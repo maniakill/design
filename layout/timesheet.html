@@ -1,0 +1,21 @@
+<div class="header">
+	<button class="calendar headerB" ng-click="open()" ><img src="images/calendar.png"></button>
+	<input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dt" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan" disabled="disabled"/>
+	<button class="right headerB">Save</button>
+	<button class="right add headerB"><img src="images/add.png"></button>
+</div>
+<ul>
+	<li ng-repeat="project in projects">
+		<p class="projectName">{{project.project_name}}</p>
+		<ul>
+			<li ng-repeat="task in project.task" class="taskDetail">
+				<span class="right arrow"></span>
+				<div class="right hourContainer ">
+					<span class="clock left"></span><span class="hours left">{{task.hours}}</span>
+				</div>
+				<span class="taskName">{{task.task_name}}</span>
+			</li>
+		</ul>	
+	</li>
+</ul>
+<div data-ng-include="'layout/footer.html'" />

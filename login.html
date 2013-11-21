@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app>
+	<meta charset="UTF-8">
+	<head>
+		<title>SalesAssist</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<script src="js/angular.js"></script>
+		<script src="js/login.js"></script>
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="logo">&nbsp;</div>
+			<div class="content">
+				<p>Get integrated &#45; Grow your business</p>
+			</div>
+			<div class="loginForm" ng-controller="Login">
+				<form>
+					<input type="text" name="username" value="" maxlenght="50" class="text" placeholder="Username" ng-model="username" required />
+					<input type="password" name="password" value="" maxlenght="50" class="password" placeholder="Password" ng-model="password" required />
+					<input type="submit" class="submit" value="Login" ng-click="fetch()">
+					<!-- <button ng-click="fetch()">Login</button> -->
+				</form>
+				<div>
+					<pre>{{loged}}</pre>
+					<a href="#" id="forgot">Can't access your account?</a>
+				</div>
+			</div>		
+		</div>
+	</body>
+</html>
