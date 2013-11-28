@@ -1,0 +1,10 @@
+<div ng-include="'layout/header.html'" />
+
+<ul class="lists">
+    <li ng-repeat="item in items" ng-click="open(item.project_id)">
+        <p>{{ item.project_name }}</p>
+    	<span>{{ item.customer_name }}</span>
+    </li>
+</ul>
+
+<div data-ng-include="'layout/footer.html'" />

@@ -11,6 +11,8 @@ ol, ul { list-style: none; }
 a, a:hover{ text-decoration: none; }
 .right { float: right; }
 .left { float: left; }
+.select_type { font-size: 22px; cursor: pointer; padding-bottom: 15px; display: block; }
+.center { text-align: center; }
 	.wrapper{ margin: 0 auto; width: 320px; }
 		.tree{ background: url("../images/tree.png") no-repeat top left; width: 281px; height: 186px; margin: 25% auto 0; }
 		.logo{ background: url("../images/logo.png") no-repeat top left; width: 264px; height: 45px; margin: 9% auto 3%; }
@@ -26,9 +28,11 @@ a, a:hover{ text-decoration: none; }
 			.header .headerB { background: linear-gradient( #487ea5 , #245980); border: 1px solid #1d4461; border-radius: 5px; box-shadow: 0 1px 2px #92b3cb; color: white;  font-size: 12px; text-shadow: 0px -1px #013a66; padding: 6px 15px 5px; margin: 0px; line-height: normal; }
 			.header .add, .header .calendar { width: 28px; height: 28px; padding: 0px;  margin-right: 6px; }
 			.header .calendar { margin-right: 0px; }
-			.header #classSpan { font-size: 20px; color: #ffffff; font-family:HelveticaLTSRoman; background: none; border: 0px; box-shadow: 0 0px 0px; cursor: default; padding: 0px; margin: 0px; width: 180px; border-radius: 0px; }
-		.projectName{ font-family:HelveticaLTSBold; font-size: 16px; padding: 7px 10px; border-bottom: 1px solid #e6e6e6; color: #000000; }
-		.taskDetail{ padding: 9px 10px 8px; border-bottom: 1px solid #e6e6e6; }
+			#classSpan, #classSpan1 { font-size: 20px; color: #ffffff; font-family:HelveticaLTSRoman; background: none; border: 0px; box-shadow: 0 0px 0px; cursor: default; padding: 0px; margin: 0px; width: 180px; border-radius: 0px; }
+			#classSpan1 { color: #000000; }
+		.projects { border-bottom: 1px solid #e6e6e6; }	
+		.projectName{ font-family:HelveticaLTSBold; font-size: 16px; padding: 7px 10px; /*border-bottom: 1px solid #e6e6e6; */color: #000000; cursor: default; }
+		.taskDetail{ padding: 9px 10px 8px; /*border-bottom: 1px solid #e6e6e6;*/ cursor: pointer; }
 			.taskDetail .taskName{ font-family:HelveticaLTSRoman; font-size: 16px; color: #666666; }
 			.taskDetail .arrow { background: url("../images/arrow.png") no-repeat left top; width: 10px; height: 15px; margin-top: 4px; }
 			.taskDetail .hourContainer{ margin-right: 15px; padding: 0px 5px 2px; }
@@ -49,3 +53,13 @@ a, a:hover{ text-decoration: none; }
 					.account_footer{ background: url('../images/footer_icons.png') no-repeat -155px -11px; }
 					.footer_link, .footer_link:hover{ display: block; margin: 0 auto; width: 80px; text-align: center; color: #ffffff; font-family:HelveticaLTSBold; font-size: 10px; line-height: normal; text-shadow: 0px -1px #335c80; }
 					.act .footer_link{ text-shadow: 0px 1px #122433; }
+		.add_wrap { padding: 10px; }
+			.add_ul { border: 1px solid #ABABAB; border-radius: 12px; }
+				.add_ul li { line-height: normal; font-size: 17px; font-family:HelveticaLTSBold; border-bottom: 1px solid #ABABAB; padding: 7px 10px 10px; cursor: pointer; }
+				.add_ul li.last_li { border-bottom: 0px; }
+					#add_calendar{ margin-top: -1px; margin-left: -4px; margin-right: 10px; background: url('../images/calendar_add.png') left top; width: 28px; height: 28px; }
+			.add_note { margin-top: 10px; }
+		.lists {}
+			.lists li { padding: 5px 10px 2px; border-bottom: 1px solid #E6E6E6; font-weight: bold; cursor: pointer; }
+				.lists li p { color: #0f0f0f; font-size: 16px; }
+				.lists li span { color: #666666; font-size: 14px; }

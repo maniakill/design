@@ -1,0 +1,14 @@
+<div ng-include="'layout/header.html'" />
+<div class="add_wrap">
+	<ul class="add_ul">
+		<li><a herf="#" ng-click="open()" id="add_calendar" class="left"></a>
+		<input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/></li>
+		<li>{{customer}}</li>
+		<li>{{project}}</li>
+		<li class="last_li">{{task}}</li>
+	</ul>
+	<ul class="add_ul add_note">
+		<li class="last_li">Add notes</li>
+	</ul>
+</div>
+<div data-ng-include="'layout/footer.html'" />
