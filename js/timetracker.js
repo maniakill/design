@@ -29,6 +29,21 @@ app.config(function ($routeProvider) {
                 controller: 'lists',
                 templateUrl: 'layout/lists.html'
             })
+        .when('/lists/:projectId',
+            {
+                controller: 'lists',
+                templateUrl: 'layout/lists.html'
+            })
+        .when('/lists_a',
+            {
+                controller: 'lists_a',
+                templateUrl: 'layout/lists_a.html'
+            })
+        .when('/lists_a/:customerId',
+            {
+                controller: 'lists_a',
+                templateUrl: 'layout/lists_a.html'
+            })
         // .when('/add',
         //     {
         //         controller: 'add',
@@ -39,6 +54,56 @@ app.config(function ($routeProvider) {
                 controller: 'add',
                 templateUrl: 'layout/add.html'
             })
+        .when('/add/:item/:taskId',
+            {
+                controller: 'add',
+                templateUrl: 'layout/add.html'
+            })
+        .when('/add_a/:item',
+            {
+                controller: 'add_a',
+                templateUrl: 'layout/add_a.html'
+            })
+        .when('/add_a/:item/:taskId',
+            {
+                controller: 'add_a',
+                templateUrl: 'layout/add_a.html'
+            })
+        .when('/addNote/:pId/:tId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
+        .when('/addNote/:pId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
+        .when('/expenses',
+            {
+                controller: 'expenses',
+                templateUrl: 'layout/expenses.html'
+            })
+        .when('/account',
+            {
+                controller: 'account',
+                templateUrl: 'layout/account.html'
+            })
+        .when('/footer',
+            {
+                controller: 'footer',
+                templateUrl: 'layout/footer.html'
+            })
+        .when('/header',
+            {
+                controller: 'header',
+                templateUrl: 'layout/header.html'
+            })
+        .when('/pending',
+            {
+                controller: 'pending',
+                templateUrl: 'layout/pending.html'
+            })
         .otherwise({ redirectTo: '/' });
 });
 
@@ -47,7 +112,11 @@ app.factory('project', ['$http','$templateCache',
         var project = {},
             url = 'https://go.salesassist.eu/pim/mobile/',
             key = 'api_key='+localStorage.token+'&username='+localStorage.username,
-            project_list = [];
+            project_list = localStorage.projects ? JSON.parse(localStorage.projects) : [],
+            customers_list = localStorage.customers ? JSON.parse(localStorage.customers) : [],
+            task_list = localStorage.tasks ? JSON.parse(localStorage.tasks) : [],
+            adhoc_task_list = localStorage.adhocTasks ? JSON.parse(localStorage.adhocTasks) : [],
+            obj = {};
         
         project.getTime = function(time) {
             this.data = $http.get(url+'index.php?do=mobile-time&'+key+'&start='+time).then(function(response){
@@ -59,7 +128,8 @@ app.factory('project', ['$http','$templateCache',
         project.getProjectList = function(){
             this.data = $http.get(url+'index.php?do=mobile-project_list&'+key).then(function(response){
                 if(typeof(response.data.response[0].projects) == 'object'){
-                   project_list = response.data.response[0].projects;               
+                    localStorage.projects = JSON.stringify(response.data.response[0].projects);
+                    project_list = response.data.response[0].projects;               
                 }
                 return response.data;
             });
@@ -70,6 +140,84 @@ app.factory('project', ['$http','$templateCache',
             for (x in project_list) {
                 if (project_list[x].project_id === id) {
                     return project_list[x];
+                    break;
+                }
+            }
+            return null;
+        }
+
+        project.getProjectTaskList = function(item){
+            task_list = [];
+            this.data =  $http.get(url+'index.php?do=mobile-task_list&'+key+'&project_id='+item).then(function(response){
+                if(response.data.code == 'ok'){
+                    if(typeof(response.data.response.tasks) == 'object'){
+                        localStorage.tasks = JSON.stringify(response.data.response.tasks);
+                        task_list = response.data.response.tasks;
+                    }
+                }
+                return response.data.response;
+            });
+            return this.data;
+        }
+
+        project.getTask = function(id){
+            for (x in task_list) {
+                if (task_list[x].id === id) {
+                    return task_list[x];
+                    break;
+                }
+            }
+            return null;
+        }
+        // set the note when adding a timesheet 
+        project.setNote = function(note){
+            obj.note = note;
+        }
+        // get the note when adding a timesheet
+        project.getNote = function(){
+            return obj.note;
+        }
+
+        project.getCustomerList = function(){
+            this.data = $http.get(url+'index.php?do=mobile-customer_list&'+key).then(function(response){
+                if(typeof(response.data.response[0].customers) == 'object'){
+                    localStorage.customers = JSON.stringify(response.data.response[0].customers);
+                    customers_list = response.data.response[0].customers;               
+                }
+                return response.data;
+            });
+            return this.data;
+        }
+
+        project.getCustomer = function(id){
+            for (x in customers_list) {
+                if (customers_list[x].id === id) {
+                    return customers_list[x];
+                    break;
+                }
+            }
+            return null;
+        }
+
+        project.getCustomerTaskList = function(item){
+            adhoc_task_list = [];
+            this.data =  $http.get(url+'index.php?do=mobile-task_list&'+key+'&customer_id='+item).then(function(response){
+                if(response.data.code == 'ok'){
+                    if(typeof(response.data.response.tasks) == 'object'){
+                        localStorage.adhocTasks = JSON.stringify(response.data.response.tasks);
+                        adhoc_task_list = response.data.response.tasks;
+                    }
+                }
+                return response.data.response;
+            });
+            return this.data;
+        }
+
+        project.getAdhocTask = function(id){
+            for (x in adhoc_task_list) {
+                if (adhoc_task_list[x].id === id) {
+                    return adhoc_task_list[x];
+                    break;
                 }
             }
             return null;

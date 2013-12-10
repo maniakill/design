@@ -1,0 +1,18 @@
+<div ng-include="'layout/header.html'" />
+<div class="logo logo_acount">&nbsp;</div>
+<div class="content">
+	<p>Get integrated &#45; Grow your business</p>
+</div>
+<div class="add_wrap">
+	<ul class="add_ul">
+		<li><span class="square">0</span>New Expense <span class="arrow abs" ng-hide="no_task"></span></li>
+		<li><span class="square">0</span>Tasks Running <span class="arrow abs" ng-hide="no_task"></span></li>
+		<li class="last_li" ng-click="selectTask(projectId)"><span class="square">0</span>Unsaved Time Entries<span class="arrow abs" ng-hide="no_task"></span></li>
+	</ul>
+</div>
+<div class="loginForm">
+	<form>
+		<input type="submit" class="submit" value="Sync All" ng-click="logout()">
+	</form>	
+</div>
+<div data-ng-include="'layout/footer.html'" />

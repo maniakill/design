@@ -1,14 +1,13 @@
 <div ng-include="'layout/header.html'" />
 
 <ul class="lists" ng-hide="projectList" >
-    <li ng-repeat="item in items" ng-click="open(item.project_id)">
-        <p>{{ item.project_name }}</p>
-    	<span>{{ item.customer_name }}</span>
+    <li ng-repeat="item in items" ng-click="open(item.id)" class="tasks_list">
+        <p>{{ item.name }}</p>
     </li>
 </ul>
 
 <ul class="lists" ng-hide="taskList">
-    <li ng-repeat="task in tasks" ng-click="open(projectId,task.id)" class="tasks_list">
+    <li ng-repeat="task in tasks" ng-click="open(customerId,task.id)" class="tasks_list">
         <p>{{ task.name }}</p>    	
     </li>
 </ul>

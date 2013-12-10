@@ -1,8 +1,12 @@
 <div class="header" ng-controller="header">
 	<button ng-hide="timesheet" class="calendar headerB" ng-click="open()" ><img src="images/calendar.png"></button>
 	<input ng-hide="timesheet" type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dt" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan" disabled="disabled"/>
-	<button ng-hide="timesheet" class="right headerB">Save</button>
+	<!-- <button ng-hide="timesheet" class="right headerB">Save</button> -->
 	<button ng-hide="timesheet" class="right add headerB" ng-click="add()"><img src="images/add.png"></button>
 	<button ng-hide="add_page" class="headerB" ng-click="times()">Back</button>
 	<button ng-hide="add_page" class="right headerB">Start</button>
+	<!-- add note page -->
+	<button ng-hide="add_note" class="headerB" ng-click="addpage()">Back</button>
+	<button ng-hide="add_note" class="right headerB" ng-click="addpage(true)">Save</button>
+	<!-- add note page end -->
 </div>
