@@ -1,0 +1,9 @@
+<div ng-include="'layout/header.html'" />
+
+<ul class="lists">
+    <li ng-repeat="task in expense" ng-click="open(projectId,task.expense_id)" class="tasks_list">
+        <p>{{ task.name }}</p>    	
+    </li>
+</ul>
+
+<div data-ng-include="'layout/footer.html'" />

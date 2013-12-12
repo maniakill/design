@@ -29,6 +29,11 @@ app.config(function ($routeProvider) {
                 controller: 'lists',
                 templateUrl: 'layout/lists.html'
             })
+        .when('/lists/expense/',
+            {
+                controller: 'lists',
+                templateUrl: 'layout/lists.html'
+            })
         .when('/lists/:projectId',
             {
                 controller: 'lists',
@@ -39,10 +44,20 @@ app.config(function ($routeProvider) {
                 controller: 'lists_a',
                 templateUrl: 'layout/lists_a.html'
             })
+        .when('/lists_a/expense/',
+            {
+                controller: 'lists_a',
+                templateUrl: 'layout/lists_a.html'
+            })
         .when('/lists_a/:customerId',
             {
                 controller: 'lists_a',
                 templateUrl: 'layout/lists_a.html'
+            })
+        .when('/lists_e/:projectId',
+            {
+                controller: 'lists_e',
+                templateUrl: 'layout/lists_e.html'
             })
         // .when('/add',
         //     {
@@ -79,7 +94,42 @@ app.config(function ($routeProvider) {
                 controller: 'addNote',
                 templateUrl: 'layout/addNote.html'
             })
-        .when('/expenses',
+        .when('/addAmount_expense/:pId/:tId',
+            {
+                controller: 'addAmount',
+                templateUrl: 'layout/addAmount.html'
+            })
+        .when('/addAmount_expense/:pId',
+            {
+                controller: 'addAmount',
+                templateUrl: 'layout/addAmount.html'
+            })
+        .when('/addNote_expense/:pId/:tId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
+        .when('/addNote_expense/:pId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
+        .when('/expenses/:item',
+            {
+                controller: 'expenses',
+                templateUrl: 'layout/expenses.html'
+            })
+        .when('/expenses/:item/:taskId',
+            {
+                controller: 'expenses',
+                templateUrl: 'layout/expenses.html'
+            })
+        .when('/expenses_a/:item',
+            {
+                controller: 'expenses',
+                templateUrl: 'layout/expenses.html'
+            })
+        .when('/expenses_a/:item/:taskId',
             {
                 controller: 'expenses',
                 templateUrl: 'layout/expenses.html'
@@ -116,6 +166,7 @@ app.factory('project', ['$http','$templateCache',
             customers_list = localStorage.customers ? JSON.parse(localStorage.customers) : [],
             task_list = localStorage.tasks ? JSON.parse(localStorage.tasks) : [],
             adhoc_task_list = localStorage.adhocTasks ? JSON.parse(localStorage.adhocTasks) : [],
+            expenses_list = localStorage.expenses_list ? JSON.parse(localStorage.expenses_list) : [],
             obj = {};
         
         project.getTime = function(time) {
@@ -178,6 +229,15 @@ app.factory('project', ['$http','$templateCache',
             return obj.note;
         }
 
+        // set the note when adding a timesheet 
+        project.setAmount = function(amount){
+            obj.amount = amount;
+        }
+        // get the note when adding a timesheet
+        project.getAmount = function(){
+            return obj.amount;
+        }
+
         project.getCustomerList = function(){
             this.data = $http.get(url+'index.php?do=mobile-customer_list&'+key).then(function(response){
                 if(typeof(response.data.response[0].customers) == 'object'){
@@ -223,6 +283,30 @@ app.factory('project', ['$http','$templateCache',
             return null;
         }
         
+        project.getExpensesList = function(item){
+            expenses_list = [];
+            this.data =  $http.get(url+'index.php?do=mobile-expenses_list&'+key).then(function(response){
+                if(response.data.code == 'ok'){
+                    if(typeof(response.data.response[0].expense) == 'object'){
+                        localStorage.expenses_list = JSON.stringify(response.data.response[0].expense);
+                        expenses_list = response.data.response[0].expense;
+                    }
+                }
+                return response.data.response;
+            });
+            return this.data;
+        }
+
+        project.getExpense = function(id){
+            for (x in expenses_list) {
+                if (expenses_list[x].expense_id === id) {
+                    return expenses_list[x];
+                    break;
+                }
+            }
+            return null;
+        }
+
         return project;
     }
 ]);
