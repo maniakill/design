@@ -192,8 +192,8 @@ app.config(function ($routeProvider) {
         .otherwise({ redirectTo: '/' });
 });
 
-app.factory('project', ['$http','$templateCache',
-    function ($http, $templateCache) {
+app.factory('project', ['$http','$templateCache', '$location',
+    function ($http, $templateCache, $location) {
         var project = {},
             url = 'https://go.salesassist.eu/pim/mobile/',
             key = 'api_key='+localStorage.token+'&username='+localStorage.username,
@@ -340,6 +340,22 @@ app.factory('project', ['$http','$templateCache',
                 }
             }
             return null;
+        }
+
+        project.save = function(pId, tId){
+             // this.data =
+            $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId).then(function(response){
+                /*if(response.data.code == 'ok'){
+                    if(typeof(response.data.response[0].expense) == 'object'){
+                        localStorage.expenses_list = JSON.stringify(response.data.response[0].expense);
+                        expenses_list = response.data.response[0].expense;
+                    }
+                }*/
+                // return response.data.response;
+                // /timesheet/:d/:m/:y
+                $location.path('/timesheet');
+            });
+            // return this.data;
         }
 
         return project;

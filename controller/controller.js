@@ -54,8 +54,8 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
                 for(x in $scope.projects){
                     for(y in $scope.projects[x]['task']){
                         $scope.projects[x]['task'][y]['hours'] = number2hour($scope.projects[x]['task'][y]['hours']);                        
-                    }              
-                }                
+                    }
+                }
             }
         });
 
@@ -216,6 +216,26 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             });
         };
         /*modalend*/
+
+        $scope.save = function(){
+
+            
+            
+            // project.save($routeParams.item,$routeParams.taskId)//.then(function(results){
+                // console.log(results[0]); this is the task_time_id
+                /*console.log(results);
+                if(typeof(results.project) == 'object'){
+                    $scope.no_project = true;
+                    $scope.projects = results.response.project;
+                    for(x in $scope.projects){
+                        for(y in $scope.projects[x]['task']){
+                            $scope.projects[x]['task'][y]['hours'] = number2hour($scope.projects[x]['task'][y]['hours']);                        
+                        }              
+                    }                
+                }*/
+            // });
+        }
+
     }
 ]);
 // add
@@ -440,7 +460,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         $scope.amount = project.getAmount() ? project.getAmount() : 'Select Amount';
         $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
-        // $scope.no_notes = project.getNote() ? true : false;
+
         if($routeParams.item){
             if(prj){
                 var p = project.getProject($routeParams.item);
