@@ -59,6 +59,11 @@ app.config(function ($routeProvider) {
                 controller: 'lists_e',
                 templateUrl: 'layout/lists_e.html'
             })
+        .when('/lists_ea/:projectId',
+            {
+                controller: 'lists_e',
+                templateUrl: 'layout/lists_e.html'
+            })
         // .when('/add',
         //     {
         //         controller: 'add',
@@ -94,6 +99,16 @@ app.config(function ($routeProvider) {
                 controller: 'addNote',
                 templateUrl: 'layout/addNote.html'
             })
+        .when('/addNotea/:pId/:tId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
+        .when('/addNotea/:pId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
         .when('/addAmount_expense/:pId/:tId',
             {
                 controller: 'addAmount',
@@ -104,12 +119,32 @@ app.config(function ($routeProvider) {
                 controller: 'addAmount',
                 templateUrl: 'layout/addAmount.html'
             })
+        .when('/addAmount_expensea/:pId/:tId',
+            {
+                controller: 'addAmount',
+                templateUrl: 'layout/addAmount.html'
+            })
+        .when('/addAmount_expensea/:pId',
+            {
+                controller: 'addAmount',
+                templateUrl: 'layout/addAmount.html'
+            })
         .when('/addNote_expense/:pId/:tId',
             {
                 controller: 'addNote',
                 templateUrl: 'layout/addNote.html'
             })
         .when('/addNote_expense/:pId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
+        .when('/addNote_expensea/:pId/:tId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
+        .when('/addNote_expensea/:pId',
             {
                 controller: 'addNote',
                 templateUrl: 'layout/addNote.html'

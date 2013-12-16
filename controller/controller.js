@@ -87,14 +87,15 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             return value;
         }
 
-        $scope.editTask = function(pId,tId){
+        $scope.editTask = function(pId,tId,notes){
+            project.setNote(notes);
             $location.path('/add/'+pId+'/'+tId);
         }
     }
 ]);
 // footer
-ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal',
-    function ($scope, $routeParams, $route, $modal){
+ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project',
+    function ($scope, $routeParams, $route, $modal, project){
         var d = new Date();
         $scope.timed = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
         $scope.timesheet = true;
@@ -107,13 +108,15 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal',
         $scope.exp = function ($event) {
             $event.preventDefault()
             var modalInstance = $modal.open({
-              templateUrl: 'layout/task_type.html',
-              controller: 'task_type',
-              resolve: {
-                items: function () {
-                  return $scope.task_type;
+                templateUrl: 'layout/task_type.html',
+                controller: 'task_type',
+                resolve: {
+                    items: function () {
+                        project.setNote('');
+                        project.setAmount('');
+                        return $scope.task_type;
+                    }
                 }
-              }
             });
         };
         /*modalend*/
@@ -137,7 +140,7 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal',
 // header
 ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$route', '$modal', 'project',
     function ($scope, $timeout, $routeParams, $location, $route, $modal, project ){
-        var link = $route.current.originalPath.search('expense') > 0 ? '/expenses/' : '/add/',
+        var link = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('expensea') > 0 ? '/expenses_a/' : '/expenses/') : ( $route.current.originalPath.search('Notea') > 0 ? '/add_a/' : '/add/'),
             note = $route.current.originalPath.search('Amount') > 0 ? false : true;
         $scope.timesheet = true;
         $scope.add_page = true;
@@ -193,11 +196,11 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             if($routeParams.tId){
                 url += '/'+$routeParams.tId;
             }
-            $location.path(url);       
+            $location.path(url);    
         }
 
         /*modal*/
-        $scope.task_type = [ { title: 'Add Task for Project', url: '/lists' }, {title: 'Add Ad Hoc Task', url: '/lists_a'} ];
+        $scope.task_type = [ { title: 'Add Task for Project', url: '/lists' }, { title: 'Add Ad Hoc Task', url: '/lists_a'} ];
 
         $scope.add = function () {
             var modalInstance = $modal.open({
@@ -205,7 +208,9 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
               controller: 'task_type',
               resolve: {
                 items: function () {
-                  return $scope.task_type;
+                    project.setNote();
+                    project.setAmount();
+                    return $scope.task_type;
                 }
               }
             });
@@ -220,7 +225,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
         $scope.customer = 'Customer Name';
         $scope.project = 'Project Name';
         $scope.task = 'Select Task';
-        $scope.notes =  project.getNote() ? project.getNote() : 'Add notes';
+        $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
         // $scope.no_notes = project.getNote() ? true : false;
         if($routeParams.item){
@@ -392,7 +397,8 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
 // lists
 ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
     function ($scope, $http, $location, project, $routeParams, $route){
-        var link = '/expenses/';
+        var prj = $route.current.originalPath.search('_ea') > 0 ? false : true;
+        var link = prj ? '/expenses/' : '/expenses_a/' ;
         $scope.expense = [];
         $scope.projectId = $routeParams.projectId;
         
@@ -401,10 +407,9 @@ ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routePar
                 $scope.expense = results[0].expense;               
             }
         });
-        
         $scope.open = function (pId,tId){
             if(tId){
-                $location.path(link+pId+'/'+tId);    
+                $location.path(link+pId+'/'+tId);
             }else{
                 $location.path(link+pId);                
             }
@@ -419,8 +424,8 @@ ctrl.controller('addNote',['$scope', 'project',
     }
 ]);
 // addAmount
-ctrl.controller('addAmount',['$scope', 'project', 
-    function ($scope, project){
+ctrl.controller('addAmount',['$scope', 'project',
+    function ($scope, project, $route){
         $scope.amount =  project.getAmount() ? project.getAmount() : '';
     }
 ]);
@@ -433,11 +438,11 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         $scope.project = 'Project Name';
         $scope.task = 'Receipt Photo';
         $scope.amount = project.getAmount() ? project.getAmount() : 'Select Amount';
-        $scope.notes =  project.getNote() ? project.getNote() : 'Add notes';
+        $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
         // $scope.no_notes = project.getNote() ? true : false;
         if($routeParams.item){
-            if(prj){console.log('d');
+            if(prj){
                 var p = project.getProject($routeParams.item);
                 if(p){
                     $scope.project = p.project_name;
@@ -453,7 +458,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                 }else{
                     // $location.path('/timesheet');
                 }
-            }else{console.log('f');
+            }else{
                 var p = project.getCustomer($routeParams.item);
                 if(p){
                     $scope.project = p.name;
@@ -488,7 +493,11 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         };
         
         $scope.selectExpense = function(id){
-            $location.path('/lists_e/'+id);
+            if(prj){
+                $location.path('/lists_e/'+id);
+            }else{
+                $location.path('/lists_ea/'+id);
+            }
         }
 
         $scope.dateOptions = {
@@ -520,6 +529,9 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 
         $scope.addNote = function(pId,tId){
             var url = '/addNote_expense/'+pId;
+            if(!prj){
+                url = '/addNote_expensea/'+pId;
+            }
             if(tId){
                 url += '/'+tId; 
             }
@@ -528,6 +540,9 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 
         $scope.addAmount = function(pId,tId){
             var url = '/addAmount_expense/'+pId;
+            if(!prj){
+                url = '/addAmount_expensea/'+pId;
+            }
             if(tId){
                 url += '/'+tId; 
             }
@@ -561,7 +576,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
         $scope.date = 'today';
         $scope.customer = 'Customer Name';
         $scope.task = 'Select Task';
-        $scope.notes =  project.getNote() ? project.getNote() : 'Add notes';
+        $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
         // $scope.no_notes = project.getNote() ? true : false;
         if($routeParams.item){
@@ -629,7 +644,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
         /*timepicker end*/
 
         $scope.addNote = function(pId,tId){
-            var url = '/addNote/'+pId;
+            var url = '/addNotea/'+pId;
             if(tId){
                 url += '/'+tId; 
             }
