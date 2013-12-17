@@ -59,6 +59,10 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             }
         });
 
+        $scope.test = function(){
+            $scope.projects[1].task[1].hours='1:00';
+        }
+
         function number2hour(number){
             var value = '0:00';
             if(isNaN(number) === true){
@@ -114,6 +118,7 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
                     items: function () {
                         project.setNote('');
                         project.setAmount('');
+                        project.setDate();
                         return $scope.task_type;
                     }
                 }
@@ -210,6 +215,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                 items: function () {
                     project.setNote();
                     project.setAmount();
+                    project.setDate();
                     return $scope.task_type;
                 }
               }
@@ -217,11 +223,8 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
         };
         /*modalend*/
 
-        $scope.save = function(){
-
-            
-            
-            // project.save($routeParams.item,$routeParams.taskId)//.then(function(results){
+        $scope.save = function(){            
+            project.save($routeParams.item,$routeParams.taskId)//.then(function(results){
                 // console.log(results[0]); this is the task_time_id
                 /*console.log(results);
                 if(typeof(results.project) == 'object'){
@@ -671,5 +674,30 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
             $location.path(url);
         }
 
+    }
+]);
+// timesheet
+ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams', '$location',
+    function ($scope, $timeout ,project, $routeParams, $location){
+        $scope.projects = [];
+        if($routeParams.y && $routeParams.m && $routeParams.d){ 
+            var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
+        }else{
+            var time='';
+        }
+        $scope.no_project = false;
+        
+        project.getExpenses(time).then(function(results){
+            // console.log(results);
+            if(typeof(results.response.expense) == 'object'){
+                $scope.no_project = true;
+                $scope.expense = results.response.expense;                
+            }
+        });
+
+        $scope.editTask = function(pId,tId,notes){
+            project.setNote(notes);
+            $location.path('/add/'+pId+'/'+tId);
+        }
     }
 ]);

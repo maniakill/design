@@ -24,6 +24,15 @@ app.config(function ($routeProvider) {
                 controller: 'timesheet',
                 templateUrl: 'layout/timesheet.html'
             })
+        .when('/expenses_list',{
+                controller: 'expenses_list',
+                templateUrl: 'layout/expenses_list.html'
+            })
+        .when('/expenses_list/:d/:m/:y',
+            {
+                controller: 'expenses_list',
+                templateUrl: 'layout/expenses_list.html'
+            })
         .when('/lists',
             {
                 controller: 'lists',
@@ -344,20 +353,31 @@ app.factory('project', ['$http','$templateCache', '$location',
 
         project.save = function(pId, tId){
              // this.data =
-            $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId).then(function(response){
-                /*if(response.data.code == 'ok'){
-                    if(typeof(response.data.response[0].expense) == 'object'){
-                        localStorage.expenses_list = JSON.stringify(response.data.response[0].expense);
-                        expenses_list = response.data.response[0].expense;
-                    }
-                }*/
-                // return response.data.response;
-                // /timesheet/:d/:m/:y
-                $location.path('/timesheet');
+            var start = '';
+            if(project.selectedDate){
+                start = '&start='+project.selectedDate;
+            }
+            $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+start).then(function(response){
+                // mai trebuie si sa contorizez timpul
+                if(project.selectedDate){
+                    $location.path('/timesheet/'+project.selectedDate);
+                }else{
+                    $location.path('/timesheet');                    
+                }
             });
-            // return this.data;
         }
 
+        project.setDate = function(time){
+            project.selectedDate = time;
+        }
+
+        project.getExpenses = function(time){
+            this.data = $http.get(url+'index.php?do=mobile-expenses&'+key+'&start='+time).then(function(response){
+                return response.data;
+            });
+            return this.data;
+        }
+       
         return project;
     }
 ]);

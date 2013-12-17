@@ -620,7 +620,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.position'])
   };
 }])
 
-.directive( 'datepicker', ['dateFilter', '$parse', 'datepickerConfig', '$log', '$location', '$route', function (dateFilter, $parse, datepickerConfig, $log, $location, $route) {
+.directive( 'datepicker', ['dateFilter', '$parse', 'datepickerConfig', '$log', '$location', '$route', 'project', function (dateFilter, $parse, datepickerConfig, $log, $location, $route, project) {
   return {
     restrict: 'EA',
     replace: true,
@@ -719,8 +719,11 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.position'])
           dt.setFullYear( date.getFullYear(), date.getMonth(), date.getDate() );
           ngModel.$setViewValue( dt );
           refill( true );
+          project.setDate(timed);
           if($route.current.controller == 'timesheet'){
-            $location.path('/timesheet/'+timed);            
+            $location.path('/timesheet/'+timed);
+          }else if($route.current.controller == 'expenses_list'){
+            $location.path('/expenses_list/'+timed);
           }
         } else {
           selected = date;
