@@ -55,7 +55,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
                     for(y in $scope.projects[x]['task']){
                         $scope.projects[x]['task'][y]['hours'] = number2hour($scope.projects[x]['task'][y]['hours']);                        
                     }
-                }
+                }                
             }
         });
 
@@ -91,9 +91,13 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             return value;
         }
 
-        $scope.editTask = function(pId,tId,notes){
+        $scope.editTask = function(pId, tId, notes, adhoc, cId){
             project.setNote(notes);
-            $location.path('/add/'+pId+'/'+tId);
+            if(adhoc == 'ad hoc'){
+                $location.path('/add_a/'+cId+'/'+tId);
+            }else{
+                $location.path('/add/'+pId+'/'+tId);                
+            }
         }
     }
 ]);
@@ -101,33 +105,35 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
 ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project',
     function ($scope, $routeParams, $route, $modal, project){
         var d = new Date();
-        $scope.timed = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+        // $scope.timed = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
         $scope.timesheet = true;
         $scope.expense = true;
         $scope.account = true;
 
-        /*modal*/
-        $scope.task_type = [ { title: 'Add Task for Project', url: '/lists/expense' }, {title: 'Add Ad Hoc Task', url: '/lists_a/expense'} ];
+        // /*modal*/
+        // $scope.task_type = [ { title: 'Add Task for Project', url: '/lists/expense' }, {title: 'Add Ad Hoc Task', url: '/lists_a/expense'} ];
 
-        $scope.exp = function ($event) {
-            $event.preventDefault()
-            var modalInstance = $modal.open({
-                templateUrl: 'layout/task_type.html',
-                controller: 'task_type',
-                resolve: {
-                    items: function () {
-                        project.setNote('');
-                        project.setAmount('');
-                        project.setDate();
-                        return $scope.task_type;
-                    }
-                }
-            });
-        };
-        /*modalend*/
+        // $scope.exp = function ($event) {
+        //     $event.preventDefault()
+        //     var modalInstance = $modal.open({
+        //         templateUrl: 'layout/task_type.html',
+        //         controller: 'task_type',
+        //         resolve: {
+        //             items: function () {
+        //                 project.setNote('');
+        //                 project.setAmount('');
+        //                 project.setDate();
+        //                 return $scope.task_type;
+        //             }
+        //         }
+        //     });
+        // };
+        // /*modalend*/
 
         switch($route.current.controller){
             case 'expenses':
+            case 'expenses_list':
+            case "lists_e":
                 $scope.expense = false;
                 $scope.expenseAct = 'act';
                 break;
@@ -140,24 +146,44 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
                 $scope.timesheetAct = 'act';
                 break;
         }
+        
+        switch($route.current.originalPath){
+            case "/lists/expense/":
+            case "/lists_a/expense/":
+
+                $scope.expense = false;
+                $scope.expenseAct = 'act';
+                $scope.timesheet = true;
+                $scope.timesheetAct = '';
+                break;
+        }
     }
 ]);
 // header
 ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$route', '$modal', 'project',
     function ($scope, $timeout, $routeParams, $location, $route, $modal, project ){
         var link = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('expensea') > 0 ? '/expenses_a/' : '/expenses/') : ( $route.current.originalPath.search('Notea') > 0 ? '/add_a/' : '/add/'),
-            note = $route.current.originalPath.search('Amount') > 0 ? false : true;
+            note = $route.current.originalPath.search('Amount') > 0 ? false : true,
+            type = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('_a') > 0 ? 'expenses_a' : 'expenses') : ( $route.current.originalPath.search('_a') > 0 ? 'add_a' : '');
         $scope.timesheet = true;
         $scope.add_page = true;
         $scope.add_note = true;
-        
+            
         switch($route.current.controller){
             case 'timesheet':
                 $scope.timesheet = false;
+                $scope.task_type = [ { title: 'Add Task for Project', url: '/lists' }, { title: 'Add Ad Hoc Task', url: '/lists_a'} ];
+                $scope.types = 'Task';
+                break;
+            case 'expenses_list':
+                $scope.timesheet = false;
+                $scope.task_type = [ { title: 'Add Task for Project', url: '/lists/expense' }, {title: 'Add Ad Hoc Task', url: '/lists_a/expense'} ];
+                $scope.types = 'Expense';                
                 break;
             case 'add':
             case 'add_a':
             case 'lists':
+            case 'expenses':
                 $scope.add_page = false;
                 break;
             case 'addNote':
@@ -205,7 +231,6 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
         }
 
         /*modal*/
-        $scope.task_type = [ { title: 'Add Task for Project', url: '/lists' }, { title: 'Add Ad Hoc Task', url: '/lists_a'} ];
 
         $scope.add = function () {
             var modalInstance = $modal.open({
@@ -217,26 +242,27 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                     project.setAmount();
                     project.setDate();
                     return $scope.task_type;
+                },
+                types: function(){
+                    return $scope.types;
                 }
               }
             });
         };
         /*modalend*/
 
-        $scope.save = function(){            
-            project.save($routeParams.item,$routeParams.taskId)//.then(function(results){
-                // console.log(results[0]); this is the task_time_id
-                /*console.log(results);
-                if(typeof(results.project) == 'object'){
-                    $scope.no_project = true;
-                    $scope.projects = results.response.project;
-                    for(x in $scope.projects){
-                        for(y in $scope.projects[x]['task']){
-                            $scope.projects[x]['task'][y]['hours'] = number2hour($scope.projects[x]['task'][y]['hours']);                        
-                        }              
-                    }                
-                }*/
-            // });
+        $scope.save = function(){
+            if(!$routeParams.item){
+                alert("Please select a project");
+                return false;
+            }
+            if(!$routeParams.taskId){
+                alert("Please select a task");
+                return false;
+            }
+            var notes = project.getNote();
+
+            project.save(type,$routeParams.item,$routeParams.taskId,notes);
         }
 
     }
@@ -301,10 +327,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
         $scope.mstep = 1;
 
         $scope.ismeridian = false;
-        /*$scope.toggleMode = function() {
-            $scope.ismeridian = ! $scope.ismeridian;
-        };*/
-
+       
         $scope.update = function() {
             var d = new Date();
             d.setHours( 0 );
@@ -330,9 +353,10 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
     }
 ]);
 // task_type
-ctrl.controller('task_type',['$scope','$modalInstance','items', '$location',
-    function ($scope, $modalInstance, items, $location) {
+ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'types',
+    function ($scope, $modalInstance, items, $location, types) {
         $scope.items = items;
+        $scope.types = types;
         
         $scope.open = function(url){
             $location.path(url);
@@ -495,7 +519,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                         }
                     }
                 }else{
-                    $location.path('/timesheet');
+                    // $location.path('/timesheet');
                 }
             }
         }
@@ -601,6 +625,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
         $scope.task = 'Select Task';
         $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
+        
         // $scope.no_notes = project.getNote() ? true : false;
         if($routeParams.item){
             var p = project.getCustomer($routeParams.item);
@@ -688,16 +713,20 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
         $scope.no_project = false;
         
         project.getExpenses(time).then(function(results){
-            // console.log(results);
             if(typeof(results.response.expense) == 'object'){
                 $scope.no_project = true;
                 $scope.expense = results.response.expense;                
             }
         });
 
-        $scope.editTask = function(pId,tId,notes){
+        $scope.editTask = function(pId, tId, notes, amount, adhoc, cId){
             project.setNote(notes);
-            $location.path('/add/'+pId+'/'+tId);
+            project.setAmount(amount);
+            if(adhoc == "ad hoc"){
+                $location.path('/expenses_a/'+cId+'/'+tId);    
+            }else{
+                $location.path('/expenses/'+pId+'/'+tId);                
+            }
         }
     }
 ]);

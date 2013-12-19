@@ -351,20 +351,36 @@ app.factory('project', ['$http','$templateCache', '$location',
             return null;
         }
 
-        project.save = function(pId, tId){
+        project.save = function(type, pId, tId,notes){
              // this.data =
             var start = '';
             if(project.selectedDate){
                 start = '&start='+project.selectedDate;
             }
-            $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+start).then(function(response){
-                // mai trebuie si sa contorizez timpul
-                if(project.selectedDate){
-                    $location.path('/timesheet/'+project.selectedDate);
-                }else{
-                    $location.path('/timesheet');                    
-                }
-            });
+            
+            switch (type){
+                case "add_a":
+                    var amount = project.getAmount();
+                    $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&customer_id='+pId+'&task_id='+tId+'&notes='+notes+start).then(function(response){
+                        // mai trebuie si sa contorizez timpul
+                        if(project.selectedDate){
+                            $location.path('/timesheet/'+project.selectedDate);
+                        }else{
+                            $location.path('/timesheet');                    
+                        }
+                    });
+                    break;
+                default:
+                    $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+start).then(function(response){
+                        // mai trebuie si sa contorizez timpul
+                        if(project.selectedDate){
+                            $location.path('/timesheet/'+project.selectedDate);
+                        }else{
+                            $location.path('/timesheet');                    
+                        }
+                    });
+                    break;
+            }
         }
 
         project.setDate = function(time){
