@@ -9,8 +9,8 @@ ctrl.controller('start',['$scope', '$timeout', '$location',
     }
 ]);
 // login
-ctrl.controller('login',['$scope', '$http', '$templateCache','$location',
-    function ($scope, $http, $templateCache, $location) {
+ctrl.controller('login',['$scope', '$http', '$templateCache','$location', '$timeout',
+    function ($scope, $http, $templateCache, $location, $timeout) {
         $scope.method = 'POST';
         $scope.url = 'https://go.salesassist.eu/pim/mobile/';
         $scope.loged = '';
@@ -27,12 +27,29 @@ ctrl.controller('login',['$scope', '$http', '$templateCache','$location',
                         $location.path('/timesheet');
                     }else{
                         // something went very wrong!!! (maybe script error)
+                        $scope.alerts = [
+                            { type: 'error', msg: data.error_code }                            
+                        ];
+                        $timeout(function(){
+                            $scope.closeAlert(0);
+                        },3000)
+                        
                     }
                 }).
                 error(function(data, status) {
                    // something went very wrong!!! (maybe server error)
+                   $scope.alerts = [
+                        { type: 'error', msg: 'Server error. Please try later' }
+                    ];
+                    $timeout(function(){
+                        $scope.closeAlert(0);
+                    },3000)
                 });
             }
+        };
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
         };         
     }
 ]);
@@ -99,6 +116,10 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
                 $location.path('/add/'+pId+'/'+tId);                
             }
         }
+
+        $scope.addNewTask = function(){
+            project.addNewTask();
+        }
     }
 ]);
 // footer
@@ -109,26 +130,6 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
         $scope.timesheet = true;
         $scope.expense = true;
         $scope.account = true;
-
-        // /*modal*/
-        // $scope.task_type = [ { title: 'Add Task for Project', url: '/lists/expense' }, {title: 'Add Ad Hoc Task', url: '/lists_a/expense'} ];
-
-        // $scope.exp = function ($event) {
-        //     $event.preventDefault()
-        //     var modalInstance = $modal.open({
-        //         templateUrl: 'layout/task_type.html',
-        //         controller: 'task_type',
-        //         resolve: {
-        //             items: function () {
-        //                 project.setNote('');
-        //                 project.setAmount('');
-        //                 project.setDate();
-        //                 return $scope.task_type;
-        //             }
-        //         }
-        //     });
-        // };
-        // /*modalend*/
 
         switch($route.current.controller){
             case 'expenses':
@@ -177,12 +178,14 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                 break;
             case 'expenses_list':
                 $scope.timesheet = false;
-                $scope.task_type = [ { title: 'Add Task for Project', url: '/lists/expense' }, {title: 'Add Ad Hoc Task', url: '/lists_a/expense'} ];
+                $scope.task_type = [ { title: 'Add Expense for Project', url: '/lists/expense' }, {title: 'Add Ad Hoc Expense', url: '/lists_a/expense'} ];
                 $scope.types = 'Expense';                
                 break;
             case 'add':
             case 'add_a':
             case 'lists':
+            case 'lists_a':
+            case 'lists_e':
             case 'expenses':
                 $scope.add_page = false;
                 break;
@@ -265,6 +268,9 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             project.save(type,$routeParams.item,$routeParams.taskId,notes);
         }
 
+        $scope.$on('clickAdd', function() {
+            $scope.add();
+        }); 
     }
 ]);
 // add
@@ -349,6 +355,20 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
             }
             $location.path(url);
         }
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
+
+        $scope.$on('addError', function(arg,args) {
+            $scope.alerts = [
+                { type: 'error', msg: args }
+            ];
+            $timeout(function(){
+                $scope.closeAlert(0);
+            },3000)
+        }); 
+        
 
     }
 ]);
@@ -699,6 +719,19 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
             $location.path(url);
         }
 
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
+
+        $scope.$on('addError', function(arg,args) {
+            $scope.alerts = [
+                { type: 'error', msg: args }
+            ];
+            $timeout(function(){
+                $scope.closeAlert(0);
+            },3000)
+        });
+
     }
 ]);
 // timesheet
@@ -727,6 +760,10 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
             }else{
                 $location.path('/expenses/'+pId+'/'+tId);                
             }
+        }
+
+        $scope.addNewTask = function(){
+            project.addNewTask();
         }
     }
 ]);

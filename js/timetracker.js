@@ -201,8 +201,8 @@ app.config(function ($routeProvider) {
         .otherwise({ redirectTo: '/' });
 });
 
-app.factory('project', ['$http','$templateCache', '$location',
-    function ($http, $templateCache, $location) {
+app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
+    function ($http, $templateCache, $location, $rootScope) {
         var project = {},
             url = 'https://go.salesassist.eu/pim/mobile/',
             key = 'api_key='+localStorage.token+'&username='+localStorage.username,
@@ -363,20 +363,30 @@ app.factory('project', ['$http','$templateCache', '$location',
                     var amount = project.getAmount();
                     $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&customer_id='+pId+'&task_id='+tId+'&notes='+notes+start).then(function(response){
                         // mai trebuie si sa contorizez timpul
-                        if(project.selectedDate){
-                            $location.path('/timesheet/'+project.selectedDate);
+                        if(response.data.code == 'ok'){
+                            if(project.selectedDate){
+                                $location.path('/timesheet/'+project.selectedDate);
+                            }else{
+                                $location.path('/timesheet');                    
+                            }
                         }else{
-                            $location.path('/timesheet');                    
+                            $rootScope.$broadcast('addError',response.data.error_code);
+                            
                         }
                     });
                     break;
                 default:
                     $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+start).then(function(response){
                         // mai trebuie si sa contorizez timpul
-                        if(project.selectedDate){
-                            $location.path('/timesheet/'+project.selectedDate);
+                        if(response.data.code == 'ok'){
+                            if(project.selectedDate){
+                                $location.path('/timesheet/'+project.selectedDate);
+                            }else{
+                                $location.path('/timesheet');                    
+                            }
                         }else{
-                            $location.path('/timesheet');                    
+                            $rootScope.$broadcast('addError',response.data.error_code);
+                            
                         }
                     });
                     break;
@@ -392,6 +402,17 @@ app.factory('project', ['$http','$templateCache', '$location',
                 return response.data;
             });
             return this.data;
+        }
+
+        project.addNewTask = function() {
+            $rootScope.$broadcast('clickAdd');
+        };
+
+        project.isLoged = function(){
+            if(!localStorage.token || !localStorage.username){
+                return false;
+            }
+            return true;
         }
        
         return project;
