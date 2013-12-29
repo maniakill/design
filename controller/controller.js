@@ -72,7 +72,8 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
                     for(y in $scope.projects[x]['task']){
                         $scope.projects[x]['task'][y]['hours'] = number2hour($scope.projects[x]['task'][y]['hours']);                        
                     }
-                }                
+                }
+                console.log($scope.projects);            
             }
         });
 
@@ -165,7 +166,8 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
     function ($scope, $timeout, $routeParams, $location, $route, $modal, project ){
         var link = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('expensea') > 0 ? '/expenses_a/' : '/expenses/') : ( $route.current.originalPath.search('Notea') > 0 ? '/add_a/' : '/add/'),
             note = $route.current.originalPath.search('Amount') > 0 ? false : true,
-            type = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('_a') > 0 ? 'expenses_a' : 'expenses') : ( $route.current.originalPath.search('_a') > 0 ? 'add_a' : '');
+            type = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('_a') > 0 ? 'expenses_a' : 'expenses') : ( $route.current.originalPath.search('_a') > 0 ? 'add_a' : ''),
+            alertText = ['project','task'];
         $scope.timesheet = true;
         $scope.add_page = true;
         $scope.add_note = true;
@@ -186,8 +188,11 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             case 'lists':
             case 'lists_a':
             case 'lists_e':
+                $scope.add_page = false;
+                break;
             case 'expenses':
                 $scope.add_page = false;
+                alertText = ['project','expense'];
                 break;
             case 'addNote':
             case 'addAmount':
@@ -243,6 +248,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                 items: function () {
                     project.setNote();
                     project.setAmount();
+                    project.setHours();
                     project.setDate();
                     return $scope.task_type;
                 },
@@ -256,11 +262,11 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
 
         $scope.save = function(){
             if(!$routeParams.item){
-                alert("Please select a project");
+                alert("Please select a "+alertText[0]);
                 return false;
             }
             if(!$routeParams.taskId){
-                alert("Please select a task");
+                alert("Please select a "+alertText[1]);
                 return false;
             }
             var notes = project.getNote();
@@ -343,7 +349,10 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
         $scope.update();
 
         $scope.changed = function () {
-            console.log('Time changed to: ' + $scope.mytime);
+            var hours = $scope.mytime.getHours(),
+                minutes = $scope.mytime.getMinutes();
+                t = hours + minutes/60;
+            project.setHours(t);
         };
 
         /*timepicker end*/

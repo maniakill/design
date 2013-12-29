@@ -204,6 +204,7 @@ app.config(function ($routeProvider) {
 app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
     function ($http, $templateCache, $location, $rootScope) {
         var project = {},
+            // project.taskTime = {},
             url = 'https://go.salesassist.eu/pim/mobile/',
             key = 'api_key='+localStorage.token+'&username='+localStorage.username,
             project_list = localStorage.projects ? JSON.parse(localStorage.projects) : [],
@@ -213,6 +214,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
             expenses_list = localStorage.expenses_list ? JSON.parse(localStorage.expenses_list) : [],
             obj = {};
         
+        project.taskTime = {};
+
         project.getTime = function(time) {
             this.data = $http.get(url+'index.php?do=mobile-time&'+key+'&start='+time).then(function(response){
                 return response.data;
@@ -270,7 +273,10 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
         }
         // get the note when adding a timesheet
         project.getNote = function(){
-            return obj.note;
+            if(obj.note){
+                return obj.note;                
+            }
+            return '';
         }
 
         // set the note when adding a timesheet 
@@ -279,7 +285,21 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
         }
         // get the note when adding a timesheet
         project.getAmount = function(){
-            return obj.amount;
+            if(obj.amount){
+                return obj.amount;
+            }
+            return '';
+        }
+
+        project.setHours = function(hour){
+            obj.hours = hour;
+        }
+
+        project.getHours = function(){
+            if(obj.hours){
+                return obj.hours;
+            }
+            return 0;
         }
 
         project.getCustomerList = function(){
@@ -360,14 +380,44 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
             
             switch (type){
                 case "add_a":
-                    var amount = project.getAmount();
-                    $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&customer_id='+pId+'&task_id='+tId+'&notes='+notes+start).then(function(response){
+                    var h = project.getHours();
+                    $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&customer_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
                         // mai trebuie si sa contorizez timpul
                         if(response.data.code == 'ok'){
                             if(project.selectedDate){
                                 $location.path('/timesheet/'+project.selectedDate);
                             }else{
                                 $location.path('/timesheet');                    
+                            }
+                        }else{
+                            $rootScope.$broadcast('addError',response.data.error_code);
+                            
+                        }
+                    });
+                    break;
+                case "expenses":
+                    var amount = project.getAmount();
+                    $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&project_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
+                        if(response.data.code == 'ok'){
+                            if(project.selectedDate){
+                                $location.path('/expenses_list/'+project.selectedDate);
+                            }else{
+                                $location.path('/expenses_list');                    
+                            }
+                        }else{
+                            $rootScope.$broadcast('addError',response.data.error_code);
+                            
+                        }
+                    });
+                    break;
+                case "expenses_a":
+                    var amount = project.getAmount();
+                    $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
+                        if(response.data.code == 'ok'){
+                            if(project.selectedDate){
+                                $location.path('/expenses_list/'+project.selectedDate);
+                            }else{
+                                $location.path('/expenses_list');                    
                             }
                         }else{
                             $rootScope.$broadcast('addError',response.data.error_code);
@@ -376,9 +426,13 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
                     });
                     break;
                 default:
-                    $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+start).then(function(response){
-                        // mai trebuie si sa contorizez timpul
+                    var h = project.getHours();
+                    $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
                         if(response.data.code == 'ok'){
+                            project.taskTime[response.data.response.id] = {};
+                            project.taskTime[response.data.response.id].started = true;
+                            project.taskTime[response.data.response.id].hours = h;
+                            project.taskTime[response.data.response.id].start = Date.now();
                             if(project.selectedDate){
                                 $location.path('/timesheet/'+project.selectedDate);
                             }else{
@@ -390,6 +444,19 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
                         }
                     });
                     break;
+            }
+        }
+
+        // var t = window.setInterval( rune, 1000 );
+
+        function rune(){
+            console.log($rootScope);
+            var d = Date.now()
+            for( x in project.taskTime ){
+                if(project.taskTime[x].started === true){
+                    var newTime = Math.floor(d-project.taskTime[x].start);
+
+                }
             }
         }
 
