@@ -64,6 +64,24 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         }
         $scope.no_project = false;
         
+        function onLoad() {
+            document.addEventListener("online", onOnline, false);
+            document.addEventListener("deviceready", onDeviceReady, false);
+        }
+        onLoad();
+        // device APIs are available
+        //
+        function onDeviceReady() {
+            alert('Device Ready');
+        }
+
+        // Handle the online event
+        //
+        function onOnline() {
+            alert('Connected to the internet');
+        }
+
+
         project.getTime(time).then(function(results){
             if(typeof(results.response.project) == 'object'){
                 $scope.no_project = true;
