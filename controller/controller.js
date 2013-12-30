@@ -65,13 +65,14 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         $scope.no_project = false;
         
         function onLoad() {
-            document.addEventListener("online", onOnline, false);
+            
             document.addEventListener("deviceready", onDeviceReady, false);
         }
         onLoad();
         // device APIs are available
         //
         function onDeviceReady() {
+            document.addEventListener("online", onOnline, false);
             alert('Device Ready');
         }
 
@@ -91,12 +92,12 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
                         $scope.projects[x]['task'][y]['hours'] = number2hour($scope.projects[x]['task'][y]['hours']);                        
                     }
                 }
-                console.log($scope.projects);            
+                // console.log($scope.projects);      
             }
         });
 
         $scope.test = function(){
-            $scope.projects[1].task[1].hours='1:00';
+            $scope.projects.task[0].hours='1:00';
         }
 
         function number2hour(number){
