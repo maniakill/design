@@ -65,7 +65,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         $scope.no_project = false;
         
         function onLoad() {
-            
+            alert('start');
             document.addEventListener("deviceready", onDeviceReady, false);
         }
         onLoad();
