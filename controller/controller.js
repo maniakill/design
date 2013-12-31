@@ -62,9 +62,10 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         }else{
             var time='';
         }
-        $scope.no_project = false;
+        $scope.no_project = true;
         
-        function onLoad() {
+        // this should be moved when timetracker.js loads
+        /*function onLoad() {
             alert('start');
             document.addEventListener("deviceready", onDeviceReady, false);
         }
@@ -91,22 +92,25 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             states[Connection.NONE]     = 'No network connection';
 
             alert('Connection type: ' + states[networkState]);
-        }
-
-
-
-        project.getTime(time).then(function(results){
+        }*/
+        // console.log(project.time);
+        $scope.projects = project.time;
+        project.getTime(time);
+        /*project.getTime(time).then(function(results){
             if(typeof(results.response.project) == 'object'){
                 $scope.no_project = true;
                 $scope.projects = results.response.project;
                 for(x in $scope.projects){
                     for(y in $scope.projects[x]['task']){
-                        $scope.projects[x]['task'][y]['hours'] = number2hour($scope.projects[x]['task'][y]['hours']);                        
+                        $scope.projects[x]['task'][y]['hours'] = number2hour($scope.projects[x]['task'][y]['hours']);
                     }
                 }
-                // console.log($scope.projects);      
+                console.log($scope.projects);
             }
-        });
+        });*/
+        $scope.showh = function(item){
+            return number2hour(item);
+        }
 
         $scope.test = function(){
             $scope.projects.task[0].hours='1:00';
@@ -327,11 +331,11 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
                 $scope.customer = p.customer_name;
                 $scope.projectId = p.project_id;
                 if($routeParams.taskId){
-                    var t = project.getTask($routeParams.taskId);
+                    var t = project.getTask($routeParams.item,$routeParams.taskId);
                     if(t){
                         $scope.no_task = true;
-                        $scope.task = t.name;
-                        $scope.taskId = t.id;
+                        $scope.task = t.task_name;
+                        $scope.taskId = t.task_id;
                     }
                 }
             }else{
@@ -441,18 +445,22 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
         if($routeParams.projectId){
             $scope.taskList = false;
             $scope.projectId = $routeParams.projectId;
-            project.getProjectTaskList($routeParams.projectId).then(function(results){
+            $scope.tasks = project.time[$scope.projectId].task;
+            project.getProjectTaskList($scope.projectId);
+            /*project.getProjectTaskList($routeParams.projectId).then(function(results){
                 if(typeof(results.tasks) == 'object'){
                     $scope.tasks = results.tasks;               
                 }                
-            });
+            });*/
         }else{
             $scope.projectList = false;
-            project.getProjectList().then(function(results){
+            $scope.items = project.time;
+            project.getProjectList();
+            /*project.getProjectList().then(function(results){
                 if(typeof(results.response[0].projects) == 'object'){
                     $scope.items = results.response[0].projects;               
                 }
-            });
+            });*/
         }
 
         $scope.open = function (pId,tId){
@@ -477,18 +485,22 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
         if($routeParams.customerId){
             $scope.taskList = false;
             $scope.customerId = $routeParams.customerId;
-            project.getCustomerTaskList($routeParams.customerId).then(function(results){
+            $scope.tasks = project.adhocTask;
+            project.getCustomerTaskList($routeParams.customerId);
+            /*project.getCustomerTaskList($routeParams.customerId).then(function(results){
                 if(typeof(results.tasks) == 'object'){
                     $scope.tasks = results.tasks;               
                 }                
-            });
+            });*/
         }else{
             $scope.projectList = false;
-            project.getCustomerList().then(function(results){
+            $scope.items = project.customers;
+            project.getCustomerList();
+            /*project.getCustomerList().then(function(results){
                 if(typeof(results.response[0].customers) == 'object'){
                     $scope.items = results.response[0].customers;               
                 }
-            });
+            });*/
         }
 
         $scope.open = function (pId,tId){
@@ -506,14 +518,16 @@ ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routePar
     function ($scope, $http, $location, project, $routeParams, $route){
         var prj = $route.current.originalPath.search('_ea') > 0 ? false : true;
         var link = prj ? '/expenses/' : '/expenses_a/' ;
-        $scope.expense = [];
+        $scope.expense = project.expenseList;
         $scope.projectId = $routeParams.projectId;
-        
-        project.getExpensesList().then(function(results){
+        console.log(project.expenseList);
+        project.getExpensesList();
+        /*project.getExpensesList().then(function(results){
             if(typeof(results[0].expense) == 'object'){
                 $scope.expense = results[0].expense;               
             }
-        });
+        });*/
+
         $scope.open = function (pId,tId){
             if(tId){
                 $location.path(link+pId+'/'+tId);
@@ -563,13 +577,13 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                         }
                     }
                 }else{
-                    // $location.path('/timesheet');
+                    $location.path('/timesheet');
                 }
             }else{
                 var p = project.getCustomer($routeParams.item);
                 if(p){
-                    $scope.project = p.name;
-                    $scope.projectId = p.id;
+                    $scope.project = p.customer_name;
+                    $scope.projectId = p.customer_id;
                     if($routeParams.taskId){
                         var t = project.getExpense($routeParams.taskId);
                         if(t){
@@ -579,7 +593,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                         }
                     }
                 }else{
-                    // $location.path('/timesheet');
+                    $location.path('/timesheet');
                 }
             }
         }
@@ -690,8 +704,8 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
         if($routeParams.item){
             var p = project.getCustomer($routeParams.item);
             if(p){
-                $scope.customer = p.name;
-                $scope.customerId = p.id;
+                $scope.customer = p.customer_name;
+                $scope.customerId = p.customer_id;
                 if($routeParams.taskId){
                     var t = project.getAdhocTask($routeParams.taskId);
                     if(t){
@@ -781,16 +795,18 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
         if($routeParams.y && $routeParams.m && $routeParams.d){ 
             var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
         }else{
-            var time='';
+            var d = new Date();
+            var time= d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
         }
         $scope.no_project = false;
-        
-        project.getExpenses(time).then(function(results){
+        $scope.expense = project.expense[time];
+        project.getExpenses(time);
+        /*project.getExpenses(time).then(function(results){
             if(typeof(results.response.expense) == 'object'){
                 $scope.no_project = true;
                 $scope.expense = results.response.expense;                
             }
-        });
+        });*/
 
         $scope.editTask = function(pId, tId, notes, amount, adhoc, cId){
             project.setNote(notes);

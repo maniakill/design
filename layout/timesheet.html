@@ -1,12 +1,12 @@
 <div ng-include="'layout/header.html'" />
 <ul>
-	<li ng-repeat="project in projects" class="projects">
+	<li ng-repeat="project in projects" class="projects" ng-hide="project.date">
 		<p class="projectName">{{project.project_name}}</p>
 		<ul>
-			<li ng-repeat="task in project.task" class="taskDetail" ng-click="editTask(project.project_id, task.task_id, task.notes, project.project_name, project.customer_id)">
+			<li ng-repeat="task in project.task" class="taskDetail" ng-click="editTask(project.project_id, task.task_id, task.notes, project.project_name, project.customer_id)" ng-hide="task.date">
 				<span class="right arrow"></span>
 				<div class="right hourContainer ">
-					<span class="clock left"></span><span class="hours left">{{task.hours}}</span>
+					<span class="clock left"></span><span class="hours left">{{showh(task.hours)}}</span>
 				</div>
 				<span class="taskName">{{task.task_name}}</span>
 			</li>

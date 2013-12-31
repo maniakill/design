@@ -1,8 +1,8 @@
 <div ng-include="'layout/header.html'" />
 
 <ul class="lists" ng-hide="projectList" >
-    <li ng-repeat="item in items" ng-click="open(item.id)" class="tasks_list">
-        <p>{{ item.name }}</p>
+    <li ng-repeat="item in items" ng-click="open(item.customer_id)" class="tasks_list">
+        <p>{{ item.customer_name }}</p>
     </li>
 </ul>
 

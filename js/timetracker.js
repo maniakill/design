@@ -204,53 +204,186 @@ app.config(function ($routeProvider) {
 app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
     function ($http, $templateCache, $location, $rootScope) {
         var project = {},
-            // project.taskTime = {},
             url = 'https://go.salesassist.eu/pim/mobile/',
             key = 'api_key='+localStorage.token+'&username='+localStorage.username,
-            project_list = localStorage.projects ? JSON.parse(localStorage.projects) : [],
-            customers_list = localStorage.customers ? JSON.parse(localStorage.customers) : [],
-            task_list = localStorage.tasks ? JSON.parse(localStorage.tasks) : [],
-            adhoc_task_list = localStorage.adhocTasks ? JSON.parse(localStorage.adhocTasks) : [],
-            expenses_list = localStorage.expenses_list ? JSON.parse(localStorage.expenses_list) : [],
-            obj = {};
+            // adhoc_task_list = localStorage.adhocTasks ? JSON.parse(localStorage.adhocTasks) : [],
+            // expenses_list = localStorage.expenses_list ? JSON.parse(localStorage.expenses_list) : [],
+            obj = {};            
         
+        /* store data */
+        project.time = localStorage.getItem('timesheet') ? JSON.parse(localStorage.getItem('timesheet')) : {};
+        project.customers = localStorage.getItem('customers') ? JSON.parse(localStorage.getItem('customers')) : {};
+        project.adhocTask = localStorage.getItem('adhocTasksList') ? JSON.parse(localStorage.getItem('adhocTasksList')) : {};
+        project.expense = localStorage.getItem('expenses') ? JSON.parse(localStorage.getItem('expenses')) : {};
+        project.expenseList = localStorage.getItem('expensesList') ? JSON.parse(localStorage.getItem('expensesList')) : {};
+        project.taskTimeId = localStorage.getItem('taskTimeId') ? JSON.parse(localStorage.getItem('taskTimeId')) : {};
+
         project.taskTime = {};
 
+        var saveTime = function(type, item){
+            if(!type){
+                type = 'timesheet';
+                item = project.time;
+            }            
+            localStorage.setItem(type, JSON.stringify(item));
+        }
+
+        // localStorage.setItem('timesheet', '');
+        // localStorage.setItem('customers', '');
+        // localStorage.setItem('expenses', '');
+        
+        function Task(item, show, saveT){
+            this.task_name = item.task_name ? item.task_name : item.name;
+            this.task_id = item.task_id ? item.task_id : item.id;
+            this.time_time_id = item.task_time_id;
+            this.notes = item.notes;
+            this.hours = item.hours;
+            this.date = show;
+            if(saveT){
+                // aici trebuie sa salvez timesheet
+                // ma gandesc ca trebuie as fie ceva de genu 
+                // data => task_time_id, task_id, project_id, hours, notes
+            }
+        }
+
+        function Proj(item, show, saveT){
+            this.project_name = item.project_name;
+            this.project_id = item.project_id;
+            this.customer_name = item.customer_name;
+            this.customer_id = item.customer_id;
+            this.date = show;
+            this.task = {};
+            for(x in item.task){
+                var id = item.task[x].task_id;
+                this.task[id] = new Task(item.task[x], show, saveT);
+            }
+        }
+
+        function Cust(item, show){
+            this.customer_name = item.name;
+            this.customer_id = item.id;
+        }
+
+        function AdHoc(item, show){
+            this.name = item.name;
+            this.id = item.id;
+        }
+
+        function Expense(item){
+            this.id = item.id;
+            this.amount = item.amount;
+            this.customer_id = item.customer_id;
+            this.customer_name = item.customer_name;
+            this.expense_id = item.expense_id;
+            this.expense_name = item.expense_name;
+            this.note = item.note;
+            this.project_id = item.project_id;
+            this.project_name = item.project_name;
+            this.unit = item.unit;
+            this.unit_price = item.unit_price;
+        }
+
+        function Expenses(item){
+            this.expense_id = item.expense_id;
+            this.unit = item.unit;
+            this.unit_price = item.unit_price;
+            this.name = item.name;
+        }
+
+        var save = function(item, show, saveT){
+            var id = item.project_id
+            if(!project.time[id]){
+                project.time[id] = new Proj(item, show, saveT);
+                saveTime();
+            }
+        }
+
+        var saveTask = function(pr, item, show){
+            if(project.time[pr]){
+                var id = item.id;
+                if(!project.time[pr].task[id]){
+                    project.time[pr].task[id] = new Task(item,show);
+                    saveTime();
+                }
+            }            
+        }
+
+        var saveCustomer = function(item, show){
+            var id = item.id
+            if(!project.customers[id]){
+                project.customers[id] = new Cust(item, show);
+                saveTime('customers',project.customers);
+            }
+        }
+
+        var saveAdhocTask = function(item, show){
+            var id = item.id;
+            if(!project.adhocTask[id]){
+                project.adhocTask[id] = new AdHoc(item, show);
+                saveTime('adhocTasksList', project.adhocTask);
+            }
+        }
+
+        var saveExpenses = function(item, time){
+            var id = item.id;
+            var t = time;
+            if(!t){
+                var d = new Date();
+                t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+            }
+            if(!project.expense[t]){
+                project.expense[t] = {};
+                project.expense[t][id] = new Expense(item);                
+            }else{
+                // if(!project.expense[t][id]){
+                    project.expense[t][id] = new Expense(item);
+                // }
+            }
+        }
+
+        var saveExpens = function(item){
+            var id = item.expense_id;
+            if(!project.expenseList[id]){
+                project.expenseList[id] = new Expenses(item);
+            }
+        }
+        /* end store data */
+        /* requests */
         project.getTime = function(time) {
             this.data = $http.get(url+'index.php?do=mobile-time&'+key+'&start='+time).then(function(response){
+                console.log(response.data.response.project);
+                if(typeof(response.data.response.project) == 'object' ){
+                    var pr = response.data.response.project;
+                    for(x in pr){
+                        save(pr[x], false, true);
+                    }
+                }
                 return response.data;
-            });
+            });            
             return this.data;
         }
 
         project.getProjectList = function(){
             this.data = $http.get(url+'index.php?do=mobile-project_list&'+key).then(function(response){
                 if(typeof(response.data.response[0].projects) == 'object'){
-                    localStorage.projects = JSON.stringify(response.data.response[0].projects);
-                    project_list = response.data.response[0].projects;               
+                    var pr = response.data.response[0].projects;
+                    for(x in pr){
+                        save(pr[x], true);
+                    }
                 }
-                return response.data;
+                return response.data;                
             });
             return this.data;
         }
 
-        project.getProject = function(id){
-            for (x in project_list) {
-                if (project_list[x].project_id === id) {
-                    return project_list[x];
-                    break;
-                }
-            }
-            return null;
-        }
-
         project.getProjectTaskList = function(item){
-            task_list = [];
             this.data =  $http.get(url+'index.php?do=mobile-task_list&'+key+'&project_id='+item).then(function(response){
                 if(response.data.code == 'ok'){
                     if(typeof(response.data.response.tasks) == 'object'){
-                        localStorage.tasks = JSON.stringify(response.data.response.tasks);
-                        task_list = response.data.response.tasks;
+                        var ta = response.data.response.tasks;
+                        for(x in ta){
+                            saveTask(item,ta[x],true);
+                        }
                     }
                 }
                 return response.data.response;
@@ -258,15 +391,81 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
             return this.data;
         }
 
-        project.getTask = function(id){
-            for (x in task_list) {
-                if (task_list[x].id === id) {
-                    return task_list[x];
-                    break;
+        project.getCustomerList = function(){
+            this.data = $http.get(url+'index.php?do=mobile-customer_list&'+key).then(function(response){
+                if(typeof(response.data.response[0].customers) == 'object'){
+                    var cu = response.data.response[0].customers;
+                    for(x in cu){
+                        saveCustomer(cu[x],true);
+                    }             
                 }
+                return response.data;
+            });
+            return this.data;
+        }
+
+        project.getCustomerTaskList = function(item){
+            this.data =  $http.get(url+'index.php?do=mobile-task_list&'+key+'&customer_id='+item).then(function(response){
+                if(response.data.code == 'ok'){
+                    if(typeof(response.data.response.tasks) == 'object'){
+                        var ad = response.data.response.tasks;
+                        for(x in ad){
+                            saveAdhocTask(ad[x],true);
+                        }
+                    }
+                }
+                return response.data.response;
+            });
+            return this.data;
+        }
+
+        project.getExpensesList = function(item){
+            this.data =  $http.get(url+'index.php?do=mobile-expenses_list&'+key).then(function(response){
+                if(response.data.code == 'ok'){
+                    if(typeof(response.data.response[0].expense) == 'object'){
+                        var ex = response.data.response[0].expense;
+                        for(x in ex){
+                            saveExpens(ex[x]);
+                        }
+                        saveTime('expensesList', project.expenseList);
+                    }
+                }
+                return response.data.response;
+            });
+            return this.data;
+        }
+
+        project.getExpenses = function(time){
+            this.data = $http.get(url+'index.php?do=mobile-expenses&'+key+'&start='+time).then(function(response){
+                if(response.data.code == 'ok'){
+                    if(typeof(response.data.response.expense) == 'object'){
+                        var ex = response.data.response.expense;
+                        for(x in ex){
+                            saveExpenses(ex[x], time);
+                        }
+                        saveTime('expenses', project.expense);
+                    }
+                }
+                return response.data;
+            });
+            return this.data;
+        }
+        /* end requests */
+        /* geters and seters */
+        project.getProject = function(id){
+            if (project.time[id]) {
+                return project.time[id];
             }
             return null;
         }
+
+        project.getTask = function(id, item){
+            if (project.time[id].task[item]) {
+                return project.time[id].task[item];
+            }
+            return null;
+        }
+
         // set the note when adding a timesheet 
         project.setNote = function(note){
             obj.note = note;
@@ -302,75 +501,32 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
             return 0;
         }
 
-        project.getCustomerList = function(){
-            this.data = $http.get(url+'index.php?do=mobile-customer_list&'+key).then(function(response){
-                if(typeof(response.data.response[0].customers) == 'object'){
-                    localStorage.customers = JSON.stringify(response.data.response[0].customers);
-                    customers_list = response.data.response[0].customers;               
-                }
-                return response.data;
-            });
-            return this.data;
-        }
-
         project.getCustomer = function(id){
-            for (x in customers_list) {
-                if (customers_list[x].id === id) {
-                    return customers_list[x];
-                    break;
-                }
+            if (project.customers[id]) {
+                return project.customers[id];
             }
             return null;
-        }
-
-        project.getCustomerTaskList = function(item){
-            adhoc_task_list = [];
-            this.data =  $http.get(url+'index.php?do=mobile-task_list&'+key+'&customer_id='+item).then(function(response){
-                if(response.data.code == 'ok'){
-                    if(typeof(response.data.response.tasks) == 'object'){
-                        localStorage.adhocTasks = JSON.stringify(response.data.response.tasks);
-                        adhoc_task_list = response.data.response.tasks;
-                    }
-                }
-                return response.data.response;
-            });
-            return this.data;
         }
 
         project.getAdhocTask = function(id){
-            for (x in adhoc_task_list) {
-                if (adhoc_task_list[x].id === id) {
-                    return adhoc_task_list[x];
-                    break;
-                }
+            if (project.adhocTask[id]) {
+                return project.adhocTask[id];
             }
             return null;
-        }
-        
-        project.getExpensesList = function(item){
-            expenses_list = [];
-            this.data =  $http.get(url+'index.php?do=mobile-expenses_list&'+key).then(function(response){
-                if(response.data.code == 'ok'){
-                    if(typeof(response.data.response[0].expense) == 'object'){
-                        localStorage.expenses_list = JSON.stringify(response.data.response[0].expense);
-                        expenses_list = response.data.response[0].expense;
-                    }
-                }
-                return response.data.response;
-            });
-            return this.data;
         }
 
         project.getExpense = function(id){
-            for (x in expenses_list) {
-                if (expenses_list[x].expense_id === id) {
-                    return expenses_list[x];
-                    break;
-                }
+            if (project.expenseList[id]) {
+                return project.expenseList[id];
             }
             return null;
         }
 
+        project.setDate = function(time){
+            project.selectedDate = time;
+        }
+        /* end geters and seters */
+        /* send data to server */
         project.save = function(type, pId, tId,notes){
              // this.data =
             var start = '';
@@ -446,6 +602,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
                     break;
             }
         }
+        /* end send data to server */
 
         // var t = window.setInterval( rune, 1000 );
 
@@ -458,17 +615,6 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
 
                 }
             }
-        }
-
-        project.setDate = function(time){
-            project.selectedDate = time;
-        }
-
-        project.getExpenses = function(time){
-            this.data = $http.get(url+'index.php?do=mobile-expenses&'+key+'&start='+time).then(function(response){
-                return response.data;
-            });
-            return this.data;
         }
 
         project.addNewTask = function() {
