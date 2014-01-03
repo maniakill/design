@@ -60,7 +60,8 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         if($routeParams.y && $routeParams.m && $routeParams.d){ 
             var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
         }else{
-            var time='';
+            var d = new Date();
+            var time=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
         }
         $scope.no_project = true;
         
@@ -94,7 +95,10 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             alert('Connection type: ' + states[networkState]);
         }*/
         // console.log(project.time);
-        $scope.projects = project.time;
+        if(!project.taskTimeId[time]){
+            project.taskTimeId[time] = {};
+        }
+        $scope.projects = project.taskTimeId[time];
         project.getTime(time);
         /*project.getTime(time).then(function(results){
             if(typeof(results.response.project) == 'object'){
@@ -108,6 +112,17 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
                 console.log($scope.projects);
             }
         });*/
+        
+        $scope.getP = function(item){
+            var p = project.getProject(item);
+            return p.project_name;
+        }
+
+        $scope.getTaskName = function(pr, item){
+            var t = project.getTask(pr, item);
+            return t.task_name;
+        }
+
         $scope.showh = function(item){
             return number2hour(item);
         }
@@ -162,7 +177,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
 ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project',
     function ($scope, $routeParams, $route, $modal, project){
         var d = new Date();
-        // $scope.timed = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+        
         $scope.timesheet = true;
         $scope.expense = true;
         $scope.account = true;
@@ -187,7 +202,6 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
         switch($route.current.originalPath){
             case "/lists/expense/":
             case "/lists_a/expense/":
-
                 $scope.expense = false;
                 $scope.expenseAct = 'act';
                 $scope.timesheet = true;
@@ -495,7 +509,7 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
         }else{
             $scope.projectList = false;
             $scope.items = project.customers;
-            project.getCustomerList();
+            project.getCustomerList();  
             /*project.getCustomerList().then(function(results){
                 if(typeof(results.response[0].customers) == 'object'){
                     $scope.items = results.response[0].customers;               

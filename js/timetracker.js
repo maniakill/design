@@ -206,8 +206,6 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
         var project = {},
             url = 'https://go.salesassist.eu/pim/mobile/',
             key = 'api_key='+localStorage.token+'&username='+localStorage.username,
-            // adhoc_task_list = localStorage.adhocTasks ? JSON.parse(localStorage.adhocTasks) : [],
-            // expenses_list = localStorage.expenses_list ? JSON.parse(localStorage.expenses_list) : [],
             obj = {};            
         
         /* store data */
@@ -217,7 +215,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
         project.expense = localStorage.getItem('expenses') ? JSON.parse(localStorage.getItem('expenses')) : {};
         project.expenseList = localStorage.getItem('expensesList') ? JSON.parse(localStorage.getItem('expensesList')) : {};
         project.taskTimeId = localStorage.getItem('taskTimeId') ? JSON.parse(localStorage.getItem('taskTimeId')) : {};
-
+        
         project.taskTime = {};
 
         var saveTime = function(type, item){
@@ -229,24 +227,50 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
         }
 
         // localStorage.setItem('timesheet', '');
+        // localStorage.setItem('taskTimeId', '');
         // localStorage.setItem('customers', '');
         // localStorage.setItem('expenses', '');
+
+        function TaskTimeId(item, pr){
+            this.time_time_id = item.task_time_id;
+            this.task_id = item.task_id ? item.task_id : item.id;
+            this.project_id = pr.project_id;
+            this.customer_id = pr.customer_id;
+            this.hours = item.hours;
+            this.notes = item.notes;
+        }
         
-        function Task(item, show, saveT){
+        function Task(item, show, saveT, pr, time){
             this.task_name = item.task_name ? item.task_name : item.name;
             this.task_id = item.task_id ? item.task_id : item.id;
             this.time_time_id = item.task_time_id;
-            this.notes = item.notes;
-            this.hours = item.hours;
-            this.date = show;
+            this.notes = item.notes; // this will be out
+            this.hours = item.hours; // this will be out
+            this.date = show; // this will be irelevant
             if(saveT){
                 // aici trebuie sa salvez timesheet
                 // ma gandesc ca trebuie as fie ceva de genu 
-                // data => task_time_id, task_id, project_id, hours, notes
+                // data => task_time_id, task_id, project_id, customer_id, hours, notes
+                var id = item.task_time_id;
+                var t = time;
+                if(!t){
+                    var d = new Date();
+                    t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+                }
+                if(!project.taskTimeId[t]){
+                    project.taskTimeId[t] = {};
+                }
+                if(!project.taskTimeId[t][pr.project_id]){
+                    project.taskTimeId[t][pr.project_id] = {};
+                    project.taskTimeId[t][pr.project_id].id = pr.project_id;
+                    project.taskTimeId[t][pr.project_id].tasks = {};
+                }
+                project.taskTimeId[t][pr.project_id].tasks[id] = new TaskTimeId(item, pr);
+                saveTime('taskTimeId', project.taskTimeId);
             }
         }
 
-        function Proj(item, show, saveT){
+        function Proj(item, show, saveT, time){
             this.project_name = item.project_name;
             this.project_id = item.project_id;
             this.customer_name = item.customer_name;
@@ -255,7 +279,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
             this.task = {};
             for(x in item.task){
                 var id = item.task[x].task_id;
-                this.task[id] = new Task(item.task[x], show, saveT);
+                this.task[id] = new Task(item.task[x], show, saveT, item, time);
             }
         }
 
@@ -290,12 +314,40 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
             this.name = item.name;
         }
 
-        var save = function(item, show, saveT){
+        var save = function(item, show, saveT, time){
             var id = item.project_id
             if(!project.time[id]){
-                project.time[id] = new Proj(item, show, saveT);
-                saveTime();
+                project.time[id] = new Proj(item, show, saveT, time);                
+            }else{
+                if(!project.time[id].task){
+                    project.time[id].task = {};
+                }
+                for(x in item.task){
+                    var t_id = item.task[x].task_id;
+                    if(!project.time[id].task[t_id]){
+                        project.time[id].task[t_id] = new Task(item.task[x], show, saveT, item, time);
+                    }
+                    if(saveT){
+                        var idt = item.task[x].task_time_id;
+                        var t = time;
+                        if(!t){
+                            var d = new Date();
+                            t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+                        }
+                        if(!project.taskTimeId[t]){
+                            project.taskTimeId[t] = {};
+                        }
+                        if(!project.taskTimeId[t][id]){
+                            project.taskTimeId[t][id] = {};
+                            project.taskTimeId[t][id].id = id;
+                            project.taskTimeId[t][id].tasks = {};
+                        }
+                        project.taskTimeId[t][id].tasks[idt] = new TaskTimeId(item.task[x], item);
+                        saveTime('taskTimeId', project.taskTimeId);
+                    }
+                }
             }
+            saveTime();
         }
 
         var saveTask = function(pr, item, show){
@@ -351,12 +403,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
         /* requests */
         project.getTime = function(time) {
             this.data = $http.get(url+'index.php?do=mobile-time&'+key+'&start='+time).then(function(response){
-                console.log(response.data.response.project);
                 if(typeof(response.data.response.project) == 'object' ){
                     var pr = response.data.response.project;
                     for(x in pr){
-                        save(pr[x], false, true);
+                        save(pr[x], false, true, time);
                     }
+                    console.log(project.taskTimeId);
                 }
                 return response.data;
             });            
@@ -397,7 +449,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
                     var cu = response.data.response[0].customers;
                     for(x in cu){
                         saveCustomer(cu[x],true);
-                    }             
+                    }
                 }
                 return response.data;
             });
