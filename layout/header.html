@@ -4,7 +4,8 @@
 	<!-- <button ng-hide="timesheet" class="right headerB">Save</button> -->
 	<button ng-hide="timesheet" class="right add headerB" ng-click="add()"><img src="images/add.png"></button>
 	<button ng-hide="add_page" class="headerB" ng-click="times()">Back</button>
-	<button ng-hide="add_page" class="right headerB" ng-click="save()" >Start</button>
+	<button ng-hide="add_page2" class="right headerB" ng-click="save()" >Start</button>
+	<button ng-show="stope" class="right headerB" ng-click="stop()" >Stop</button>
 	<!-- add note page -->
 	<button ng-hide="add_note" class="headerB" ng-click="addpage()">Back</button>
 	<button ng-hide="add_note" class="right headerB" ng-click="addpage(true)">Save</button>

@@ -99,6 +99,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             project.taskTimeId[time] = {};
         }
         $scope.projects = project.taskTimeId[time];
+        console.log(project.taskTimeId[time]);
         project.getTime(time);
         /*project.getTime(time).then(function(results){
             if(typeof(results.response.project) == 'object'){
@@ -159,12 +160,12 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             return value;
         }
 
-        $scope.editTask = function(pId, tId, notes, adhoc, cId){
+        $scope.editTask = function(pId, tId, notes, adhoc, cId, taskTimeId){
             project.setNote(notes);
             if(adhoc == 'ad hoc'){
                 $location.path('/add_a/'+cId+'/'+tId);
             }else{
-                $location.path('/add/'+pId+'/'+tId);                
+                $location.path('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time);                
             }
         }
 
@@ -219,7 +220,9 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             alertText = ['project','task'];
         $scope.timesheet = true;
         $scope.add_page = true;
+        $scope.add_page2 = true;
         $scope.add_note = true;
+        $scope.stope = false;
             
         switch($route.current.controller){
             case 'timesheet':
@@ -232,8 +235,22 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                 $scope.task_type = [ { title: 'Add Expense for Project', url: '/lists/expense' }, {title: 'Add Ad Hoc Expense', url: '/lists_a/expense'} ];
                 $scope.types = 'Expense';                
                 break;
-            case 'add':
+            case 'add':                
             case 'add_a':
+                if($routeParams.taskTimeId){
+                    var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
+                    $scope.time2 = time;
+                    $scope.taskTimeItem = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId];
+                    if($scope.taskTimeItem.active){
+                        $scope.stope = true;
+                    }else{
+                        $scope.add_page2 = false;
+                    }
+                }else{
+                    $scope.add_page2 = false;
+                }
+                $scope.add_page = false;
+                break;
             case 'lists':
             case 'lists_a':
             case 'lists_e':
@@ -319,8 +336,15 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                 return false;
             }
             var notes = project.getNote();
+            if($routeParams.taskTimeId){
+                project.start($scope.taskTimeItem,$scope.time2);
+            }else{
+                project.save(type,$routeParams.item,$routeParams.taskId,notes);
+            }
+        }
 
-            project.save(type,$routeParams.item,$routeParams.taskId,notes);
+        $scope.stop = function(){
+            project.stop($scope.taskTimeItem,$scope.time2);
         }
 
         $scope.$on('clickAdd', function() {
@@ -351,29 +375,48 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
                         $scope.task = t.task_name;
                         $scope.taskId = t.task_id;
                     }
+                    if($routeParams.taskTimeId){
+                        var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
+                        var h = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId].hours;
+                        var d = new Date();
+                        d.setHours( Math.floor(h) );                        
+                        //  calculating the minutes
+                        var minutes = h;
+                        if(isNaN(minutes)){
+                            minutes = 0;
+                        }
+                        minutes = Math.round(minutes * 60);
+                        if(minutes >= 60){
+                            var n = Math.floor(minutes/60);
+                            minutes = minutes - (60*n);                            
+                        }
+                        d.setMinutes( minutes );
+                        //  calculating the minutes
+                        $scope.mytime = d;
+                    }
                 }
             }else{
                 $location.path('/timesheet');
             }
         }
-
+        
         $scope.today = function() {
-            if($routeParams.y && $routeParams.m && $routeParams.d){ 
-                $scope.dta = new Date($routeParams.y, $routeParams.m-1, $routeParams.d);
-            }else{
-                $scope.dta = new Date();
-            }
+            $scope.dta = new Date();            
         };
         $scope.today();
 
         $scope.open = function() {
-            $timeout(function() {
-                $scope.opened = true;
-            });
+            if(!$routeParams.taskTimeId){
+                $timeout(function() {
+                    $scope.opened = true;
+                });    
+            }            
         };
         
         $scope.selectTask = function(id){
-            $location.path('/lists/'+id);
+            if(!$routeParams.taskTimeId){
+                $location.path('/lists/'+id);                
+            }
         }
 
         $scope.dateOptions = {
@@ -382,8 +425,6 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
         };
 
         /*timepicker*/
-        $scope.mytime = new Date();
-
         $scope.hstep = 1;
         $scope.mstep = 1;
 
@@ -395,13 +436,17 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
             d.setMinutes( 0 );
             $scope.mytime = d;
         };
-        $scope.update();
+        if(!$routeParams.taskTimeId){
+            $scope.update();           
+        }
 
         $scope.changed = function () {
-            var hours = $scope.mytime.getHours(),
+            if(!$routeParams.taskTimeId){
+                var hours = $scope.mytime.getHours(),
                 minutes = $scope.mytime.getMinutes();
                 t = hours + minutes/60;
-            project.setHours(t);
+                project.setHours(t);    
+            }            
         };
 
         /*timepicker end*/

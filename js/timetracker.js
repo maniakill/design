@@ -73,17 +73,17 @@ app.config(function ($routeProvider) {
                 controller: 'lists_e',
                 templateUrl: 'layout/lists_e.html'
             })
-        // .when('/add',
-        //     {
-        //         controller: 'add',
-        //         templateUrl: 'layout/add.html'
-        //     })
         .when('/add/:item',
             {
                 controller: 'add',
                 templateUrl: 'layout/add.html'
             })
         .when('/add/:item/:taskId',
+            {
+                controller: 'add',
+                templateUrl: 'layout/add.html'
+            })
+        .when('/add/:item/:taskId/:taskTimeId/:d/:m/:y',
             {
                 controller: 'add',
                 templateUrl: 'layout/add.html'
@@ -201,8 +201,8 @@ app.config(function ($routeProvider) {
         .otherwise({ redirectTo: '/' });
 });
 
-app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
-    function ($http, $templateCache, $location, $rootScope) {
+app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$interval',
+    function ($http, $templateCache, $location, $rootScope, $interval) {
         var project = {},
             url = 'https://go.salesassist.eu/pim/mobile/',
             key = 'api_key='+localStorage.token+'&username='+localStorage.username,
@@ -215,8 +215,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
         project.expense = localStorage.getItem('expenses') ? JSON.parse(localStorage.getItem('expenses')) : {};
         project.expenseList = localStorage.getItem('expensesList') ? JSON.parse(localStorage.getItem('expensesList')) : {};
         project.taskTimeId = localStorage.getItem('taskTimeId') ? JSON.parse(localStorage.getItem('taskTimeId')) : {};
-        
-        project.taskTime = {};
+        project.taskTime = localStorage.getItem('taskTime') ? JSON.parse(localStorage.getItem('taskTime')) : {};
 
         var saveTime = function(type, item){
             if(!type){
@@ -227,30 +226,29 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
         }
 
         // localStorage.setItem('timesheet', '');
+        // localStorage.setItem('taskTime', '');
         // localStorage.setItem('taskTimeId', '');
         // localStorage.setItem('customers', '');
         // localStorage.setItem('expenses', '');
 
-        function TaskTimeId(item, pr){
-            this.time_time_id = item.task_time_id;
+        function TaskTimeId(item, pr, h, notes, id){
+            this.task_time_id = id;
             this.task_id = item.task_id ? item.task_id : item.id;
             this.project_id = pr.project_id;
             this.customer_id = pr.customer_id;
-            this.hours = item.hours;
-            this.notes = item.notes;
+            this.hours = h;
+            this.notes = notes;
+            this.active = '';
         }
         
         function Task(item, show, saveT, pr, time){
             this.task_name = item.task_name ? item.task_name : item.name;
             this.task_id = item.task_id ? item.task_id : item.id;
-            this.time_time_id = item.task_time_id;
-            this.notes = item.notes; // this will be out
-            this.hours = item.hours; // this will be out
-            this.date = show; // this will be irelevant
+            // this.task_time_id = item.task_time_id;
+            // this.notes = item.notes; // this will be out
+            // this.hours = item.hours; // this will be out
+            // this.date = show; // this will be irelevant
             if(saveT){
-                // aici trebuie sa salvez timesheet
-                // ma gandesc ca trebuie as fie ceva de genu 
-                // data => task_time_id, task_id, project_id, customer_id, hours, notes
                 var id = item.task_time_id;
                 var t = time;
                 if(!t){
@@ -265,7 +263,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
                     project.taskTimeId[t][pr.project_id].id = pr.project_id;
                     project.taskTimeId[t][pr.project_id].tasks = {};
                 }
-                project.taskTimeId[t][pr.project_id].tasks[id] = new TaskTimeId(item, pr);
+                project.taskTimeId[t][pr.project_id].tasks[id] = new TaskTimeId(item, pr, item.hours, item.notes, item.task_time_id);
                 saveTime('taskTimeId', project.taskTimeId);
             }
         }
@@ -342,7 +340,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
                             project.taskTimeId[t][id].id = id;
                             project.taskTimeId[t][id].tasks = {};
                         }
-                        project.taskTimeId[t][id].tasks[idt] = new TaskTimeId(item.task[x], item);
+                        project.taskTimeId[t][id].tasks[idt] = new TaskTimeId(item.task[x], item, item.task[x].hours, item.task[x].notes, item.task[x].task_time_id);
                         saveTime('taskTimeId', project.taskTimeId);
                     }
                 }
@@ -407,8 +405,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
                     var pr = response.data.response.project;
                     for(x in pr){
                         save(pr[x], false, true, time);
-                    }
-                    console.log(project.taskTimeId);
+                    }                    
                 }
                 return response.data;
             });            
@@ -637,14 +634,25 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
                     var h = project.getHours();
                     $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
                         if(response.data.code == 'ok'){
-                            project.taskTime[response.data.response.id] = {};
-                            project.taskTime[response.data.response.id].started = true;
-                            project.taskTime[response.data.response.id].hours = h;
-                            project.taskTime[response.data.response.id].start = Date.now();
+                            var id = response.data.response.id;
+                            var p = project.getProject(pId);
+                            var ta = project.getTask(pId,tId);
+                            var t = start;
+                            if(!t){
+                                var d = new Date();
+                                t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+                            }
+                            project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
+                            saveTime('taskTimeId', project.taskTimeId);
+                            project.taskTime[id] = {};                                
+                            project.taskTime[id].start = Date.now();
+                            project.taskTime[id].pId = pId;
+                            project.taskTime[id].time = t;
+                            saveTime('taskTime', project.taskTime);
                             if(project.selectedDate){
                                 $location.path('/timesheet/'+project.selectedDate);
                             }else{
-                                $location.path('/timesheet');                    
+                                $location.path('/timesheet');
                             }
                         }else{
                             $rootScope.$broadcast('addError',response.data.error_code);
@@ -656,18 +664,46 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope',
         }
         /* end send data to server */
 
-        // var t = window.setInterval( rune, 1000 );
+        project.stop = function(item, time){
+            item.active = '';
+            saveTime('taskTimeId', project.taskTimeId);
+            project.taskTime[item.task_time_id] = {};
+            saveTime('taskTime', project.taskTime);
+            $location.path('/timesheet/'+time);
+        }
+
+        project.start = function(item, time){
+            item.active = 'active';
+            saveTime('taskTimeId', project.taskTimeId);
+            var d = Date.now();
+            var newd = d-item.hours*3600*1000;
+            project.taskTime[item.task_time_id] = {};
+            project.taskTime[item.task_time_id].start = newd;
+            project.taskTime[item.task_time_id].pId = item.project_id;
+            project.taskTime[item.task_time_id].time = time;            
+            saveTime('taskTime', project.taskTime);
+            $location.path('/timesheet/'+time);   
+        }
+
+        // var t = window.setInterval( rune, 1000 ); I don't know why this doesn't work and the line below works
+        $interval(rune,1000);
 
         function rune(){
-            console.log($rootScope);
-            var d = Date.now()
+            var d = Date.now();
             for( x in project.taskTime ){
-                if(project.taskTime[x].started === true){
-                    var newTime = Math.floor(d-project.taskTime[x].start);
-
+                if(JSON.stringify(project.taskTime[x]) != '{}' ){
+                    var newTime = Math.floor((d-project.taskTime[x].start)/1000);
+                        newTime = newTime/3600;
+                    if(project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x]){
+                        project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].hours = newTime;
+                        project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].active = 'active';
+                    }
                 }
             }
+            saveTime('taskTime', project.taskTime);
+            saveTime('taskTimeId', project.taskTimeId);
         }
+        // rune();
 
         project.addNewTask = function() {
             $rootScope.$broadcast('clickAdd');
