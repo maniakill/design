@@ -5,7 +5,7 @@
 		<timepicker hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
 	</div>
 	<ul class="add_ul">
-		<li><a herf="#" ng-click="open()" id="add_calendar" class="left"></a>
+		<li class="datePicker"><a herf="#" ng-click="open()" id="add_calendar" class="left"></a>
 		<input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/></li>
 		<li>{{customer}}</li>
 		<li class="last_li" ng-click="selectTask(customerId)">{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>

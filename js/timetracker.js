@@ -206,8 +206,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         var project = {},
             url = 'https://go.salesassist.eu/pim/mobile/',
             key = 'api_key='+localStorage.token+'&username='+localStorage.username,
-            obj = {};            
-        
+            obj = {};
+
         /* store data */
         project.time = localStorage.getItem('timesheet') ? JSON.parse(localStorage.getItem('timesheet')) : {};
         project.customers = localStorage.getItem('customers') ? JSON.parse(localStorage.getItem('customers')) : {};
@@ -221,7 +221,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             if(!type){
                 type = 'timesheet';
                 item = project.time;
-            }            
+            }
             localStorage.setItem(type, JSON.stringify(item));
         }
 
@@ -240,7 +240,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             this.notes = notes;
             this.active = '';
         }
-        
+
         function Task(item, show, saveT, pr, time){
             this.task_name = item.task_name ? item.task_name : item.name;
             this.task_id = item.task_id ? item.task_id : item.id;
@@ -315,7 +315,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         var save = function(item, show, saveT, time){
             var id = item.project_id
             if(!project.time[id]){
-                project.time[id] = new Proj(item, show, saveT, time);                
+                project.time[id] = new Proj(item, show, saveT, time);
             }else{
                 if(!project.time[id].task){
                     project.time[id].task = {};
@@ -355,7 +355,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     project.time[pr].task[id] = new Task(item,show);
                     saveTime();
                 }
-            }            
+            }
         }
 
         var saveCustomer = function(item, show){
@@ -383,7 +383,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             }
             if(!project.expense[t]){
                 project.expense[t] = {};
-                project.expense[t][id] = new Expense(item);                
+                project.expense[t][id] = new Expense(item);
             }else{
                 // if(!project.expense[t][id]){
                     project.expense[t][id] = new Expense(item);
@@ -405,10 +405,10 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     var pr = response.data.response.project;
                     for(x in pr){
                         save(pr[x], false, true, time);
-                    }                    
+                    }
                 }
                 return response.data;
-            });            
+            });
             return this.data;
         }
 
@@ -420,7 +420,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         save(pr[x], true);
                     }
                 }
-                return response.data;                
+                return response.data;
             });
             return this.data;
         }
@@ -502,32 +502,36 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         /* end requests */
         /* geters and seters */
         project.getProject = function(id){
-            if (project.time[id]) {
+            if (project.time[id] && id) {
                 return project.time[id];
             }
-            return null;
+            return '';
         }
 
         project.getTask = function(id, item){
-            if (project.time[id].task[item]) {
-                return project.time[id].task[item];
+            if (id && item) {
+                if(project.time[id]){
+                    if(project.time[id].task[item]){
+                        return project.time[id].task[item];
+                    }
+                }
             }
-            return null;
+            return '';
         }
 
-        // set the note when adding a timesheet 
+        // set the note when adding a timesheet
         project.setNote = function(note){
             obj.note = note;
         }
         // get the note when adding a timesheet
         project.getNote = function(){
             if(obj.note){
-                return obj.note;                
+                return obj.note;
             }
             return '';
         }
 
-        // set the note when adding a timesheet 
+        // set the note when adding a timesheet
         project.setAmount = function(amount){
             obj.amount = amount;
         }
@@ -551,24 +555,24 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         }
 
         project.getCustomer = function(id){
-            if (project.customers[id]) {
+            if (project.customers[id] && id) {
                 return project.customers[id];
             }
-            return null;
+            return '';
         }
 
         project.getAdhocTask = function(id){
-            if (project.adhocTask[id]) {
+            if (project.adhocTask[id] && id) {
                 return project.adhocTask[id];
             }
-            return null;
+            return '';
         }
 
         project.getExpense = function(id){
-            if (project.expenseList[id]) {
+            if (project.expenseList[id] && id) {
                 return project.expenseList[id];
             }
-            return null;
+            return '';
         }
 
         project.setDate = function(time){
@@ -582,7 +586,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             if(project.selectedDate){
                 start = '&start='+project.selectedDate;
             }
-            
+
             switch (type){
                 case "add_a":
                     var h = project.getHours();
@@ -592,11 +596,11 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             if(project.selectedDate){
                                 $location.path('/timesheet/'+project.selectedDate);
                             }else{
-                                $location.path('/timesheet');                    
+                                $location.path('/timesheet');
                             }
                         }else{
                             $rootScope.$broadcast('addError',response.data.error_code);
-                            
+
                         }
                     });
                     break;
@@ -607,11 +611,11 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             if(project.selectedDate){
                                 $location.path('/expenses_list/'+project.selectedDate);
                             }else{
-                                $location.path('/expenses_list');                    
+                                $location.path('/expenses_list');
                             }
                         }else{
                             $rootScope.$broadcast('addError',response.data.error_code);
-                            
+
                         }
                     });
                     break;
@@ -622,11 +626,11 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             if(project.selectedDate){
                                 $location.path('/expenses_list/'+project.selectedDate);
                             }else{
-                                $location.path('/expenses_list');                    
+                                $location.path('/expenses_list');
                             }
                         }else{
                             $rootScope.$broadcast('addError',response.data.error_code);
-                            
+
                         }
                     });
                     break;
@@ -644,7 +648,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             }
                             project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
                             saveTime('taskTimeId', project.taskTimeId);
-                            project.taskTime[id] = {};                                
+                            project.taskTime[id] = {};
                             project.taskTime[id].start = Date.now();
                             project.taskTime[id].pId = pId;
                             project.taskTime[id].time = t;
@@ -656,7 +660,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             }
                         }else{
                             $rootScope.$broadcast('addError',response.data.error_code);
-                            
+
                         }
                     });
                     break;
@@ -680,9 +684,9 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             project.taskTime[item.task_time_id] = {};
             project.taskTime[item.task_time_id].start = newd;
             project.taskTime[item.task_time_id].pId = item.project_id;
-            project.taskTime[item.task_time_id].time = time;            
+            project.taskTime[item.task_time_id].time = time;
             saveTime('taskTime', project.taskTime);
-            $location.path('/timesheet/'+time);   
+            $location.path('/timesheet/'+time);
         }
 
         // var t = window.setInterval( rune, 1000 ); I don't know why this doesn't work and the line below works
@@ -715,9 +719,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             }
             return true;
         }
-       
+
         return project;
     }
 ]);
-
-
