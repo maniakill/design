@@ -102,8 +102,17 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             project.taskTimeId[time] = {};
         }
         $scope.projects = project.taskTimeId[time];
-        // console.log(project.taskTimeId[time]);
-        project.getTime(time);
+        if(JSON.stringify(project.taskTimeId[time]) == '{}'){
+            $scope.no_project = false;
+        }
+        
+        project.getTime(time).then(function(){
+            $scope.no_project = true;
+            if(JSON.stringify(project.taskTimeId[time]) == '{}'){
+                $scope.no_project = false;
+            }
+        });
+                        
         /*project.getTime(time).then(function(results){
             if(typeof(results.response.project) == 'object'){
                 $scope.no_project = true;
@@ -166,7 +175,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         $scope.editTask = function(pId, tId, notes, adhoc, cId, taskTimeId){
             project.setNote(notes);
             if(adhoc == 'ad hoc'){
-                $location.path('/add_a/'+cId+'/'+tId);
+                $location.path('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time);
             }else{
                 $location.path('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time);
             }
@@ -223,9 +232,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             alertText = ['project','task'];
         $scope.timesheet = true;
         $scope.add_page = true;
-        $scope.add_page2 = true;
         $scope.add_note = true;
-        $scope.stope = false;
 
         switch($route.current.controller){
             case 'timesheet':
@@ -240,18 +247,6 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                 break;
             case 'add':
             case 'add_a':
-                if($routeParams.taskTimeId){
-                    var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
-                    $scope.time2 = time;
-                    $scope.taskTimeItem = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId];
-                    if($scope.taskTimeItem.active){
-                        $scope.stope = true;
-                    }else{
-                        $scope.add_page2 = false;
-                    }
-                }else{
-                    $scope.add_page2 = false;
-                }
                 $scope.add_page = false;
                 break;
             case 'lists':
@@ -329,27 +324,6 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
         };
         /*modalend*/
 
-        $scope.save = function(){
-            if(!$routeParams.item){
-                alert("Please select a "+alertText[0]);
-                return false;
-            }
-            if(!$routeParams.taskId){
-                alert("Please select a "+alertText[1]);
-                return false;
-            }
-            var notes = project.getNote();
-            if($routeParams.taskTimeId){
-                project.start($scope.taskTimeItem,$scope.time2);
-            }else{
-                project.save(type,$routeParams.item,$routeParams.taskId,notes);
-            }
-        }
-
-        $scope.stop = function(){
-            project.stop($scope.taskTimeItem,$scope.time2);
-        }
-
         $scope.$on('clickAdd', function() {
             $scope.add();
         });
@@ -358,6 +332,8 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
 // add
 ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeout',
     function ($scope, $routeParams, project, $location, $timeout){
+        var alertText = ['project','task'],
+            time = '';
         $scope.date = 'today';
         $scope.customer = 'Customer Name';
         $scope.project = 'Project Name';
@@ -379,7 +355,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
                         $scope.taskId = t.task_id;
                     }
                     if($routeParams.taskTimeId){
-                        var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
+                        time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
                         var h = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId].hours;
                         var d = new Date();
                         d.setHours( Math.floor(h) );
@@ -439,8 +415,47 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
             d.setMinutes( 0 );
             $scope.mytime = d;
         };
+
         if(!$routeParams.taskTimeId){
             $scope.update();
+            $scope.mode = false;
+        }else{
+            $scope.time2 = time;
+            var item  = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId];
+            if(item.active){
+                $scope.mode = true;
+            }else{
+                $scope.mode = false;
+            }
+        }
+
+        $scope.save = function(){
+            if(!$routeParams.item){
+                // alert("Please select a "+alertText[0]);
+                $scope.alerts = [{ type: 'error', msg: "Please select a "+alertText[0] }];
+                $timeout(function(){
+                    $scope.closeAlert(0);
+                },3000);
+                return false;
+            }
+            if(!$routeParams.taskId){
+                // alert("Please select a "+alertText[1]);
+                $scope.alerts = [{ type: 'error', msg: "Please select a "+alertText[1] }];
+                $timeout(function(){
+                    $scope.closeAlert(0);
+                },3000);
+                return false;
+            }
+            var notes = project.getNote();
+            if($routeParams.taskTimeId){
+                project.start(item,$scope.time2);
+            }else{
+                project.save('',$routeParams.item,$routeParams.taskId,notes);
+            }
+        }
+
+        $scope.stop = function(){
+            project.stop(item,$scope.time2);
         }
 
         $scope.changed = function () {
@@ -472,7 +487,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
             ];
             $timeout(function(){
                 $scope.closeAlert(0);
-            },3000)
+            },3000);
         });
 
 
@@ -499,6 +514,7 @@ ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'ty
 ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
     function ($scope, $http, $location, project, $routeParams, $route){
         var link = $route.current.originalPath == '/lists/expense/' ? '/expenses/' : '/add/';
+        $scope.projs = project.time;
         $scope.items = [];
         $scope.tasks = [];
         $scope.projectList = true;
@@ -516,13 +532,14 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
             });*/
         }else{
             $scope.projectList = false;
-            $scope.items = project.time;
-            project.getProjectList();
-            /*project.getProjectList().then(function(results){
+            // $scope.items = project.time;
+            $scope.items = noAdHocP($scope.projs);
+            // project.getProjectList();
+            project.getProjectList().then(function(results){
                 if(typeof(results.response[0].projects) == 'object'){
-                    $scope.items = results.response[0].projects;
+                    $scope.items = noAdHocP($scope.projs);
                 }
-            });*/
+            });
         }
 
         $scope.open = function (pId,tId){
@@ -533,6 +550,17 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
             }
         }
 
+        function noAdHocP(p){
+            var ps = {};
+            if(p){
+                for(x in p){
+                    if(p[x].project_name != 'ad hoc'){
+                        ps[x] = p[x];
+                    }
+                }
+            }
+            return ps;
+        }
     }
 ]);
 // lists_a
@@ -744,15 +772,7 @@ ctrl.controller('account',['$scope', '$location', 'project',
             localStorage.setItem('timesheet', '');
             localStorage.setItem('taskTime', '');
             localStorage.setItem('taskTimeId', '');
-            localStorage.setItem('customers', '');
-            localStorage.setItem('expenses', '');
-            localStorage.setItem('adhocTasksList', '');
-            localStorage.setItem('expensesList', '');
             project.time = {};
-            project.customers = {};
-            project.adhocTask = {};
-            project.expense = {};
-            project.expenseList = {};
             project.taskTimeId = {};
             project.taskTime = {};
         }
@@ -777,6 +797,8 @@ ctrl.controller('pending',['$scope', '$location',
 // add adhoc
 ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$timeout',
     function ($scope, $routeParams, project, $location, $timeout){
+        var time = '',
+            alertText = ['project','task'];
         $scope.date = 'today';
         $scope.customer = 'Customer Name';
         $scope.task = 'Select Task';
@@ -796,8 +818,34 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
                         $scope.task = t.name;
                         $scope.taskId = t.id;
                     }
+                    if($routeParams.taskTimeId){
+                        $scope.projectId = $routeParams.projectId;
+                        t = project.getTask($scope.projectId,$routeParams.taskId);
+                        if(t){
+                            $scope.no_task = true;
+                            $scope.task = t.task_name;
+                            $scope.taskId = t.task_id;
+                        }
+                        time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
+                        var h = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId].hours;
+                        var d = new Date();
+                        d.setHours( Math.floor(h) );
+                        //  calculating the minutes
+                        var minutes = h;
+                        if(isNaN(minutes)){
+                            minutes = 0;
+                        }
+                        minutes = Math.round(minutes * 60);
+                        if(minutes >= 60){
+                            var n = Math.floor(minutes/60);
+                            minutes = minutes - (60*n);
+                        }
+                        d.setMinutes( minutes );
+                        //  calculating the minutes
+                        $scope.mytime = d;
+                    }
                 }
-            }else{
+            }else{                
                 $location.path('/timesheet');
             }
         }
@@ -827,7 +875,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
         };
 
         /*timepicker*/
-        $scope.mytime = new Date();
+        // $scope.mytime = new Date();
 
         $scope.hstep = 1;
         $scope.mstep = 1;
@@ -840,7 +888,42 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
             d.setMinutes( 0 );
             $scope.mytime = d;
         };
-        $scope.update();
+        // $scope.update();
+        if(!$routeParams.taskTimeId){
+            $scope.update();
+            $scope.mode = false;
+        }else{
+            $scope.projectId = $routeParams.projectId;                        
+            time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
+            $scope.time2 = time;
+            var item  = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId];
+            if(item.active){
+                $scope.mode = true;
+            }else{
+                $scope.mode = false;
+            }
+        }
+
+        $scope.save = function(){
+            if(!$routeParams.item){
+                alert("Please select a "+alertText[0]);
+                return false;
+            }
+            if(!$routeParams.taskId){
+                alert("Please select a "+alertText[1]);
+                return false;
+            }
+            var notes = project.getNote();
+            if($routeParams.taskTimeId){
+                project.start(item,$scope.time2);
+            }else{
+                project.save('add_a',$routeParams.item,$routeParams.taskId,notes);
+            }
+        }
+
+        $scope.stop = function(){
+            project.stop(item,$scope.time2);
+        }
 
         $scope.changed = function () {
             console.log('Time changed to: ' + $scope.mytime);
@@ -874,16 +957,28 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 // timesheet
 ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams', '$location',
     function ($scope, $timeout ,project, $routeParams, $location){
-        $scope.projects = [];
+        $scope.expense = [];
         if($routeParams.y && $routeParams.m && $routeParams.d){
             var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
         }else{
             var d = new Date();
             var time= d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
         }
-        $scope.no_project = false;
+
+        if(!project.expense[time]){
+            project.expense[time] = {};
+        }
+        $scope.no_project = true;
         $scope.expense = project.expense[time];
-        project.getExpenses(time);
+        if(JSON.stringify(project.expense[time]) == '{}'){
+            $scope.no_project = false;
+        }
+        project.getExpenses(time).then(function(){
+            $scope.no_project = true;
+            if(JSON.stringify(project.expense[time]) == '{}'){
+                $scope.no_project = false;
+            }
+        });
         /*project.getExpenses(time).then(function(results){
             if(typeof(results.response.expense) == 'object'){
                 $scope.no_project = true;

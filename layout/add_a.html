@@ -1,8 +1,14 @@
 <div ng-include="'layout/header.html'" />
 <div class="add_wrap">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-	<div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:334px">
+	<div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:300px">
 		<timepicker hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+	</div>
+	<div class="loginForm">
+		<form>
+			<input ng-hide="mode" type="submit" class="submit" value="Start" ng-click="save()">
+			<input ng-show="mode" type="submit" class="submit" value="Stop" ng-click="stop()">
+		</form>	
 	</div>
 	<ul class="add_ul">
 		<li class="datePicker"><a herf="#" ng-click="open()" id="add_calendar" class="left"></a>
