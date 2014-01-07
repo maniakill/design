@@ -108,7 +108,17 @@ app.config(function ($routeProvider) {
                 controller: 'addNote',
                 templateUrl: 'layout/addNote.html'
             })
+        .when('/addNote/:pId/:tId/:taskTimeId/:d/:m/:y',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
         .when('/addNote/:pId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
+        .when('/addNotea/:pId/:tId/:projectId/:taskTimeId/:d/:m/:y',
             {
                 controller: 'addNote',
                 templateUrl: 'layout/addNote.html'
@@ -123,12 +133,22 @@ app.config(function ($routeProvider) {
                 controller: 'addNote',
                 templateUrl: 'layout/addNote.html'
             })
+        .when('/addAmount_expense/:pId/:tId/:expId',
+            {
+                controller: 'addAmount',
+                templateUrl: 'layout/addAmount.html'
+            })
         .when('/addAmount_expense/:pId/:tId',
             {
                 controller: 'addAmount',
                 templateUrl: 'layout/addAmount.html'
             })
         .when('/addAmount_expense/:pId',
+            {
+                controller: 'addAmount',
+                templateUrl: 'layout/addAmount.html'
+            })
+        .when('/addAmount_expensea/:pId/:tId/:expId',
             {
                 controller: 'addAmount',
                 templateUrl: 'layout/addAmount.html'
@@ -143,12 +163,22 @@ app.config(function ($routeProvider) {
                 controller: 'addAmount',
                 templateUrl: 'layout/addAmount.html'
             })
+        .when('/addNote_expense/:pId/:tId/:expId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
         .when('/addNote_expense/:pId/:tId',
             {
                 controller: 'addNote',
                 templateUrl: 'layout/addNote.html'
             })
         .when('/addNote_expense/:pId',
+            {
+                controller: 'addNote',
+                templateUrl: 'layout/addNote.html'
+            })
+        .when('/addNote_expensea/:pId/:tId/:expId',
             {
                 controller: 'addNote',
                 templateUrl: 'layout/addNote.html'
@@ -173,12 +203,22 @@ app.config(function ($routeProvider) {
                 controller: 'expenses',
                 templateUrl: 'layout/expenses.html'
             })
+        .when('/expenses/:item/:taskId/:expId',
+            {
+                controller: 'expenses',
+                templateUrl: 'layout/expenses.html'
+            })
         .when('/expenses_a/:item',
             {
                 controller: 'expenses',
                 templateUrl: 'layout/expenses.html'
             })
         .when('/expenses_a/:item/:taskId',
+            {
+                controller: 'expenses',
+                templateUrl: 'layout/expenses.html'
+            })
+        .when('/expenses_a/:item/:taskId/:expId',
             {
                 controller: 'expenses',
                 templateUrl: 'layout/expenses.html'

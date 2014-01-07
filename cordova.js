@@ -4184,10 +4184,10 @@ module.exports = {
         // return prompt(argsJson, 'gap:'+JSON.stringify([service, action, callbackId]));      //AICI
     },
     setNativeToJsBridgeMode: function(value) {
-        prompt(value, 'gap_bridge_mode:');
+        // prompt(value, 'gap_bridge_mode:');
     },
     retrieveJsMessages: function() {
-        return prompt('', 'gap_poll:');
+        // return prompt('', 'gap_poll:');
     }
 };
 

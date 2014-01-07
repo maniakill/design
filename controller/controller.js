@@ -291,6 +291,15 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             if($routeParams.tId){
                 url += '/'+$routeParams.tId;
             }
+            if($routeParams.taskTimeId){
+                if($routeParams.projectId){
+                    url += '/'+$routeParams.projectId;
+                }
+                url += '/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
+            }
+            if($routeParams.expId){
+                url += '/'+$routeParams.expId;
+            }          
             $location.path(url);
         }
 
@@ -465,6 +474,9 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
             var url = '/addNote/'+pId;
             if(tId){
                 url += '/'+tId;
+            }
+            if($routeParams.taskTimeId){
+                url += '/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
             }
             $location.path(url);
         }
@@ -660,7 +672,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                         }
                     }
                 }else{
-                    $location.path('/timesheet');
+                    $location.path('/expenses_list');
                 }
             }else{
                 var p = project.getCustomer($routeParams.item);
@@ -676,7 +688,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                         }
                     }
                 }else{
-                    $location.path('/timesheet');
+                    $location.path('/expenses_list');
                 }
             }
         }
@@ -721,16 +733,20 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         $scope.today();
 
         $scope.open = function() {
-            $timeout(function() {
-                $scope.opened = true;
-            });
+            if(!$routeParams.expId){
+                $timeout(function() {
+                    $scope.opened = true;
+                });
+            }
         };
 
         $scope.selectExpense = function(id){
-            if(prj){
-                $location.path('/lists_e/'+id);
-            }else{
-                $location.path('/lists_ea/'+id);
+            if(!$routeParams.expId){
+                if(prj){
+                    $location.path('/lists_e/'+id);
+                }else{
+                    $location.path('/lists_ea/'+id);
+                }
             }
         }
 
@@ -769,6 +785,9 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
             if(tId){
                 url += '/'+tId;
             }
+            if($routeParams.expId){
+                url += '/'+$routeParams.expId;
+            }
             $location.path(url);
         }
 
@@ -779,6 +798,9 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
             }
             if(tId){
                 url += '/'+tId;
+            }
+            if($routeParams.expId){
+                url += '/'+$routeParams.expId;
             }
             $location.path(url);
         }
@@ -883,13 +905,17 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
         $scope.today();
 
         $scope.open = function() {
-            $timeout(function() {
-                $scope.opened = true;
-            });
+            if(!$routeParams.taskTimeId){
+                $timeout(function() {
+                    $scope.opened = true;
+                });
+            }
         };
 
         $scope.selectTask = function(id){
-            $location.path('/lists_a/'+id);
+            if(!$routeParams.taskTimeId){
+                $location.path('/lists_a/'+id);
+            }
         }
 
         $scope.dateOptions = {
@@ -959,6 +985,9 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
             if(tId){
                 url += '/'+tId;
             }
+            if($routeParams.taskTimeId){
+                url += '/'+ $routeParams.projectId +'/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
+            }
             $location.path(url);
         }
 
@@ -993,6 +1022,7 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
         }
         $scope.no_project = true;
         $scope.expense = project.expense[time];
+        console.log($scope.expense);
         if(JSON.stringify(project.expense[time]) == '{}'){
             $scope.no_project = false;
         }
@@ -1009,13 +1039,13 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
             }
         });*/
 
-        $scope.editTask = function(pId, tId, notes, amount, adhoc, cId){
+        $scope.editTask = function(pId, tId, notes, amount, adhoc, cId, expId){
             project.setNote(notes);
             project.setAmount(amount);
             if(adhoc == "ad hoc"){
-                $location.path('/expenses_a/'+cId+'/'+tId);
+                $location.path('/expenses_a/'+cId+'/'+tId+'/'+expId);
             }else{
-                $location.path('/expenses/'+pId+'/'+tId);
+                $location.path('/expenses/'+pId+'/'+tId+'/'+expId);
             }
         }
 
