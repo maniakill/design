@@ -1,5 +1,11 @@
 <div ng-include="'layout/header.html'" />
 <div class="add_wrap">
+	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+	<div class="loginForm">
+		<form>
+			<input type="submit" class="submit" value="Save" ng-click="save()">
+		</form>
+	</div>
 	<ul class="add_ul">
 		<li><a herf="#" ng-click="open()" id="add_calendar" class="left"></a>
 		<input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/></li>
@@ -9,6 +15,6 @@
 		<li class="notes" ng-click="addAmount(projectId,taskId)">{{amount}}<span class="arrow abs" ></span></li>
 		<li class="last_li" ng-click="selectTask(projectId)">{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
 	</ul>
-	
+
 </div>
 <div data-ng-include="'layout/footer.html'" />

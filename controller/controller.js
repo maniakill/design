@@ -105,26 +105,13 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         if(JSON.stringify(project.taskTimeId[time]) == '{}'){
             $scope.no_project = false;
         }
-        
+
         project.getTime(time).then(function(){
             $scope.no_project = true;
             if(JSON.stringify(project.taskTimeId[time]) == '{}'){
                 $scope.no_project = false;
             }
         });
-                        
-        /*project.getTime(time).then(function(results){
-            if(typeof(results.response.project) == 'object'){
-                $scope.no_project = true;
-                $scope.projects = results.response.project;
-                for(x in $scope.projects){
-                    for(y in $scope.projects[x]['task']){
-                        $scope.projects[x]['task'][y]['hours'] = number2hour($scope.projects[x]['task'][y]['hours']);
-                    }
-                }
-                console.log($scope.projects);
-            }
-        });*/
 
         $scope.getP = function(item){
             var p = project.getProject(item);
@@ -227,6 +214,7 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
 ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$route', '$modal', 'project',
     function ($scope, $timeout, $routeParams, $location, $route, $modal, project ){
         var link = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('expensea') > 0 ? '/expenses_a/' : '/expenses/') : ( $route.current.originalPath.search('Notea') > 0 ? '/add_a/' : '/add/'),
+            link2 = $route.current.originalPath.search('expense') > 0 ? '/expenses_list' : '/timesheet',
             note = $route.current.originalPath.search('Amount') > 0 ? false : true,
             type = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('_a') > 0 ? 'expenses_a' : 'expenses') : ( $route.current.originalPath.search('_a') > 0 ? 'add_a' : ''),
             alertText = ['project','task'];
@@ -287,7 +275,11 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
         };
 
         $scope.times = function(){
-            $location.path('/timesheet');
+            var url = link2;
+            if($routeParams.y && $routeParams.m && $routeParams.d){
+                url += '/'+ $routeParams.y +'/'+ $routeParams.m +'/'+ $routeParams.d;
+            }
+            $location.path(url);
         }
 
         $scope.addpage = function(write){
@@ -610,7 +602,6 @@ ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routePar
         var link = prj ? '/expenses/' : '/expenses_a/' ;
         $scope.expense = project.expenseList;
         $scope.projectId = $routeParams.projectId;
-        console.log(project.expenseList);
         project.getExpensesList();
         /*project.getExpensesList().then(function(results){
             if(typeof(results[0].expense) == 'object'){
@@ -643,7 +634,9 @@ ctrl.controller('addAmount',['$scope', 'project',
 // expenses
 ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$timeout', '$route',
     function ($scope, $routeParams, project, $location, $timeout, $route){
-        var prj = $route.current.originalPath.search('_a') > 0 ? false : true;
+        var prj = $route.current.originalPath.search('_a') > 0 ? false : true,
+            type = $route.current.originalPath.search('_a') > 0 ? 'expenses_a' : 'expenses',
+            alertText = ['project','expense','amount'];
         $scope.date = 'today';
         $scope.customer = 'Select Expense';
         $scope.project = 'Project Name';
@@ -686,6 +679,36 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                     $location.path('/timesheet');
                 }
             }
+        }
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
+
+        $scope.save = function(){
+            if(!$routeParams.item){
+                $scope.alerts = [{ type: 'error', msg: "Please select a "+alertText[0] }];
+                $timeout(function(){
+                    $scope.closeAlert(0);
+                },3000);
+                return false;
+            }
+            if(!$routeParams.taskId){
+                $scope.alerts = [{ type: 'error', msg: "Please select a "+alertText[1] }];
+                $timeout(function(){
+                    $scope.closeAlert(0);
+                },3000);
+                return false;
+            }
+            if(isNaN($scope.amount) || $scope.amount == 0){
+                $scope.alerts = [{ type: 'error', msg: "Please select a "+alertText[2] }];
+                $timeout(function(){
+                    $scope.closeAlert(0);
+                },3000);
+                return false;
+            }
+            var notes = project.getNote();
+            project.save(type,$routeParams.item,$routeParams.taskId,notes);
         }
 
         $scope.today = function() {
@@ -845,7 +868,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
                         $scope.mytime = d;
                     }
                 }
-            }else{                
+            }else{
                 $location.path('/timesheet');
             }
         }
@@ -893,7 +916,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
             $scope.update();
             $scope.mode = false;
         }else{
-            $scope.projectId = $routeParams.projectId;                        
+            $scope.projectId = $routeParams.projectId;
             time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
             $scope.time2 = time;
             var item  = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId];
