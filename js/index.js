@@ -44,6 +44,7 @@ var app = {
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
         alert('e');
+        $('#rrr').text('Received Event: ' + id);
         console.log('Received Event: ' + id);
     }
 };

@@ -9,12 +9,15 @@
 		<!-- !css -->
 	</head>
 	<body>
+		<div id="rrr"></div>
 		<div ng-view=""></div>
 		<!-- javascript -->
 		<script type="text/javascript" src="cordova.js"></script>
 		<script type="text/javascript" src="js/index.js"></script>
 		<script type="text/javascript">
             console.log('e');
+            alert('e');
+            $('#rrr').text('init');
             app.initialize();
         </script>
 		<script type="text/javascript" src="js/jquery.js"></script>
