@@ -78,10 +78,10 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         //
 
         function onDeviceReady() {
-            //checkConnection();
+            checkConnection();
             alert('Device Ready');
         }
-/*
+
         function checkConnection() {
             var networkState = navigator.connection.type;
 
@@ -96,7 +96,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             states[Connection.NONE]     = 'No network connection';
 
             alert('Connection type: ' + states[networkState]);
-        }*/
+        }
         // console.log(project.time);
         if(!project.taskTimeId[time]){
             project.taskTimeId[time] = {};
