@@ -69,7 +69,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         $scope.no_project = true;
 
         // this should be moved when timetracker.js loads
-        /*function onLoad() {
+        function onLoad() {
             alert('start');
             document.addEventListener("deviceready", onDeviceReady, false);
         }
@@ -78,10 +78,10 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         //
 
         function onDeviceReady() {
-            checkConnection();
+            //checkConnection();
             alert('Device Ready');
         }
-
+/*
         function checkConnection() {
             var networkState = navigator.connection.type;
 
