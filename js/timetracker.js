@@ -769,7 +769,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     project.taskTime[id].pId = pId;
                     project.taskTime[id].time = t;
                     saveTime('taskTime', project.taskTime);
-
+                    alert(connect);
+                    alert(connect.toString());
                     if(connect != 'none' || connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
                             if(response.data.code == 'ok'){
