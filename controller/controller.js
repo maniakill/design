@@ -76,7 +76,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         if(JSON.stringify(project.taskTimeId[time]) == '{}'){
             $scope.no_project = false;
         }
-
+        
         project.getTime(time).then(function(){
             $scope.no_project = true;
             if(JSON.stringify(project.taskTimeId[time]) == '{}'){
