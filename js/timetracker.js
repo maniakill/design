@@ -769,9 +769,9 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     project.taskTime[id].pId = pId;
                     project.taskTime[id].time = t;
                     saveTime('taskTime', project.taskTime);
-                    alert(connect);
-                    alert(connect.toString());
+                    alert(connect);                    
                     if(connect != 'none' || connect !='unknown'){
+                        alert('e');
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
                             if(response.data.code == 'ok'){
                                 var idn = response.data.response.id;
@@ -804,6 +804,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             }
                         });
                     }else{
+                        alert('f');
                         if(project.selectedDate){
                             $location.path('/timesheet/'+project.selectedDate);
                         }else{
