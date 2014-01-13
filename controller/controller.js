@@ -68,40 +68,11 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         }
         $scope.no_project = true;
 
-        // this should be moved when timetracker.js loads
-        function onLoad() {
-            alert('start');
-            document.addEventListener("deviceready", onDeviceReady, false);
-        }
-        onLoad();
-        // device APIs are available
-        //
-
-        function onDeviceReady() {
-            checkConnection();
-            alert('Device Ready');
-        }
-
-        function checkConnection() {
-            var networkState = navigator.connection.type;
-
-            var states = {};
-            states[Connection.UNKNOWN]  = 'Unknown connection';
-            states[Connection.ETHERNET] = 'Ethernet connection';
-            states[Connection.WIFI]     = 'WiFi connection';
-            states[Connection.CELL_2G]  = 'Cell 2G connection';
-            states[Connection.CELL_3G]  = 'Cell 3G connection';
-            states[Connection.CELL_4G]  = 'Cell 4G connection';
-            states[Connection.CELL]     = 'Cell generic connection';
-            states[Connection.NONE]     = 'No network connection';
-
-            alert('Connection type: ' + states[networkState]);
-        }
-        // console.log(project.time);
         if(!project.taskTimeId[time]){
             project.taskTimeId[time] = {};
         }
         $scope.projects = project.taskTimeId[time];
+        console.log(project.taskTimeId[time]);
         if(JSON.stringify(project.taskTimeId[time]) == '{}'){
             $scope.no_project = false;
         }
@@ -112,6 +83,8 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
                 $scope.no_project = false;
             }
         });
+
+        
 
         $scope.getP = function(item){
             var p = project.getProject(item);
@@ -277,7 +250,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
         $scope.times = function(){
             var url = link2;
             if($routeParams.y && $routeParams.m && $routeParams.d){
-                url += '/'+ $routeParams.y +'/'+ $routeParams.m +'/'+ $routeParams.d;
+                url += '/'+ $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
             }
             $location.path(url);
         }
@@ -1022,7 +995,7 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
         }
         $scope.no_project = true;
         $scope.expense = project.expense[time];
-        console.log($scope.expense);
+        // console.log($scope.expense);
         if(JSON.stringify(project.expense[time]) == '{}'){
             $scope.no_project = false;
         }
