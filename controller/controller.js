@@ -25,8 +25,6 @@ ctrl.controller('login',['$scope', '$http', '$templateCache','$location', '$time
                     if(data.code == 'ok'){
                         localStorage.setItem('token',data.response);
                         localStorage.setItem('username',$scope.params['username']);
-                        // localStorage.token = data.response;
-                        // localStorage.username = $scope.params['username'];
                         $location.path('/timesheet');
                     }else{
                         // something went very wrong!!! (maybe script error)
@@ -83,8 +81,6 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
                 $scope.no_project = false;
             }
         });
-
-        
 
         $scope.getP = function(item){
             var p = project.getProject(item);
@@ -314,7 +310,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
         $scope.task = 'Select Task';
         $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
-        // $scope.no_notes = project.getNote() ? true : false;
+        
         if($routeParams.item){
             var p = project.getProject($routeParams.item);
             if(p){
@@ -405,7 +401,6 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
 
         $scope.save = function(){
             if(!$routeParams.item){
-                // alert("Please select a "+alertText[0]);
                 $scope.alerts = [{ type: 'error', msg: "Please select a "+alertText[0] }];
                 $timeout(function(){
                     $scope.closeAlert(0);
@@ -413,7 +408,6 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
                 return false;
             }
             if(!$routeParams.taskId){
-                // alert("Please select a "+alertText[1]);
                 $scope.alerts = [{ type: 'error', msg: "Please select a "+alertText[1] }];
                 $timeout(function(){
                     $scope.closeAlert(0);
@@ -509,9 +503,7 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
             });*/
         }else{
             $scope.projectList = false;
-            // $scope.items = project.time;
             $scope.items = noAdHocP($scope.projs);
-            // project.getProjectList();
             project.getProjectList().then(function(results){
                 if(typeof(results.response[0].projects) == 'object'){
                     $scope.items = noAdHocP($scope.projs);
@@ -553,21 +545,11 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
             $scope.taskList = false;
             $scope.customerId = $routeParams.customerId;
             $scope.tasks = project.adhocTask;
-            project.getCustomerTaskList($routeParams.customerId);
-            /*project.getCustomerTaskList($routeParams.customerId).then(function(results){
-                if(typeof(results.tasks) == 'object'){
-                    $scope.tasks = results.tasks;
-                }
-            });*/
+            project.getCustomerTaskList($routeParams.customerId);            
         }else{
             $scope.projectList = false;
             $scope.items = project.customers;
             project.getCustomerList();
-            /*project.getCustomerList().then(function(results){
-                if(typeof(results.response[0].customers) == 'object'){
-                    $scope.items = results.response[0].customers;
-                }
-            });*/
         }
 
         $scope.open = function (pId,tId){
@@ -588,11 +570,6 @@ ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routePar
         $scope.expense = project.expenseList;
         $scope.projectId = $routeParams.projectId;
         project.getExpensesList();
-        /*project.getExpensesList().then(function(results){
-            if(typeof(results[0].expense) == 'object'){
-                $scope.expense = results[0].expense;
-            }
-        });*/
 
         $scope.open = function (pId,tId){
             if(tId){
@@ -799,8 +776,6 @@ ctrl.controller('account',['$scope', '$location', 'project',
             localStorage.setItem('username','');
             localStorage.setItem('token','');
             removeStuff(); // this is for testiung only and shall be removed when going live
-            // localStorage.username = '';
-            // localStorage.token = '';
             $location.path('/start');
         }
     }
@@ -823,7 +798,6 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
         $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
 
-        // $scope.no_notes = project.getNote() ? true : false;
         if($routeParams.item){
             var p = project.getCustomer($routeParams.item);
             if(p){
@@ -897,8 +871,6 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
         };
 
         /*timepicker*/
-        // $scope.mytime = new Date();
-
         $scope.hstep = 1;
         $scope.mstep = 1;
 
@@ -995,7 +967,7 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
         }
         $scope.no_project = true;
         $scope.expense = project.expense[time];
-        // console.log($scope.expense);
+        
         if(JSON.stringify(project.expense[time]) == '{}'){
             $scope.no_project = false;
         }
@@ -1005,13 +977,7 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
                 $scope.no_project = false;
             }
         });
-        /*project.getExpenses(time).then(function(results){
-            if(typeof(results.response.expense) == 'object'){
-                $scope.no_project = true;
-                $scope.expense = results.response.expense;
-            }
-        });*/
-
+        
         $scope.editTask = function(pId, tId, notes, amount, adhoc, cId, expId){
             project.setNote(notes);
             project.setAmount(amount);

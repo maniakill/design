@@ -735,10 +735,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             }
                         });
                     }else{
-                        if(project.selectedDate){
-                            $location.path('/timesheet/'+project.selectedDate);
-                        }else{
-                            $location.path('/timesheet');
+                        if(add === true){
+                            if(project.selectedDate){
+                                $location.path('/timesheet/'+project.selectedDate);
+                            }else{
+                                $location.path('/timesheet');
+                            }                            
                         }
                     }
                     break;
@@ -844,10 +846,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             }
                         });
                     }else{
-                        if(project.selectedDate){
-                            $location.path('/timesheet/'+project.selectedDate);
-                        }else{
-                            $location.path('/timesheet');
+                        if(add === true){
+                            if(project.selectedDate){
+                                $location.path('/timesheet/'+project.selectedDate);
+                            }else{
+                                $location.path('/timesheet');
+                            }
                         }
                     }
                     break;
