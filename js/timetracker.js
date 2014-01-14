@@ -789,7 +789,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         alert('ma-ta none fara');
                     }
                     if(connect != 'none' || connect !='unknown'){
-                        alert('e');
+                        alert('e1');
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
                             if(response.data.code == 'ok'){
                                 var idn = response.data.response.id;
