@@ -776,18 +776,18 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     saveTime('taskTime', project.taskTime);
                     alert(connect);
                     console.log(connect);
-                    if(connect == wifi ){
-                        alert('ma-ta');
-                    }
+                    // if(connect == wifi ){
+                    //     alert('ma-ta');
+                    // }
                     if(connect == 'wifi' ){
                         alert('ma-ta cu');
                     }
                     if(connect == 'none' ){
                         alert('ma-ta none');
                     }
-                    if(connect == none ){
-                        alert('ma-ta none fara');
-                    }
+                    // if(connect == none ){
+                    //     alert('ma-ta none fara');
+                    // }
                     if(connect != 'none' || connect !='unknown'){
                         alert('e1');
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
