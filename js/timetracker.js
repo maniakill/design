@@ -1,31 +1,31 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-var connect = 'none';
-        // this should be moved when timetracker.js loads
-        function onLoad() {
-            document.addEventListener("deviceready", onDeviceReady, false);
-        }
-        onLoad();
-        // device APIs are available
-        //
+// var connect = 'none';
+// this should be moved when timetracker.js loads
+function onLoad() {
+    document.addEventListener("deviceready", onDeviceReady, false);
+}
+onLoad();
+// device APIs are available
+//
 
-        function onDeviceReady() {
-            connect = checkConnection();            
-        }
+function onDeviceReady() {
+    connect = checkConnection();            
+}
 
-        function checkConnection() {
-            var networkState = navigator.connection.type;
-            // var states = {};
-            // states[Connection.UNKNOWN]  = 'Unknown connection';
-            // states[Connection.ETHERNET] = 'Ethernet connection';
-            // states[Connection.WIFI]     = 'WiFi connection';
-            // states[Connection.CELL_2G]  = 'Cell 2G connection';
-            // states[Connection.CELL_3G]  = 'Cell 3G connection';
-            // states[Connection.CELL_4G]  = 'Cell 4G connection';
-            // states[Connection.CELL]     = 'Cell generic connection';
-            // states[Connection.NONE]     = 'No network connection';
-            // alert('Connection type: ' + states[networkState]);
-            return networkState;
-        }
+function checkConnection() {
+    var networkState = navigator.connection.type;
+    // var states = {};
+    // states[Connection.UNKNOWN]  = 'Unknown connection';
+    // states[Connection.ETHERNET] = 'Ethernet connection';
+    // states[Connection.WIFI]     = 'WiFi connection';
+    // states[Connection.CELL_2G]  = 'Cell 2G connection';
+    // states[Connection.CELL_3G]  = 'Cell 3G connection';
+    // states[Connection.CELL_4G]  = 'Cell 4G connection';
+    // states[Connection.CELL]     = 'Cell generic connection';
+    // states[Connection.NONE]     = 'No network connection';
+    // alert('Connection type: ' + states[networkState]);
+    return networkState;
+}
 
 var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap']);
 
@@ -668,6 +668,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         project.save = function(type, pId, tId,notes){
              // this.data =
             var start = '';
+            var connect = checkConnection();
             if(project.selectedDate){
                 start = '&start='+project.selectedDate;
             }
@@ -675,44 +676,71 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             switch (type){
                 case "add_a":
                     var h = project.getHours();
-                    $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&customer_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
-                        // mai trebuie si sa contorizez timpul
-                        if(response.data.code == 'ok'){
-                            var id = response.data.response.id,
-                                pId = response.data.response.project_id,
-                                p = project.getProject(pId),
-                                ta = project.getTask(pId,tId),
-                                t = start;
-                            if(!t){
-                                var d = new Date();
-                                t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
-                            }
-                            if(!project.taskTimeId[t]){
-                                project.taskTimeId[t] = {};
-                            }
-                            if(!project.taskTimeId[t][pId]){
-                                project.taskTimeId[t][pId] = {};
-                                project.taskTimeId[t][pId].id = pId;
-                                project.taskTimeId[t][pId].tasks = {};
-                            }
-                            project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
-                            saveTime('taskTimeId', project.taskTimeId);
-                            project.taskTime[id] = {};
-                            project.taskTime[id].start = Date.now();
-                            project.taskTime[id].pId = pId;
-                            project.taskTime[id].time = t;
-                            saveTime('taskTime', project.taskTime);
-
-                            if(project.selectedDate){
-                                $location.path('/timesheet/'+project.selectedDate);
-                            }else{
-                                $location.path('/timesheet');
-                            }
-                        }else{
-                            $rootScope.$broadcast('addError',response.data.error_code);
-
+                        id = response.data.response.id,
+                        pId = response.data.response.project_id,
+                        p = project.getProject(pId),
+                        ta = project.getTask(pId,tId),
+                        t = start,
+                        add = true;
+                    if(!t){
+                        var d = new Date();
+                        t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+                    }
+                    if(!project.taskTimeId[t]){
+                        project.taskTimeId[t] = {};
+                    }
+                    if(!project.taskTimeId[t][pId]){
+                        project.taskTimeId[t][pId] = {};
+                        project.taskTimeId[t][pId].id = pId;
+                        project.taskTimeId[t][pId].tasks = {};
+                    }
+                    for(x in project.taskTimeId[t][pId].tasks){
+                        if(project.taskTimeId[t][pId].tasks[x].task_id == ta.task_id){
+                            add = false;
+                            $rootScope.$broadcast('addError','Task already added');
                         }
-                    });
+                    }
+                    if(add === true){
+                        project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
+                        saveTime('taskTimeId', project.taskTimeId);
+                        project.taskTime[id] = {};
+                        project.taskTime[id].start = Date.now();
+                        project.taskTime[id].pId = pId;
+                        project.taskTime[id].time = t;
+                        saveTime('taskTime', project.taskTime);                            
+                    }
+                    if(connect != 'none' && connect !='unknown'){
+                        $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&customer_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
+                            if(response.data.code == 'ok'){                            
+                                project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
+                                saveTime('taskTimeId', project.taskTimeId);
+                                project.taskTime[id] = {};
+                                project.taskTime[id].start = Date.now();
+                                project.taskTime[id].pId = pId;
+                                project.taskTime[id].time = t;
+                                saveTime('taskTime', project.taskTime);
+                                if(project.selectedDate){
+                                    $location.path('/timesheet/'+project.selectedDate);
+                                }else{
+                                    $location.path('/timesheet');
+                                }
+                            }else{
+                                if(response.data){
+                                    $rootScope.$broadcast('addError',response.data.error_code);                                    
+                                }
+                                else{
+                                    $rootScope.$broadcast('addError',response.error_code);                                     
+                                }
+
+                            }
+                        });
+                    }else{
+                        if(project.selectedDate){
+                            $location.path('/timesheet/'+project.selectedDate);
+                        }else{
+                            $location.path('/timesheet');
+                        }
+                    }
                     break;
                 case "expenses":
                     var amount = project.getAmount();
@@ -749,7 +777,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         id = Date.now(),
                         p = project.getProject(pId),
                         ta = project.getTask(pId,tId),
-                        t = start;
+                        t = start,
+                        add = true;
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
@@ -764,19 +793,21 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     }
                     for(x in project.taskTimeId[t][pId].tasks){
                         if(project.taskTimeId[t][pId].tasks[x].task_id == ta.task_id){
-                            //dont add it;
+                            add = false;
+                            $rootScope.$broadcast('addError','Task already added');
                         }
                     }
-                    project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
-                    saveTime('taskTimeId', project.taskTimeId);
-                    project.taskTime[id] = {};
-                    project.taskTime[id].start = Date.now();
-                    project.taskTime[id].pId = pId;
-                    project.taskTime[id].time = t;
-                    saveTime('taskTime', project.taskTime);
-                    alert(connect);
+                    if(add === true){
+                        project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
+                        saveTime('taskTimeId', project.taskTimeId);
+                        project.taskTime[id] = {};
+                        project.taskTime[id].start = Date.now();
+                        project.taskTime[id].pId = pId;
+                        project.taskTime[id].time = t;
+                        saveTime('taskTime', project.taskTime);                            
+                    }
+                    
                     if(connect != 'none' && connect !='unknown'){
-                        alert('e1');
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
                             if(response.data.code == 'ok'){
                                 var idn = response.data.response.id;
@@ -804,12 +835,15 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                     $location.path('/timesheet');
                                 }
                             }else{
-                                $rootScope.$broadcast('addError',response.data.error_code);
-
+                                if(response.data){
+                                    $rootScope.$broadcast('addError',response.data.error_code);                                    
+                                }
+                                else{
+                                    $rootScope.$broadcast('addError',response.error_code);                                     
+                                }
                             }
                         });
                     }else{
-                        alert('f');
                         if(project.selectedDate){
                             $location.path('/timesheet/'+project.selectedDate);
                         }else{
