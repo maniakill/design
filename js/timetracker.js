@@ -762,6 +762,11 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         project.taskTimeId[t][pId].id = pId;
                         project.taskTimeId[t][pId].tasks = {};
                     }
+                    for(x in project.taskTimeId[t][pId].tasks){
+                        if(project.taskTimeId[t][pId].tasks[x].task_id == ta.task_id){
+                            //dont add it;
+                        }
+                    }
                     project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
                     saveTime('taskTimeId', project.taskTimeId);
                     project.taskTime[id] = {};
@@ -769,7 +774,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     project.taskTime[id].pId = pId;
                     project.taskTime[id].time = t;
                     saveTime('taskTime', project.taskTime);
-                    alert(connect);                    
+                    alert(connect);
+                    console.log(connect);
                     if(connect != 'none' || connect !='unknown'){
                         alert('e');
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
