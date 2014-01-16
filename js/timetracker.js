@@ -1,6 +1,6 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-// var connect = 'none';
-// this should be moved when timetracker.js loads
+var deviceReady = false;
+
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
 }
@@ -9,11 +9,16 @@ onLoad();
 //
 
 function onDeviceReady() {
-    connect = checkConnection();            
+    // connect = checkConnection();
+    deviceReady = true;
 }
 
 function checkConnection() {
-    var networkState = navigator.connection.type;
+    if(deviceReady){
+        var networkState = navigator.connection.type;        
+    }else{
+        var networkState = 'browser';
+    }
     // var states = {};
     // states[Connection.UNKNOWN]  = 'Unknown connection';
     // states[Connection.ETHERNET] = 'Ethernet connection';
@@ -667,8 +672,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         /* send data to server */
         project.save = function(type, pId, tId,notes){
              // this.data =
-            var start = '';
-            var connect = checkConnection();
+            var start = '',
+                connect = checkConnection();
             if(project.selectedDate){
                 start = '&start='+project.selectedDate;
             }

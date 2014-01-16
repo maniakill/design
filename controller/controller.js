@@ -70,7 +70,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             project.taskTimeId[time] = {};
         }
         $scope.projects = project.taskTimeId[time];
-        console.log(project.taskTimeId[time]);
+        // console.log(project.taskTimeId[time]);
         if(JSON.stringify(project.taskTimeId[time]) == '{}'){
             $scope.no_project = false;
         }
