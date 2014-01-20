@@ -7,10 +7,13 @@ function onLoad() {
 onLoad();
 // device APIs are available
 //
-
+// phoneGap
 function onDeviceReady() {
     // connect = checkConnection();
     deviceReady = true;
+    pictureSource=navigator.camera.PictureSourceType;
+    destinationType=navigator.camera.DestinationType;
+
 }
 
 function checkConnection() {
@@ -32,6 +35,56 @@ function checkConnection() {
     return networkState;
 }
 
+function capturePhoto() {
+    
+  // Take picture using device camera and retrieve image as base64-encoded string
+    navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
+    destinationType: destinationType.DATA_URL });
+}
+
+function onPhotoDataSuccess(imageData) {
+  // Uncomment to view the base64-encoded image data
+  // console.log(imageData);
+
+  // Get image handle
+  var smallImage = document.getElementById('smallImage');
+
+  // Unhide image elements
+  smallImage.style.display = 'block';
+
+  // Show the captured photo
+  // The in-line CSS rules are used to resize the image
+  smallImage.src = "data:image/jpeg;base64," + imageData;
+}
+
+function onFail(message) {
+    alert('Failed because: ' + message);
+}
+
+function getPhoto(source) {
+  // Retrieve image file location from specified source
+  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+    destinationType: destinationType.FILE_URI,
+    sourceType: source });
+}
+function onPhotoURISuccess(imageURI) {
+  // Uncomment to view the image file URI
+  // console.log(imageURI);
+
+  // Get image handle
+  //
+  var largeImage = document.getElementById('largeImage');
+
+  // Unhide image elements
+  //
+  largeImage.style.display = 'block';
+
+  // Show the captured photo
+  // The in-line CSS rules are used to resize the image
+  //
+  largeImage.src = imageURI;
+}
+// phoneGap
 var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap']);
 
 //This configures the routes and associates each route with a view and a controller
@@ -302,12 +355,6 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             localStorage.setItem(type, JSON.stringify(item));
         }
 
-        // localStorage.setItem('timesheet', '');
-        // localStorage.setItem('taskTime', '');
-        // localStorage.setItem('taskTimeId', '');
-        // localStorage.setItem('customers', '');
-        // localStorage.setItem('expenses', '');
-
         function TaskTimeId(item, pr, h, notes, id){
             this.task_time_id = id;
             this.task_id = item.task_id ? item.task_id : item.id;
@@ -418,7 +465,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             project.taskTimeId[t][id].tasks = {};
                         }
                         if(!project.taskTimeId[t][id].tasks[idt]){
-                            project.taskTimeId[t][id].tasks[idt] = new TaskTimeId(item.task[x], item, item.task[x].hours, item.task[x].notes, item.task[x].task_time_id);    
+                            project.taskTimeId[t][id].tasks[idt] = new TaskTimeId(item.task[x], item, item.task[x].hours, item.task[x].notes, idt);
                         }                        
                         saveTime('taskTimeId', project.taskTimeId);
                     }
@@ -485,17 +532,6 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     var pr = response.data.response.project;
                     for(x in pr){
                         save(pr[x], false, true, time);
-                        /*if(project.taskTimeId[time]){
-                            for(z in project.taskTimeId[time]){            
-                                if(z == pr[x].project_id){
-                                    for(y in project.taskTimeId[time][z].tasks){
-                                        if(project.taskTimeId[time][z].tasks[y].task_id == tId){
-                                            delete project.taskTimeId[time][z].tasks[y];
-                                        }
-                                    }
-                                }
-                            }    
-                        }   */                     
                     }
                 }
                 return response.data;
@@ -830,7 +866,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 
                                 project.taskTimeId[t][pId].tasks[idn] = new TaskTimeId(ta, p, h, notes, idn);
                                 saveTime('taskTimeId', project.taskTimeId);
-                                delete project.taskTime[id];
+                                // delete project.taskTime[id];
                                 project.taskTime[idn] = {};
                                 project.taskTime[idn].start = Date.now();
                                 project.taskTime[idn].pId = pId;

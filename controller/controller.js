@@ -65,10 +65,11 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             var time=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
         }
         $scope.no_project = true;
-
+        
         if(!project.taskTimeId[time]){
             project.taskTimeId[time] = {};
         }
+        
         $scope.projects = project.taskTimeId[time];
         // console.log(project.taskTimeId[time]);
         if(JSON.stringify(project.taskTimeId[time]) == '{}'){
@@ -481,6 +482,31 @@ ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'ty
     }
 
 ]);
+ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 'types',
+    function ($scope, $modalInstance, items, $location, types) {
+        $scope.items = items;
+        $scope.types = types;
+
+        $scope.open = function(url){
+            switch(url){
+                case 'capturePhoto()':
+                    capturePhoto();
+                    break;
+                case 'getPhoto(pictureSource.PHOTOLIBRARY)':
+                    getPhoto(pictureSource.PHOTOLIBRARY);
+                    break;
+            }
+            $scope.cancel();
+        }
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+
+        
+    }
+
+]);
 // lists
 ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
     function ($scope, $http, $location, project, $routeParams, $route){
@@ -594,8 +620,8 @@ ctrl.controller('addAmount',['$scope', 'project',
     }
 ]);
 // expenses
-ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$timeout', '$route',
-    function ($scope, $routeParams, project, $location, $timeout, $route){
+ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$timeout', '$route', '$modal',
+    function ($scope, $routeParams, project, $location, $timeout, $route, $modal){
         var prj = $route.current.originalPath.search('_a') > 0 ? false : true,
             type = $route.current.originalPath.search('_a') > 0 ? 'expenses_a' : 'expenses',
             alertText = ['project','expense','amount'];
@@ -606,6 +632,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         $scope.amount = project.getAmount() ? project.getAmount() : 'Select Amount';
         $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
+        $scope.task_type = [ { title: 'Take Photo', url: 'capturePhoto()' }, { title: 'Go to galery', url: 'getPhoto(pictureSource.PHOTOLIBRARY)'} ];
 
         if($routeParams.item){
             if(prj){
@@ -754,6 +781,28 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
             }
             $location.path(url);
         }
+
+        $scope.selectTask = function(){
+            $scope.add();
+        }
+
+        /*modal*/
+
+        $scope.add = function () {
+            var modalInstance = $modal.open({
+              templateUrl: 'layout/task_type.html',
+              controller: 'task_type1',
+              resolve: {
+                items: function () {
+                    return $scope.task_type;
+                },
+                types: function(){
+                    return $scope.types;
+                }
+              }
+            });
+        };
+        /*modalend*/
 
     }
 ]);
