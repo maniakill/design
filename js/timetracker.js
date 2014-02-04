@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-var deviceReady = false,
+var deviceReady = false;
 var pictureSource;
 var destinationType;
 
