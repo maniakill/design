@@ -4,13 +4,16 @@ var pictureSource;
 var destinationType;
 
 function onLoad() {
+    alert('1');
     document.addEventListener("deviceready", onDeviceReady, false);
+    alert('2');
 }
 onLoad();
 // device APIs are available
 //
 // phoneGap
 function onDeviceReady() {
+    alert('3');
     // connect = checkConnection();
     deviceReady = true;
     pictureSource=navigator.camera.PictureSourceType;
