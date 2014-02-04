@@ -32,7 +32,6 @@ app.directive('animatedView', ['$route', '$anchorScroll', '$compile', '$controll
             }
 
             function update() {
-                console.log('f');
                 locals = $route.current && $route.current.locals;
                 template = locals && locals.$template;
 
