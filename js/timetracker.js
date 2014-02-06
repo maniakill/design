@@ -16,7 +16,9 @@ function onDeviceReady() {
     alert('3');
     // connect = checkConnection();
     deviceReady = true;
+    alert('deviceready');
     pictureSource=navigator.camera.PictureSourceType;
+    alert('pictureSource');
     destinationType=navigator.camera.DestinationType;
     alert('d');
 }
