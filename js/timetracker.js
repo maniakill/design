@@ -15,9 +15,12 @@ onLoad();
 function onDeviceReady() {
     alert('3');
     // connect = checkConnection();
+    console.log('onDeviceReady');
     deviceReady = true;
     alert('deviceready');
+    console.log(navigator.camera);
     pictureSource=navigator.camera.PictureSourceType;
+    console.log(pictureSource);
     alert('pictureSource');
     destinationType=navigator.camera.DestinationType;
     alert('d');
