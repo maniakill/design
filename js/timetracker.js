@@ -4,24 +4,20 @@ var pictureSource;
 var destinationType;
 
 function onLoad() {
-    alert('1');
-    document.addEventListener("deviceready", onDeviceReady, false);
-    alert('2');
+    document.addEventListener("deviceready", onDeviceReady, false);    
 }
 onLoad();
 // device APIs are available
 //
 // phoneGap
 function onDeviceReady() {
-    alert('3');
     // connect = checkConnection();
     console.log('onDeviceReady');
     deviceReady = true;
-    alert('deviceready');
+    console.log(navigator);
     console.log(navigator.camera);
     pictureSource=navigator.camera.PictureSourceType;
     console.log(pictureSource);
-    alert('pictureSource');
     destinationType=navigator.camera.DestinationType;
     alert('d');
 }
@@ -46,8 +42,7 @@ function checkConnection() {
 }
 
 function capturePhoto() {
-    alert('capturePhoto');
-    console.log(destinationType.DATA_URL);
+    console.log(destinationType);
   // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
     destinationType: destinationType.DATA_URL });
