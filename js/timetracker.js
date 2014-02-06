@@ -1,6 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
 var deviceReady = false;
-var pictureSource;
 var destinationType;
 
 function onLoad() {
@@ -11,15 +10,9 @@ onLoad();
 //
 // phoneGap
 function onDeviceReady() {
-    // connect = checkConnection();
-    console.log('onDeviceReady');
     deviceReady = true;
-    console.log(navigator);
-    console.log(navigator.camera);
-    pictureSource=navigator.camera.PictureSourceType;
-    console.log(pictureSource);
-    destinationType=navigator.camera.DestinationType;
-    alert('d');
+    // pictureSource=navigator.camera.PictureSourceType;
+    // destinationType=navigator.camera.DestinationType;
 }
 
 function checkConnection() {
@@ -43,9 +36,10 @@ function checkConnection() {
 
 function capturePhoto() {
     console.log(destinationType);
+    
   // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
-    destinationType: destinationType.DATA_URL });
+    destinationType: Camera.DestinationType.DATA_URL });
 }
 
 function onPhotoDataSuccess(imageData) {
@@ -70,7 +64,7 @@ function onFail(message) {
 function getPhoto(source) {
   // Retrieve image file location from specified source
   navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
-    destinationType: destinationType.FILE_URI,
+    destinationType: Camera.DestinationType.FILE_URI,
     sourceType: source });
 }
 function onPhotoURISuccess(imageURI) {
