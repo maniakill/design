@@ -33,7 +33,7 @@ function checkConnection() {
     // alert('Connection type: ' + states[networkState]);
     return networkState;
 }
-
+/*
 function capturePhoto() {
     // console.log(destinationType);
     alert('e '+Camera.DestinationType.DATA_URL);
@@ -84,251 +84,61 @@ function onPhotoURISuccess(imageURI) {
   // The in-line CSS rules are used to resize the image
   //
   largeImage.src = imageURI;
-}
+}*/
 // phoneGap
-var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap']);
+var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap','ajoslin.mobile-navigate','ngMobile']);
 
 //This configures the routes and associates each route with a view and a controller
 app.config(function ($routeProvider) {
     $routeProvider
-        .when('/',
-            {
-                controller: 'start',
-                templateUrl: 'layout/start.html'
-            })
-        .when('/login',
-            {
-                controller: 'login',
-                templateUrl: 'layout/login.html'
-            })
-        .when('/timesheet',{
-                controller: 'timesheet',
-                templateUrl: 'layout/timesheet.html'
-            })
-        .when('/timesheet/:d/:m/:y',
-            {
-                controller: 'timesheet',
-                templateUrl: 'layout/timesheet.html'
-            })
-        .when('/expenses_list',{
-                controller: 'expenses_list',
-                templateUrl: 'layout/expenses_list.html'
-            })
-        .when('/expenses_list/:d/:m/:y',
-            {
-                controller: 'expenses_list',
-                templateUrl: 'layout/expenses_list.html'
-            })
-        .when('/lists',
-            {
-                controller: 'lists',
-                templateUrl: 'layout/lists.html'
-            })
-        .when('/lists/expense/',
-            {
-                controller: 'lists',
-                templateUrl: 'layout/lists.html'
-            })
-        .when('/lists/:projectId',
-            {
-                controller: 'lists',
-                templateUrl: 'layout/lists.html'
-            })
-        .when('/lists_a',
-            {
-                controller: 'lists_a',
-                templateUrl: 'layout/lists_a.html'
-            })
-        .when('/lists_a/expense/',
-            {
-                controller: 'lists_a',
-                templateUrl: 'layout/lists_a.html'
-            })
-        .when('/lists_a/:customerId',
-            {
-                controller: 'lists_a',
-                templateUrl: 'layout/lists_a.html'
-            })
-        .when('/lists_e/:projectId',
-            {
-                controller: 'lists_e',
-                templateUrl: 'layout/lists_e.html'
-            })
-        .when('/lists_ea/:projectId',
-            {
-                controller: 'lists_e',
-                templateUrl: 'layout/lists_e.html'
-            })
-        .when('/add/:item',
-            {
-                controller: 'add',
-                templateUrl: 'layout/add.html'
-            })
-        .when('/add/:item/:taskId',
-            {
-                controller: 'add',
-                templateUrl: 'layout/add.html'
-            })
-        .when('/add/:item/:taskId/:taskTimeId/:d/:m/:y',
-            {
-                controller: 'add',
-                templateUrl: 'layout/add.html'
-            })
-        .when('/add_a/:item',
-            {
-                controller: 'add_a',
-                templateUrl: 'layout/add_a.html'
-            })
-        .when('/add_a/:item/:taskId',
-            {
-                controller: 'add_a',
-                templateUrl: 'layout/add_a.html'
-            })
-        .when('/add_a/:item/:taskId/:projectId/:taskTimeId/:d/:m/:y',
-            {
-                controller: 'add_a',
-                templateUrl: 'layout/add_a.html'
-            })
-        .when('/addNote/:pId/:tId',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addNote/:pId/:tId/:taskTimeId/:d/:m/:y',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addNote/:pId',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addNotea/:pId/:tId/:projectId/:taskTimeId/:d/:m/:y',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addNotea/:pId/:tId',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addNotea/:pId',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addAmount_expense/:pId/:tId/:expId',
-            {
-                controller: 'addAmount',
-                templateUrl: 'layout/addAmount.html'
-            })
-        .when('/addAmount_expense/:pId/:tId',
-            {
-                controller: 'addAmount',
-                templateUrl: 'layout/addAmount.html'
-            })
-        .when('/addAmount_expense/:pId',
-            {
-                controller: 'addAmount',
-                templateUrl: 'layout/addAmount.html'
-            })
-        .when('/addAmount_expensea/:pId/:tId/:expId',
-            {
-                controller: 'addAmount',
-                templateUrl: 'layout/addAmount.html'
-            })
-        .when('/addAmount_expensea/:pId/:tId',
-            {
-                controller: 'addAmount',
-                templateUrl: 'layout/addAmount.html'
-            })
-        .when('/addAmount_expensea/:pId',
-            {
-                controller: 'addAmount',
-                templateUrl: 'layout/addAmount.html'
-            })
-        .when('/addNote_expense/:pId/:tId/:expId',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addNote_expense/:pId/:tId',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addNote_expense/:pId',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addNote_expensea/:pId/:tId/:expId',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addNote_expensea/:pId/:tId',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/addNote_expensea/:pId',
-            {
-                controller: 'addNote',
-                templateUrl: 'layout/addNote.html'
-            })
-        .when('/expenses/:item',
-            {
-                controller: 'expenses',
-                templateUrl: 'layout/expenses.html'
-            })
-        .when('/expenses/:item/:taskId',
-            {
-                controller: 'expenses',
-                templateUrl: 'layout/expenses.html'
-            })
-        .when('/expenses/:item/:taskId/:expId',
-            {
-                controller: 'expenses',
-                templateUrl: 'layout/expenses.html'
-            })
-        .when('/expenses_a/:item',
-            {
-                controller: 'expenses',
-                templateUrl: 'layout/expenses.html'
-            })
-        .when('/expenses_a/:item/:taskId',
-            {
-                controller: 'expenses',
-                templateUrl: 'layout/expenses.html'
-            })
-        .when('/expenses_a/:item/:taskId/:expId',
-            {
-                controller: 'expenses',
-                templateUrl: 'layout/expenses.html'
-            })
-        .when('/account',
-            {
-                controller: 'account',
-                templateUrl: 'layout/account.html'
-            })
-        .when('/footer',
-            {
-                controller: 'footer',
-                templateUrl: 'layout/footer.html'
-            })
-        .when('/header',
-            {
-                controller: 'header',
-                templateUrl: 'layout/header.html'
-            })
-        .when('/pending',
-            {
-                controller: 'pending',
-                templateUrl: 'layout/pending.html'
-            })
+        .when('/',{controller: 'start',templateUrl: 'layout/start.html'})
+        .when('/login',{controller: 'login',templateUrl: 'layout/login.html'})
+        .when('/timesheet',{controller: 'timesheet',templateUrl: 'layout/timesheet.html'})
+        .when('/timesheet/:d/:m/:y',{controller: 'timesheet',templateUrl: 'layout/timesheet.html'})
+        .when('/expenses_list',{controller: 'expenses_list',templateUrl: 'layout/expenses_list.html'})
+        .when('/expenses_list/:d/:m/:y',{controller: 'expenses_list',templateUrl: 'layout/expenses_list.html'})
+        .when('/lists',{controller: 'lists',templateUrl: 'layout/lists.html'})
+        .when('/lists/expense/',{controller: 'lists',templateUrl: 'layout/lists.html'})
+        .when('/lists/:projectId',{controller: 'lists',templateUrl: 'layout/lists.html'})
+        .when('/lists_a',{controller: 'lists_a',templateUrl: 'layout/lists_a.html'})
+        .when('/lists_a/expense/',{controller: 'lists_a',templateUrl: 'layout/lists_a.html'})
+        .when('/lists_a/:customerId',{controller: 'lists_a',templateUrl: 'layout/lists_a.html'})
+        .when('/lists_e/:projectId',{controller: 'lists_e',templateUrl: 'layout/lists_e.html'})
+        .when('/lists_ea/:projectId',{controller: 'lists_e',templateUrl: 'layout/lists_e.html'})
+        .when('/add/:item',{controller: 'add',templateUrl: 'layout/add.html'})
+        .when('/add/:item/:taskId',{controller: 'add',templateUrl: 'layout/add.html'})
+        .when('/add/:item/:taskId/:taskTimeId/:d/:m/:y',{controller: 'add',templateUrl: 'layout/add.html'})
+        .when('/add_a/:item',{controller: 'add_a',templateUrl: 'layout/add_a.html'})
+        .when('/add_a/:item/:taskId',{controller: 'add_a',templateUrl: 'layout/add_a.html'})
+        .when('/add_a/:item/:taskId/:projectId/:taskTimeId/:d/:m/:y',{    controller: 'add_a',    templateUrl: 'layout/add_a.html'})
+        .when('/addNote/:pId/:tId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNote/:pId/:tId/:taskTimeId/:d/:m/:y',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNote/:pId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNotea/:pId/:tId/:projectId/:taskTimeId/:d/:m/:y',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNotea/:pId/:tId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNotea/:pId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addAmount_expense/:pId/:tId/:expId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
+        .when('/addAmount_expense/:pId/:tId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
+        .when('/addAmount_expense/:pId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
+        .when('/addAmount_expensea/:pId/:tId/:expId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
+        .when('/addAmount_expensea/:pId/:tId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
+        .when('/addAmount_expensea/:pId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
+        .when('/addNote_expense/:pId/:tId/:expId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNote_expense/:pId/:tId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNote_expense/:pId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNote_expensea/:pId/:tId/:expId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNote_expensea/:pId/:tId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNote_expensea/:pId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/expenses/:item',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
+        .when('/expenses/:item/:taskId',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
+        .when('/expenses/:item/:taskId/:expId',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
+        .when('/expenses_a/:item',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
+        .when('/expenses_a/:item/:taskId',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
+        .when('/expenses_a/:item/:taskId/:expId',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
+        .when('/account',{controller: 'account',templateUrl: 'layout/account.html'})
+        .when('/footer',{controller: 'footer',templateUrl: 'layout/footer.html'})
+        .when('/header',{controller: 'header',templateUrl: 'layout/header.html'})
+        .when('/pending',{controller: 'pending',templateUrl: 'layout/pending.html'})
         .otherwise({ redirectTo: '/' });
 });
 
