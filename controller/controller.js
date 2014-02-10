@@ -1,17 +1,18 @@
 var ctrl = angular.module('ctrl', []);
 // start
-ctrl.controller('start',['$scope', '$timeout', '$location',
-    function ($scope,$timeout,$location){
+ctrl.controller('start',['$scope', '$timeout', '$location', '$navigate',
+    function ($scope,$timeout,$location,$navigate){
         var token = localStorage.getItem('token');
         var target = token ? '/timesheet' : '/login';
         $timeout(function() {
-            $location.path(target);
+            // $location.path(target);
+            $navigate.go(target,'slide');
         }, 4000);
     }
 ]);
 // login
-ctrl.controller('login',['$scope', '$http', '$templateCache','$location', '$timeout',
-    function ($scope, $http, $templateCache, $location, $timeout) {
+ctrl.controller('login',['$scope', '$http', '$templateCache','$location', '$timeout', '$navigate',
+    function ($scope, $http, $templateCache, $location, $timeout,$navigate) {
         $scope.method = 'POST';
         $scope.url = 'https://go.salesassist.eu/pim/mobile/';
         $scope.loged = '';
@@ -25,7 +26,8 @@ ctrl.controller('login',['$scope', '$http', '$templateCache','$location', '$time
                     if(data.code == 'ok'){
                         localStorage.setItem('token',data.response);
                         localStorage.setItem('username',$scope.params['username']);
-                        $location.path('/timesheet');
+                        // $location.path('/timesheet');
+                        $navigate.go('/timesheet','slide')
                     }else{
                         // something went very wrong!!! (maybe script error)
                         $scope.alerts = [
@@ -55,8 +57,8 @@ ctrl.controller('login',['$scope', '$http', '$templateCache','$location', '$time
     }
 ]);
 // timesheet
-ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$location',
-    function ($scope, $timeout ,project, $routeParams, $location){
+ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$location', '$navigate',
+    function ($scope, $timeout ,project, $routeParams, $location,$navigate){
         $scope.projects = [];
         if($routeParams.y && $routeParams.m && $routeParams.d){
             var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
@@ -132,9 +134,11 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         $scope.editTask = function(pId, tId, notes, adhoc, cId, taskTimeId){
             project.setNote(notes);
             if(adhoc == 'ad hoc'){
-                $location.path('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time);
+                $navigate.go('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time,'slide');
+                // $location.path('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time);
             }else{
-                $location.path('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time);
+                // $location.path('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time);
+                $navigate.go('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time,'slide');
             }
         }
 
@@ -181,8 +185,8 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
     }
 ]);
 // header
-ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$route', '$modal', 'project',
-    function ($scope, $timeout, $routeParams, $location, $route, $modal, project ){
+ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$route', '$modal', 'project', '$navigate',
+    function ($scope, $timeout, $routeParams, $location, $route, $modal, project ,$navigate){
         var link = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('expensea') > 0 ? '/expenses_a/' : '/expenses/') : ( $route.current.originalPath.search('Notea') > 0 ? '/add_a/' : '/add/'),
             link2 = $route.current.originalPath.search('expense') > 0 ? '/expenses_list' : '/timesheet',
             note = $route.current.originalPath.search('Amount') > 0 ? false : true,
@@ -249,7 +253,8 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             if($routeParams.y && $routeParams.m && $routeParams.d){
                 url += '/'+ $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
             }
-            $location.path(url);
+            // $location.path(url);
+            $navigate.go(url,'slide');
         }
 
         $scope.addpage = function(write){
@@ -270,7 +275,8 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             if($routeParams.expId){
                 url += '/'+$routeParams.expId;
             }          
-            $location.path(url);
+            // $location.path(url);
+            $navigate.go(url,'slide');
         }
 
         /*modal*/
@@ -301,8 +307,8 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
     }
 ]);
 // add
-ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeout',
-    function ($scope, $routeParams, project, $location, $timeout){
+ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeout', '$navigate',
+    function ($scope, $routeParams, project, $location, $timeout, $navigate){
         var alertText = ['project','task'],
             time = '';
         $scope.date = 'today';
@@ -346,7 +352,8 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
                     }
                 }
             }else{
-                $location.path('/timesheet');
+                $navigate.go('/timesheet','slide');
+                // $location.path('/timesheet');
             }
         }
 
@@ -365,7 +372,8 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
 
         $scope.selectTask = function(id){
             if(!$routeParams.taskTimeId){
-                $location.path('/lists/'+id);
+                // $location.path('/lists/'+id);
+                $navigate.go('/lists/'+id,'slide');
             }
         }
 
@@ -446,7 +454,8 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
             if($routeParams.taskTimeId){
                 url += '/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
             }
-            $location.path(url);
+            // $location.path(url);
+            $navigate.go(url,'slide');
         }
 
         $scope.closeAlert = function(index) {
@@ -466,13 +475,14 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
     }
 ]);
 // task_type
-ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'types',
-    function ($scope, $modalInstance, items, $location, types) {
+ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'types', '$navigate',
+    function ($scope, $modalInstance, items, $location, types,$navigate) {
         $scope.items = items;
         $scope.types = types;
 
         $scope.open = function(url){
-            $location.path(url);
+            // $location.path(url);
+            $navigate.go(url,'slide');
             $scope.cancel();
         }
 
@@ -482,7 +492,7 @@ ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'ty
     }
 
 ]);
-ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 'types',
+ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 'types', 
     function ($scope, $modalInstance, items, $location, types) {
         $scope.items = items;
         $scope.types = types;
@@ -508,8 +518,8 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
 
 ]);
 // lists
-ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
-    function ($scope, $http, $location, project, $routeParams, $route){
+ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route', '$navigate',
+    function ($scope, $http, $location, project, $routeParams, $route,$navigate){
         var link = $route.current.originalPath == '/lists/expense/' ? '/expenses/' : '/add/';
         $scope.projs = project.time;
         $scope.items = [];
@@ -539,9 +549,11 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
 
         $scope.open = function (pId,tId){
             if(tId){
-                $location.path(link+pId+'/'+tId);
+                // $location.path(link+pId+'/'+tId);
+                $navigate.go(link+pId+'/'+tId,'slide');
             }else{
-                $location.path(link+pId);
+                // $location.path(link+pId);
+                $navigate.go(link+pId,'slide')
             }
         }
 
@@ -559,8 +571,8 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
     }
 ]);
 // lists_a
-ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
-    function ($scope, $http, $location, project, $routeParams, $route){
+ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routeParams', '$route', '$navigate',
+    function ($scope, $http, $location, project, $routeParams, $route,$navigate){
         var link = $route.current.originalPath == '/lists_a/expense/' ? '/expenses_a/' : '/add_a/';
         $scope.items = [];
         $scope.tasks = [];
@@ -580,17 +592,19 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
 
         $scope.open = function (pId,tId){
             if(tId){
-                $location.path(link+pId+'/'+tId);
+                // $location.path(link+pId+'/'+tId);
+                $navigate.go(link+pId+'/'+tId,'slide');
             }else{
-                $location.path(link+pId);
+                // $location.path(link+pId);
+                $navigate.go(link+pId,'slide');
             }
         }
 
     }
 ]);
 // lists
-ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
-    function ($scope, $http, $location, project, $routeParams, $route){
+ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routeParams', '$route', '$navigate',
+    function ($scope, $http, $location, project, $routeParams, $route,$navigate){
         var prj = $route.current.originalPath.search('_ea') > 0 ? false : true;
         var link = prj ? '/expenses/' : '/expenses_a/' ;
         $scope.expense = project.expenseList;
@@ -599,9 +613,11 @@ ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routePar
 
         $scope.open = function (pId,tId){
             if(tId){
-                $location.path(link+pId+'/'+tId);
+                // $location.path(link+pId+'/'+tId);
+                $navigate.go(link+pId+'/'+tId,'slide')
             }else{
-                $location.path(link+pId);
+                // $location.path(link+pId);
+                $navigate.go(link+pId,'slide');
             }
         }
 
@@ -620,8 +636,8 @@ ctrl.controller('addAmount',['$scope', 'project',
     }
 ]);
 // expenses
-ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$timeout', '$route', '$modal',
-    function ($scope, $routeParams, project, $location, $timeout, $route, $modal){
+ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$timeout', '$route', '$modal', '$navigate',
+    function ($scope, $routeParams, project, $location, $timeout, $route, $modal,$navigate){
         var prj = $route.current.originalPath.search('_a') > 0 ? false : true,
             type = $route.current.originalPath.search('_a') > 0 ? 'expenses_a' : 'expenses',
             alertText = ['project','expense','amount'];
@@ -649,7 +665,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                         }
                     }
                 }else{
-                    $location.path('/expenses_list');
+                    // $location.path('/expenses_list');
+                    $navigate.go('expenses_list','slide');
                 }
             }else{
                 var p = project.getCustomer($routeParams.item);
@@ -665,7 +682,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                         }
                     }
                 }else{
-                    $location.path('/expenses_list');
+                    // $location.path('/expenses_list');
+                    $navigate.go('/expenses_list','slide');
                 }
             }
         }
@@ -720,9 +738,11 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         $scope.selectExpense = function(id){
             if(!$routeParams.expId){
                 if(prj){
-                    $location.path('/lists_e/'+id);
+                    // $location.path('/lists_e/'+id);
+                    $navigate.go('/lists_e/'+id,'slide');
                 }else{
-                    $location.path('/lists_ea/'+id);
+                    // $location.path('/lists_ea/'+id);
+                    $navigate.go('/lists_ea/'+id,'slide');
                 }
             }
         }
@@ -765,7 +785,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
             if($routeParams.expId){
                 url += '/'+$routeParams.expId;
             }
-            $location.path(url);
+            // $location.path(url);
+            $navigate.go(url,'slide');
         }
 
         $scope.addAmount = function(pId,tId){
@@ -779,7 +800,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
             if($routeParams.expId){
                 url += '/'+$routeParams.expId;
             }
-            $location.path(url);
+            // $location.path(url);
+            $navigate.go(url,'slide');
         }
 
         $scope.selectTask = function(){
@@ -807,8 +829,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
     }
 ]);
 //acount
-ctrl.controller('account',['$scope', '$location', 'project',
-    function ($scope, $location, project){
+ctrl.controller('account',['$scope', '$location', 'project', '$navigate',
+    function ($scope, $location, project,$navigate){
         $scope.username = localStorage.username;
 
         //deleting the database
@@ -825,7 +847,8 @@ ctrl.controller('account',['$scope', '$location', 'project',
             localStorage.setItem('username','');
             localStorage.setItem('token','');
             removeStuff(); // this is for testiung only and shall be removed when going live
-            $location.path('/start');
+            // $location.path('/start');
+            $navigate.go('/start','slide');
         }
     }
 ]);
@@ -837,8 +860,8 @@ ctrl.controller('pending',['$scope', '$location',
 ]);
 
 // add adhoc
-ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$timeout',
-    function ($scope, $routeParams, project, $location, $timeout){
+ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$timeout', '$navigate',
+    function ($scope, $routeParams, project, $location, $timeout,$navigate){
         var time = '',
             alertText = ['project','task'];
         $scope.date = 'today';
@@ -887,7 +910,8 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
                     }
                 }
             }else{
-                $location.path('/timesheet');
+                // $location.path('/timesheet');
+                $navigate.go('/timesheet','slide');
             }
         }
 
@@ -910,7 +934,8 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 
         $scope.selectTask = function(id){
             if(!$routeParams.taskTimeId){
-                $location.path('/lists_a/'+id);
+                // $location.path('/lists_a/'+id);
+                $navigate.go('/lists_a/'+id,'slide');
             }
         }
 
@@ -982,7 +1007,8 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
             if($routeParams.taskTimeId){
                 url += '/'+ $routeParams.projectId +'/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
             }
-            $location.path(url);
+            // $location.path(url);
+            $navigate.go(url,'slide');
         }
 
         $scope.closeAlert = function(index) {
@@ -1001,8 +1027,8 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
     }
 ]);
 // timesheet
-ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams', '$location',
-    function ($scope, $timeout ,project, $routeParams, $location){
+ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams', '$location', '$navigate',
+    function ($scope, $timeout ,project, $routeParams, $location,$navigate){
         $scope.expense = [];
         if($routeParams.y && $routeParams.m && $routeParams.d){
             var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
@@ -1031,9 +1057,11 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
             project.setNote(notes);
             project.setAmount(amount);
             if(adhoc == "ad hoc"){
-                $location.path('/expenses_a/'+cId+'/'+tId+'/'+expId);
+                // $location.path('/expenses_a/'+cId+'/'+tId+'/'+expId);
+                $navigate.go('/expenses_a/'+cId+'/'+tId+'/'+expId,'slide');
             }else{
-                $location.path('/expenses/'+pId+'/'+tId+'/'+expId);
+                // $location.path('/expenses/'+pId+'/'+tId+'/'+expId);
+                $navigate.go('/expenses/'+pId+'/'+tId+'/'+expId);
             }
         }
 
