@@ -3,7 +3,7 @@ var deviceReady = false;
 var destinationType;
 
 function onLoad() {
-    document.addEventListener("deviceready", onDeviceReady, false);    
+    document.addEventListener("deviceready", onDeviceReady, false);
 }
 onLoad();
 // device APIs are available
@@ -17,7 +17,7 @@ function onDeviceReady() {
 
 function checkConnection() {
     if(deviceReady){
-        var networkState = navigator.connection.type;        
+        var networkState = navigator.connection.type;
     }else{
         var networkState = 'browser';
     }
@@ -86,7 +86,7 @@ function onPhotoURISuccess(imageURI) {
   largeImage.src = imageURI;
 }*/
 // phoneGap
-var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap','ajoslin.mobile-navigate','ngMobile']);
+var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap','ajoslin.mobile-navigate','ngTouch']);
 
 //This configures the routes and associates each route with a view and a controller
 app.config(function ($routeProvider) {
@@ -277,7 +277,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         }
                         if(!project.taskTimeId[t][id].tasks[idt]){
                             project.taskTimeId[t][id].tasks[idt] = new TaskTimeId(item.task[x], item, item.task[x].hours, item.task[x].notes, idt);
-                        }                        
+                        }
                         saveTime('taskTimeId', project.taskTimeId);
                     }
                 }
@@ -429,7 +429,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         var ex = response.data.response.expense;
                         for(x in ex){
                             saveExpenses(ex[x], time);
-                        }                        
+                        }
                     }
                 }
                 return response.data;
@@ -559,11 +559,11 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         project.taskTime[id].start = Date.now();
                         project.taskTime[id].pId = pId;
                         project.taskTime[id].time = t;
-                        saveTime('taskTime', project.taskTime);                            
+                        saveTime('taskTime', project.taskTime);
                     }
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&customer_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
-                            if(response.data.code == 'ok'){                            
+                            if(response.data.code == 'ok'){
                                 project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
                                 saveTime('taskTimeId', project.taskTimeId);
                                 project.taskTime[id] = {};
@@ -578,10 +578,10 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 }
                             }else{
                                 if(response.data){
-                                    $rootScope.$broadcast('addError',response.data.error_code);                                    
+                                    $rootScope.$broadcast('addError',response.data.error_code);
                                 }
                                 else{
-                                    $rootScope.$broadcast('addError',response.error_code);                                     
+                                    $rootScope.$broadcast('addError',response.error_code);
                                 }
 
                             }
@@ -592,7 +592,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 $location.path('/timesheet/'+project.selectedDate);
                             }else{
                                 $location.path('/timesheet');
-                            }                            
+                            }
                         }
                     }
                     break;
@@ -658,14 +658,14 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         project.taskTime[id].start = Date.now();
                         project.taskTime[id].pId = pId;
                         project.taskTime[id].time = t;
-                        saveTime('taskTime', project.taskTime);                            
+                        saveTime('taskTime', project.taskTime);
                     }
-                    
+
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
                             if(response.data.code == 'ok'){
                                 var idn = response.data.response.id;
-                                for(x in project.taskTimeId[t]){            
+                                for(x in project.taskTimeId[t]){
                                     if(x == pId){
                                         for(y in project.taskTimeId[t][x].tasks){
                                             if(project.taskTimeId[t][x].tasks[y].task_id == tId){
@@ -674,7 +674,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                         }
                                     }
                                 }
-                                
+
                                 project.taskTimeId[t][pId].tasks[idn] = new TaskTimeId(ta, p, h, notes, idn);
                                 saveTime('taskTimeId', project.taskTimeId);
                                 // delete project.taskTime[id];
@@ -690,10 +690,10 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 }
                             }else{
                                 if(response.data){
-                                    $rootScope.$broadcast('addError',response.data.error_code);                                    
+                                    $rootScope.$broadcast('addError',response.data.error_code);
                                 }
                                 else{
-                                    $rootScope.$broadcast('addError',response.error_code);                                     
+                                    $rootScope.$broadcast('addError',response.error_code);
                                 }
                             }
                         });
