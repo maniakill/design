@@ -4,6 +4,7 @@ var destinationType;
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
+    alert('ngtouch');
 }
 onLoad();
 // device APIs are available
