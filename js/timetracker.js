@@ -86,7 +86,7 @@ function onPhotoURISuccess(imageURI) {
   largeImage.src = imageURI;
 }*/
 // phoneGap
-var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap','ajoslin.mobile-navigate','ngTouch']);
+var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap','ngTouch']);
 
 //This configures the routes and associates each route with a view and a controller
 app.config(function ($routeProvider) {
