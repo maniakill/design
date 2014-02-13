@@ -6,7 +6,6 @@ ctrl.controller('start',['$scope', '$timeout', '$location',
         var target = token ? '/timesheet' : '/login';
         $timeout(function() {
             $location.path(target);
-            // $navigate.go(target,'slide');
         }, 4000);
     }
 ]);
@@ -27,7 +26,6 @@ ctrl.controller('login',['$scope', '$http', '$templateCache','$location', '$time
                         localStorage.setItem('token',data.response);
                         localStorage.setItem('username',$scope.params['username']);
                         $location.path('/timesheet');
-                        // $navigate.go('/timesheet','slide')
                     }else{
                         // something went very wrong!!! (maybe script error)
                         $scope.alerts = [
@@ -134,11 +132,9 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         $scope.editTask = function(pId, tId, notes, adhoc, cId, taskTimeId){
             project.setNote(notes);
             if(adhoc == 'ad hoc'){
-                // $navigate.go('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time,'slide');
                 $location.path('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time);
             }else{
                 $location.path('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time);
-                // $navigate.go('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time,'slide');
             }
         }
 
@@ -254,7 +250,6 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                 url += '/'+ $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
             }
             $location.path(url);
-            // $navigate.go(url,'slide');
         }
 
         $scope.addpage = function(write){
@@ -276,7 +271,6 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                 url += '/'+$routeParams.expId;
             }
             $location.path(url);
-            // $navigate.go(url,'slide');
         }
 
         /*modal*/
@@ -352,7 +346,6 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
                     }
                 }
             }else{
-                // $navigate.go('/timesheet','slide');
                 $location.path('/timesheet');
             }
         }
@@ -373,7 +366,6 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
         $scope.selectTask = function(id){
             if(!$routeParams.taskTimeId){
                 $location.path('/lists/'+id);
-                // $navigate.go('/lists/'+id,'slide');
             }
         }
 
@@ -455,7 +447,6 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
                 url += '/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
             }
             $location.path(url);
-            // $navigate.go(url,'slide');
         }
 
         $scope.closeAlert = function(index) {
@@ -482,7 +473,6 @@ ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'ty
 
         $scope.open = function(url){
             $location.path(url);
-            // $navigate.go(url,'slide');
             $scope.cancel();
         }
 
@@ -550,10 +540,8 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
         $scope.open = function (pId,tId){
             if(tId){
                 $location.path(link+pId+'/'+tId);
-                // $navigate.go(link+pId+'/'+tId,'slide');
             }else{
                 $location.path(link+pId);
-                // $navigate.go(link+pId,'slide')
             }
         }
 
@@ -593,10 +581,8 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
         $scope.open = function (pId,tId){
             if(tId){
                 $location.path(link+pId+'/'+tId);
-                // $navigate.go(link+pId+'/'+tId,'slide');
             }else{
                 $location.path(link+pId);
-                // $navigate.go(link+pId,'slide');
             }
         }
 
@@ -614,10 +600,8 @@ ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routePar
         $scope.open = function (pId,tId){
             if(tId){
                 $location.path(link+pId+'/'+tId);
-                // $navigate.go(link+pId+'/'+tId,'slide')
             }else{
                 $location.path(link+pId);
-                // $navigate.go(link+pId,'slide');
             }
         }
 
@@ -666,7 +650,6 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                     }
                 }else{
                     $location.path('/expenses_list');
-                    // $navigate.go('expenses_list','slide');
                 }
             }else{
                 var p = project.getCustomer($routeParams.item);
@@ -683,7 +666,6 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                     }
                 }else{
                     $location.path('/expenses_list');
-                    // $navigate.go('/expenses_list','slide');
                 }
             }
         }
@@ -739,10 +721,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
             if(!$routeParams.expId){
                 if(prj){
                     $location.path('/lists_e/'+id);
-                    // $navigate.go('/lists_e/'+id,'slide');
                 }else{
                     $location.path('/lists_ea/'+id);
-                    // $navigate.go('/lists_ea/'+id,'slide');
                 }
             }
         }
@@ -786,7 +766,6 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                 url += '/'+$routeParams.expId;
             }
             $location.path(url);
-            // $navigate.go(url,'slide');
         }
 
         $scope.addAmount = function(pId,tId){
@@ -801,7 +780,6 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                 url += '/'+$routeParams.expId;
             }
             $location.path(url);
-            // $navigate.go(url,'slide');
         }
 
         $scope.selectTask = function(){
@@ -848,7 +826,6 @@ ctrl.controller('account',['$scope', '$location', 'project',
             localStorage.setItem('token','');
             removeStuff(); // this is for testiung only and shall be removed when going live
             $location.path('/start');
-            // $navigate.go('/start','slide');
         }
     }
 ]);
@@ -911,7 +888,6 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
                 }
             }else{
                 $location.path('/timesheet');
-                // $navigate.go('/timesheet','slide');
             }
         }
 
@@ -935,7 +911,6 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
         $scope.selectTask = function(id){
             if(!$routeParams.taskTimeId){
                 $location.path('/lists_a/'+id);
-                // $navigate.go('/lists_a/'+id,'slide');
             }
         }
 
@@ -1008,7 +983,6 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
                 url += '/'+ $routeParams.projectId +'/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
             }
             $location.path(url);
-            // $navigate.go(url,'slide');
         }
 
         $scope.closeAlert = function(index) {
@@ -1058,10 +1032,8 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
             project.setAmount(amount);
             if(adhoc == "ad hoc"){
                 $location.path('/expenses_a/'+cId+'/'+tId+'/'+expId);
-                // $navigate.go('/expenses_a/'+cId+'/'+tId+'/'+expId,'slide');
             }else{
                 $location.path('/expenses/'+pId+'/'+tId+'/'+expId);
-                // $navigate.go('/expenses/'+pId+'/'+tId+'/'+expId);
             }
         }
 
