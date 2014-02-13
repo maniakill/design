@@ -13,7 +13,7 @@
  * # ngTouch
  *
  * The `ngTouch` module provides touch events and other helpers for touch-enabled devices.
- * The implementation is based on jQuery Mobile touch event handling 
+ * The implementation is based on jQuery Mobile touch event handling
  * ([jquerymobile.com](http://jquerymobile.com/)).
  *
  * {@installModule touch}
@@ -422,6 +422,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
     // - But the browser's follow-up slow click will be "busted" before it reaches this handler.
     // Therefore it's safe to use this directive on both mobile and desktop.
     element.on('click', function(event, touchend) {
+      alert('e');
       scope.$apply(function() {
         clickHandler(scope, {$event: (touchend || event)});
       });
