@@ -1,9 +1,9 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
 var deviceReady = false;
 var destinationType;
-// window.addEventListener('load', function() {
-//     FastClick.attach(document.body);
-// }, false);
+window.addEventListener('load', function() {
+    FastClick.attach(document.body);
+}, false);
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
 }
@@ -13,8 +13,8 @@ onLoad();
 // phoneGap
 function onDeviceReady() {
     deviceReady = true;
-    // pictureSource=navigator.camera.PictureSourceType;
-    // destinationType=navigator.camera.DestinationType;
+    pictureSource=navigator.camera.PictureSourceType;
+    destinationType=navigator.camera.DestinationType;
 }
 
 function checkConnection() {
@@ -35,8 +35,9 @@ function checkConnection() {
     // alert('Connection type: ' + states[networkState]);
     return networkState;
 }
-/*
+
 function capturePhoto() {
+    alert('1');
     // console.log(destinationType);
     alert('e '+Camera.DestinationType.DATA_URL);
     alert(navigator.camera.toSource());
@@ -86,11 +87,8 @@ function onPhotoURISuccess(imageURI) {
   // The in-line CSS rules are used to resize the image
   //
   largeImage.src = imageURI;
-}*/
-angular.module('myModule', []).
-  run(function() {
-    FastClick.attach(document.body);
-  });
+}
+
 // phoneGap
 var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap','ngTouch']);
 
