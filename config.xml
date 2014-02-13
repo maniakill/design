@@ -24,10 +24,10 @@
     </feature>
     <name>SalesAssist TimeTracker</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        SalesAssist Time Tracker application
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="marius@medeeaweb.com" href="http://salesassist.eu">
+        ArkWeb Team
     </author>
     <content src="index.html" />
     <access origin="*" />
