@@ -1,4 +1,4 @@
-body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, label, p, blockquote, th, td { margin:0; padding:0; }
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, label, p, blockquote, th, td { margin:0; padding:0;  }
 body{ background: url("../images/bg.png") repeat-x top left #ffffff; font-size: 11px; }
 *::-webkit-input-placeholder { color: #000000; font-size: 17px;  }
 *:-moz-placeholder { color: #000000; font-size: 17px;  }
@@ -8,6 +8,7 @@ body{ background: url("../images/bg.png") repeat-x top left #ffffff; font-size: 
 @font-face { font-family: HelveticaLTSNeue; src: url('font/HelveticaNeueLTStd-Th.otf'); }
 @font-face { font-family: HelveticaLTSRoman; src: url('font/HelveticaNeueLTStd-Roman.otf'); }
 ol, ul { list-style: none; }
+div,input,textarea,label,li,button{ outline: none; }
 a, a:hover{ text-decoration: none; }
 .right { float: right; }
 .left { float: left; }
