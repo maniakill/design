@@ -422,7 +422,6 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
     // - But the browser's follow-up slow click will be "busted" before it reaches this handler.
     // Therefore it's safe to use this directive on both mobile and desktop.
     element.on('click', function(event, touchend) {
-      alert('e');
       scope.$apply(function() {
         clickHandler(scope, {$event: (touchend || event)});
       });
