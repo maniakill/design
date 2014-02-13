@@ -1,7 +1,9 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
 var deviceReady = false;
 var destinationType;
-
+window.addEventListener('load', function() {
+    FastClick.attach(document.body);
+}, false);
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
 }
