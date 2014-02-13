@@ -1,9 +1,9 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
 var deviceReady = false;
 var destinationType;
-window.addEventListener('load', function() {
-    FastClick.attach(document.body);
-}, false);
+// window.addEventListener('load', function() {
+//     FastClick.attach(document.body);
+// }, false);
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
 }
@@ -87,6 +87,10 @@ function onPhotoURISuccess(imageURI) {
   //
   largeImage.src = imageURI;
 }*/
+angular.module('myModule', []).
+  run(function() {
+    FastClick.attach(document.body);
+  });
 // phoneGap
 var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap','ngTouch']);
 
