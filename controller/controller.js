@@ -65,7 +65,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             var time=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
         }
         $scope.no_project = true;
-
+        console.log(localStorage.getItem('taskTime'));
         if(!project.taskTimeId[time]){
             project.taskTimeId[time] = {};
         }
@@ -144,8 +144,8 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
     }
 ]);
 // footer
-ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project',
-    function ($scope, $routeParams, $route, $modal, project){
+ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project', '$location',
+    function ($scope, $routeParams, $route, $modal, project,$location){
         var d = new Date();
 
         $scope.timesheet = true;
@@ -177,6 +177,10 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
                 $scope.timesheet = true;
                 $scope.timesheetAct = '';
                 break;
+        }
+
+        $scope.go = function(path){
+            $location.path('/'+path);
         }
     }
 ]);
@@ -219,6 +223,12 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             case 'addNote':
             case 'addAmount':
                 $scope.add_note = false;
+                break;
+            case 'account':
+            case 'pending':
+                $scope.timesheet = true;
+                $scope.add_page = true;
+                $scope.add_note = true;
                 break;
             default:
                 $scope.timesheet = false;
@@ -816,6 +826,7 @@ ctrl.controller('account',['$scope', '$location', 'project',
             localStorage.setItem('timesheet', '');
             localStorage.setItem('taskTime', '');
             localStorage.setItem('taskTimeId', '');
+            localStorage.setItem('expenses', '');
             project.time = {};
             project.taskTimeId = {};
             project.taskTime = {};
@@ -830,8 +841,15 @@ ctrl.controller('account',['$scope', '$location', 'project',
     }
 ]);
 //pending
-ctrl.controller('pending',['$scope', '$location',
-    function ($scope, $location){
+ctrl.controller('pending',['$scope', '$location','project',
+    function ($scope, $location,project){
+        /* things to sync:
+            project.taskTimeId;
+            project.expense
+        */
+        $scope.sync = function(){
+            project.sync();
+        }
 
     }
 ]);

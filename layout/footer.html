@@ -3,7 +3,7 @@
 		<div class="footer_active" ng-hide="timesheet">
 			<div class="blur" ></div>
 		</div>
-		<div class="footer_container">
+		<div class="footer_container" ng-click="go('timesheet')">
 			<div class="timesheet_footer"></div>
 			<a href="#/timesheet" class="footer_link">Timesheet</a>
 		</div>
@@ -12,7 +12,7 @@
 		<div class="footer_active" ng-hide="expense">
 			<div class="blur" ></div>
 		</div>
-		<div class="footer_container">
+		<div class="footer_container" ng-click="go('expenses_list')">
 			<div class="expenses_footer"></div>
 			<a href="#/expenses_list" class="footer_link" >Expenses</a>
 		</div>
@@ -21,7 +21,7 @@
 		<div class="footer_active" ng-hide="account">
 			<div class="blur" ></div>
 		</div>
-		<div class="footer_container" >
+		<div class="footer_container" ng-click="go('account')" >
 			<div class="account_footer"></div>
 			<a href="#/account" class="footer_link">Account</a>
 		</div>

@@ -152,7 +152,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             url = 'https://go.salesassist.eu/pim/mobile/',
             key = 'api_key='+localStorage.token+'&username='+localStorage.username,
             obj = {};
-
+        console.log(localStorage.getItem('taskTime'));
         /* store data */
         project.time = localStorage.getItem('timesheet') ? JSON.parse(localStorage.getItem('timesheet')) : {};
         project.customers = localStorage.getItem('customers') ? JSON.parse(localStorage.getItem('customers')) : {};
@@ -161,12 +161,17 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         project.expenseList = localStorage.getItem('expensesList') ? JSON.parse(localStorage.getItem('expensesList')) : {};
         project.taskTimeId = localStorage.getItem('taskTimeId') ? JSON.parse(localStorage.getItem('taskTimeId')) : {};
         project.taskTime = localStorage.getItem('taskTime') ? JSON.parse(localStorage.getItem('taskTime')) : {};
+        project.toSync = localStorage.getItem('toSync') ? JSON.parse(localStorage.getItem('toSync')) : {};
 
         var saveTime = function(type, item){
             if(!type){
                 type = 'timesheet';
                 item = project.time;
             }
+            if(type == 'taskTime'){
+                console.log(JSON.stringify(item));
+            }
+            localStorage.setItem(type, '');
             localStorage.setItem(type, JSON.stringify(item));
         }
 
@@ -242,6 +247,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             this.project_name = item.project_name;
             this.unit = item.unit;
             this.unit_price = item.unit_price;
+            this.sync = item.sync;
         }
 
         function Expenses(item){
@@ -532,12 +538,13 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             switch (type){
                 case "add_a":
                     var h = project.getHours();
-                        id = response.data.response.id,
-                        pId = response.data.response.project_id,
-                        p = project.getProject(pId),
-                        ta = project.getTask(pId,tId),
+                        id = Date.now(),
+                        npId = Date.now();
+                        p = Date.now(),
+                        ta = project.getAdhocTask(tId),
                         t = start,
                         add = true;
+
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
@@ -545,35 +552,45 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     if(!project.taskTimeId[t]){
                         project.taskTimeId[t] = {};
                     }
-                    if(!project.taskTimeId[t][pId]){
-                        project.taskTimeId[t][pId] = {};
-                        project.taskTimeId[t][pId].id = pId;
-                        project.taskTimeId[t][pId].tasks = {};
+                    if(!project.taskTimeId[t][npId]){
+                        project.taskTimeId[t][npId] = {};
+                        project.taskTimeId[t][npId].id = npId;
+                        project.taskTimeId[t][npId].tasks = {};
                     }
-                    for(x in project.taskTimeId[t][pId].tasks){
-                        if(project.taskTimeId[t][pId].tasks[x].task_id == ta.task_id){
+                    for(x in project.taskTimeId[t][npId].tasks){
+                        if(project.taskTimeId[t][npId].tasks[x].task_id == ta.task_id){
                             add = false;
                             $rootScope.$broadcast('addError','Task already added');
                         }
                     }
                     if(add === true){
-                        project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
+                        project.taskTimeId[t][npId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
                         saveTime('taskTimeId', project.taskTimeId);
                         project.taskTime[id] = {};
                         project.taskTime[id].start = Date.now();
-                        project.taskTime[id].pId = pId;
+                        project.taskTime[id].npId = npId;
                         project.taskTime[id].time = t;
                         saveTime('taskTime', project.taskTime);
                     }
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&customer_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
                             if(response.data.code == 'ok'){
-                                project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
+                                delete project.taskTimeId[t][npId];
+                                delete project.taskTime[id];
+                                var idn = response.data.response.id;
+                                    npId = response.data.response.project_id;
+                                if(!project.taskTimeId[t][npId]){
+                                    project.taskTimeId[t][npId] = {};
+                                    project.taskTimeId[t][npId].id = npId;
+                                    project.taskTimeId[t][npId].tasks = {};
+                                }
+                                id = idn;
+                                project.taskTimeId[t][npId].tasks[idn] = new TaskTimeId(ta, p, h, notes, idn);
                                 saveTime('taskTimeId', project.taskTimeId);
-                                project.taskTime[id] = {};
-                                project.taskTime[id].start = Date.now();
-                                project.taskTime[id].pId = pId;
-                                project.taskTime[id].time = t;
+                                project.taskTime[idn] = {};
+                                project.taskTime[idn].start = Date.now();
+                                project.taskTime[idn].pId = npId;
+                                project.taskTime[idn].time = t;
                                 saveTime('taskTime', project.taskTime);
                                 if(project.selectedDate){
                                     $location.path('/timesheet/'+project.selectedDate);
@@ -599,36 +616,116 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             }
                         }
                     }
+                    if(add === true){
+                        project.addToSync('time',t,npId,pId,tId,id);
+                    }
                     break;
                 case "expenses":
-                    var amount = project.getAmount();
-                    $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&project_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
-                        if(response.data.code == 'ok'){
-                            if(project.selectedDate){
-                                $location.path('/expenses_list/'+project.selectedDate);
+                    var item = {},
+                        amount = project.getAmount(),
+                        t = start;
+                    item.id = Date.now();
+                    item.amount = project.getAmount();
+                    item.expense_id = tId;
+                    item.expense_name = project.getExpense(tId).name;
+                    item.note = notes;
+                    item.project_id = pId;
+                    item.project_name = project.getProject(pId).project_name;
+                    item.unit = project.getExpense(tId).unit;
+                    item.unit_price = project.getExpense(tId).unit_price;
+                    item.sync = 1;
+                    if(!t){
+                        var d = new Date();
+                        t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+                    }
+                    if(!project.expense[t]){
+                        project.expense[t] = {};
+                        project.expense[t][item.id] = new Expense(item);
+                    }else{
+                        project.expense[t][item.id] = new Expense(item);
+                    }
+                    saveTime('expenses', project.expense);
+                    if(connect != 'none' && connect !='unknown'){
+                        $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&project_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
+                            if(response.data.code == 'ok'){
+                                delete project.expense[t][item.id];
+                                item.id = response.data.response[0].id;
+                                item.sync = 0;
+                                project.expense[t][item.id] = new Expense(item);
+                                saveTime('expenses', project.expense);
+                                if(project.selectedDate){
+                                    $location.path('/expenses_list/'+project.selectedDate);
+                                }else{
+                                    $location.path('/expenses_list');
+                                }
                             }else{
-                                $location.path('/expenses_list');
-                            }
-                        }else{
-                            $rootScope.$broadcast('addError',response.data.error_code);
+                                $rootScope.$broadcast('addError',response.data.error_code);
 
+                            }
+                        });
+                    }else{
+                        project.addToSync('expense',t,pId,'',tId,item.id);
+                        if(project.selectedDate){
+                            $location.path('/expenses_list/'+project.selectedDate);
+                        }else{
+                            $location.path('/expenses_list');
                         }
-                    });
+                    }
                     break;
                 case "expenses_a":
-                    var amount = project.getAmount();
-                    $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
-                        if(response.data.code == 'ok'){
-                            if(project.selectedDate){
-                                $location.path('/expenses_list/'+project.selectedDate);
+                    var item = {},
+                        amount = project.getAmount(),
+                        t = start;
+                    item.id = Date.now();
+                    item.amount = project.getAmount();
+                    item.expense_id = tId;
+                    item.expense_name = project.getExpense(tId).name;
+                    item.note = notes;
+                    item.project_id = Date.now();
+                    item.project_name = 'ad hoc';
+                    item.unit = project.getExpense(tId).unit;
+                    item.unit_price = project.getExpense(tId).unit_price;
+                    item.customer_id = pId;
+                    item.customer_name = project.getCustomer(pId).name;
+                    item.sync = 1;
+                    if(!t){
+                        var d = new Date();
+                        t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+                    }
+                    if(!project.expense[t]){
+                        project.expense[t] = {};
+                        project.expense[t][item.id] = new Expense(item);
+                    }else{
+                        project.expense[t][item.id] = new Expense(item);
+                    }
+                    saveTime('expenses', project.expense);
+                    if(connect != 'none' && connect !='unknown'){
+                        $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
+                            if(response.data.code == 'ok'){
+                                delete project.expense[t][item.id];
+                                item.id = response.data.response[0].id;
+                                item.project_id = response.data.response[0].project_id;
+                                item.sync = 0;
+                                project.expense[t][item.id] = new Expense(item);
+                                saveTime('expenses', project.expense);
+                                if(project.selectedDate){
+                                    $location.path('/expenses_list/'+project.selectedDate);
+                                }else{
+                                    $location.path('/expenses_list');
+                                }
                             }else{
-                                $location.path('/expenses_list');
-                            }
-                        }else{
-                            $rootScope.$broadcast('addError',response.data.error_code);
+                                $rootScope.$broadcast('addError',response.data.error_code);
 
+                            }
+                        });
+                    }else{
+                        project.addToSync('expense',t,item.project_id,pId,tId,item.id);
+                        if(project.selectedDate){
+                            $location.path('/expenses_list/'+project.selectedDate);
+                        }else{
+                            $location.path('/expenses_list');
                         }
-                    });
+                    }
                     break;
                 default:
                     var h = project.getHours(),
@@ -668,6 +765,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
                             if(response.data.code == 'ok'){
+                                delete project.taskTime[id];
                                 var idn = response.data.response.id;
                                 for(x in project.taskTimeId[t]){
                                     if(x == pId){
@@ -678,7 +776,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                         }
                                     }
                                 }
-
+                                id=idn;
                                 project.taskTimeId[t][pId].tasks[idn] = new TaskTimeId(ta, p, h, notes, idn);
                                 saveTime('taskTimeId', project.taskTimeId);
                                 // delete project.taskTime[id];
@@ -710,6 +808,9 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             }
                         }
                     }
+                    if(add === true){
+                        project.addToSync('time',t,pId,'',tId,id);
+                    }
                     break;
             }
         }
@@ -718,12 +819,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         project.stop = function(item, time){
             item.active = '';
             saveTime('taskTimeId', project.taskTimeId);
-            project.taskTime[item.task_time_id] = {};
+            delete project.taskTime[item.task_time_id];
             saveTime('taskTime', project.taskTime);
-            $location.path('/timesheet/'+time);
         }
 
         project.start = function(item, time){
+            project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
             item.active = 'active';
             saveTime('taskTimeId', project.taskTimeId);
             var d = Date.now();
@@ -748,10 +849,14 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     if(project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x]){
                         project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].hours = newTime;
                         project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].active = 'active';
+                        // project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].sync = 1;
                     }
                 }
             }
+            console.log(project.taskTime);
+            console.log(localStorage.getItem('taskTime'));
             saveTime('taskTime', project.taskTime);
+            console.log(localStorage.getItem('taskTime'));
             saveTime('taskTimeId', project.taskTimeId);
         }
         // rune();
@@ -765,6 +870,37 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 return false;
             }
             return true;
+        }
+
+        project.sync = function(){
+            console.log(project.toSync);
+
+        }
+
+        project.addToSync = function(type,time,pId,cId,tId,id){
+            if(!project.toSync){
+                project.toSync = {};
+            }
+            if(!project.toSync[type]){
+                project.toSync[type] = {}
+            }
+            if(!project.toSync[type][time]){
+                project.toSync[type][time] = {}
+            }
+            if(!project.toSync[type][time][pId]){
+                project.toSync[type][time][pId] = {}
+            }
+            if(!project.toSync[type][time][pId][cId]){
+                project.toSync[type][time][pId][cId] = {}
+            }
+            if(!project.toSync[type][time][pId][cId][tId]){
+                project.toSync[type][time][pId][cId][tId] = {}
+            }
+            if(!project.toSync[type][time][pId][cId][tId][id]){
+                project.toSync[type][time][pId][cId][tId][id] = 1;
+            }
+            project.toSync[type][time][pId][cId][tId][id]
+            saveTime('toSync', project.toSync);
         }
 
         return project;
