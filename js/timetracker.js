@@ -821,6 +821,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             saveTime('taskTimeId', project.taskTimeId);
             delete project.taskTime[item.task_time_id];
             saveTime('taskTime', project.taskTime);
+            $location.path('/timesheet/'+time);
         }
 
         project.start = function(item, time){
