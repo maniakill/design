@@ -46,6 +46,13 @@ ctrl.controller('login',['$scope', '$http', '$templateCache','$location', '$time
                         $scope.closeAlert(0);
                     },3000)
                 });
+            }else{
+                 $scope.alerts = [
+                        { type: 'error', msg: 'Please fill all the fields' }
+                    ];
+                    // $timeout(function(){
+                    //     $scope.closeAlert(0);
+                    // },3000)
             }
         };
 
@@ -65,13 +72,12 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             var time=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
         }
         $scope.no_project = true;
-        console.log(localStorage.getItem('taskTime'));
+        
         if(!project.taskTimeId[time]){
             project.taskTimeId[time] = {};
         }
 
         $scope.projects = project.taskTimeId[time];
-        // console.log(project.taskTimeId[time]);
         if(JSON.stringify(project.taskTimeId[time]) == '{}'){
             $scope.no_project = false;
         }
@@ -817,8 +823,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
     }
 ]);
 //acount
-ctrl.controller('account',['$scope', '$location', 'project',
-    function ($scope, $location, project){
+ctrl.controller('account',['$scope', '$location', 'project', '$interval',
+    function ($scope, $location, project,$interval){
         $scope.username = localStorage.username;
 
         //deleting the database
@@ -827,12 +833,14 @@ ctrl.controller('account',['$scope', '$location', 'project',
             localStorage.setItem('taskTime', '');
             localStorage.setItem('taskTimeId', '');
             localStorage.setItem('expenses', '');
+            localStorage.setItem('toSync', '');
             project.time = {};
             project.taskTimeId = {};
             project.taskTime = {};
         }
-
+        removeStuff();
         $scope.logout = function (){
+            // $interval.cancel(project.interval);
             localStorage.setItem('username','');
             localStorage.setItem('token','');
             removeStuff(); // this is for testiung only and shall be removed when going live
@@ -840,16 +848,41 @@ ctrl.controller('account',['$scope', '$location', 'project',
         }
     }
 ]);
-//pending
+// pending
 ctrl.controller('pending',['$scope', '$location','project',
     function ($scope, $location,project){
+        var connect = checkConnection();
         /* things to sync:
             project.taskTimeId;
             project.expense
         */
-        $scope.sync = function(){
-            project.sync();
+        $scope.max = Object.keys(project.toSync).length;
+        $scope.dynamic = 0;
+        $scope.type = 'info';
+
+        $scope.entries = 0;
+        $scope.expenses = 0;
+        for(x in project.toSync){
+            var item = project.toSync[x];
+            if(item.type == 'time'){
+                $scope.entries++;
+            }else{
+                $scope.expenses++;
+            }
         }
+        
+        // connect = 'none';
+        $scope.sync = function(){
+            if(connect != 'none' && connect !='unknown'){
+                project.sync();
+            }else{
+                $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ];
+            }
+        }
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
 
     }
 ]);
@@ -1018,7 +1051,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 
     }
 ]);
-// timesheet
+// expenses_list
 ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams', '$location',
     function ($scope, $timeout ,project, $routeParams, $location){
         $scope.expense = [];

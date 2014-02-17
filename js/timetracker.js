@@ -152,7 +152,6 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             url = 'https://go.salesassist.eu/pim/mobile/',
             key = 'api_key='+localStorage.token+'&username='+localStorage.username,
             obj = {};
-        console.log(localStorage.getItem('taskTime'));
         /* store data */
         project.time = localStorage.getItem('timesheet') ? JSON.parse(localStorage.getItem('timesheet')) : {};
         project.customers = localStorage.getItem('customers') ? JSON.parse(localStorage.getItem('customers')) : {};
@@ -168,10 +167,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 type = 'timesheet';
                 item = project.time;
             }
-            if(type == 'taskTime'){
-                console.log(JSON.stringify(item));
-            }
-            localStorage.setItem(type, '');
+            // localStorage.setItem(type, '');
             localStorage.setItem(type, JSON.stringify(item));
         }
 
@@ -258,7 +254,13 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         }
 
         var save = function(item, show, saveT, time){
-            var id = item.project_id
+            var id = item.project_id;
+            // save the customer
+            var customerItem = {};
+                customerItem.id = item.customer_id;
+                customerItem.name = item.customer_name;
+                saveCustomer(customerItem);
+            // save the custoemr
             if(!project.time[id]){
                 project.time[id] = new Proj(item, show, saveT, time);
             }else{
@@ -351,8 +353,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             this.data = $http.get(url+'index.php?do=mobile-time&'+key+'&start='+time).then(function(response){
                 if(typeof(response.data.response.project) == 'object' ){
                     var pr = response.data.response.project;
-                    for(x in pr){
-                        save(pr[x], false, true, time);
+                    for(x in pr){                        
+                        save(pr[x], false, true, time);                 
                     }
                 }
                 return response.data;
@@ -530,7 +532,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         project.save = function(type, pId, tId,notes){
              // this.data =
             var start = '',
-                connect = checkConnection();
+                // connect = checkConnection();                
+                connect = 'none';                
             if(project.selectedDate){
                 start = '&start='+project.selectedDate;
             }
@@ -839,7 +842,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         }
 
         // var t = window.setInterval( rune, 1000 ); I don't know why this doesn't work and the line below works
-        $interval(rune,1000);
+        project.interval = $interval(rune,1000);
 
         function rune(){
             var d = Date.now();
@@ -850,15 +853,11 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     if(project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x]){
                         project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].hours = newTime;
                         project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].active = 'active';
-                        // project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].sync = 1;
+                        saveTime('taskTimeId', project.taskTimeId);
                     }
                 }
             }
-            console.log(project.taskTime);
-            console.log(localStorage.getItem('taskTime'));
-            saveTime('taskTime', project.taskTime);
-            console.log(localStorage.getItem('taskTime'));
-            saveTime('taskTimeId', project.taskTimeId);
+            // saveTime('taskTime', project.taskTime);            
         }
         // rune();
 
@@ -873,35 +872,29 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             return true;
         }
 
-        project.sync = function(){
-            console.log(project.toSync);
+        project.sync = function(){            
+            console.log(Object.keys(project.toSync).length);
+            for(x in project.toSync){
+                var item = project.toSync[x];
+                
+            }
 
         }
 
         project.addToSync = function(type,time,pId,cId,tId,id){
-            if(!project.toSync){
-                project.toSync = {};
+            if(!project.toSync[id]){
+                project.toSync[id] = new SyncItem(type,time,pId,cId,tId,id);                
+                saveTime('toSync', project.toSync);
             }
-            if(!project.toSync[type]){
-                project.toSync[type] = {}
-            }
-            if(!project.toSync[type][time]){
-                project.toSync[type][time] = {}
-            }
-            if(!project.toSync[type][time][pId]){
-                project.toSync[type][time][pId] = {}
-            }
-            if(!project.toSync[type][time][pId][cId]){
-                project.toSync[type][time][pId][cId] = {}
-            }
-            if(!project.toSync[type][time][pId][cId][tId]){
-                project.toSync[type][time][pId][cId][tId] = {}
-            }
-            if(!project.toSync[type][time][pId][cId][tId][id]){
-                project.toSync[type][time][pId][cId][tId][id] = 1;
-            }
-            project.toSync[type][time][pId][cId][tId][id]
-            saveTime('toSync', project.toSync);
+        }
+
+        function SyncItem(type,time,pId,cId,tId,id){
+            this.type = type;
+            this.time = time;
+            this.pId = pId;
+            this.cId = cId;
+            this.tId = tId;
+            this.id = id;
         }
 
         return project;

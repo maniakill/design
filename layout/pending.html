@@ -4,11 +4,14 @@
 	<p>Get integrated &#45; Grow your business</p>
 </div>
 <div class="add_wrap">
+	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<ul class="add_ul">
-		<li><span class="square">0</span>New Expense <span class="arrow abs" ng-hide="no_task"></span></li>
-		<li><span class="square">0</span>Tasks Running <span class="arrow abs" ng-hide="no_task"></span></li>
-		<li class="last_li" ng-click="selectTask(projectId)"><span class="square">0</span>Unsaved Time Entries<span class="arrow abs" ng-hide="no_task"></span></li>
+		<li><span class="square">{{expenses}}</span>New Expense <!-- <span class="arrow abs" ng-hide="no_task"></span> --></li>
+		<!-- <li><span class="square">0</span>Tasks Running <span class="arrow abs" ng-hide="no_task"></span></li> -->
+		<li class="last_li" ><span class="square">{{entries}}</span>Unsaved Time Entries<!-- <span class="arrow abs" ng-hide="no_task"></span> --></li>
 	</ul>
+	
+    <progressbar max="max" value="dynamic"><span style="color:black; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>   
 </div>
 <div class="loginForm">
 	<form>
