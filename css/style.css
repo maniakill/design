@@ -22,11 +22,11 @@ a, a:hover{ text-decoration: none; }
 		.content, .loginForm{ margin: 0 auto; width: 280px; }
 			.content p{ color: #1a1a1a; font-size: 16px; font-weight: bold; text-align: center; font-family:HelveticaLTSBold; margin-top: 3%;}
 		.loginForm{ }
-			.loginForm input { border: 1px solid #cccccc; padding: 12px 10px 12px 60px; width: 280px; margin: 0px; color: #000000; font-size: 17px; }
-			.loginForm input.text{ border-bottom: 0px; border-radius: 10px 10px 0 0; height: 45px; background: url("../images/loginIcons.png") no-repeat left -1px #ffffff; }
-			.loginForm input.password{ border-radius: 0 0 10px 10px; background: url("../images/loginIcons.png") no-repeat left -46px #ffffff; height: 45px; }
+			.loginForm input { border: 1px solid #cccccc; padding: 12px 10px 12px 60px; width: 208px; margin: 0px; color: #000000; font-size: 17px; }
+			.loginForm input.text{ border-bottom: 0px; border-radius: 10px 10px 0 0; height: 20px; background: url("../images/loginIcons.png") no-repeat left -1px #ffffff; }
+			.loginForm input.password{ border-radius: 0 0 10px 10px; background: url("../images/loginIcons.png") no-repeat left -46px #ffffff; height: 20px; }
 			.loginForm input.submit{ border-radius: 10px; border: 1px solid #3a6884; margin: 5% 0px; width: 100%; padding: 12px 10px; font-size: 22px; color: #ffffff; background: url("../images/loginBg.png") repeat-x left top; text-shadow: 0px -1px #013a66; }
-			.loginForm input.account { border-radius: 10px; width: 280px; margin: 5% 0px 0px; padding: 12px 10px; font-size: 17px; }
+			.loginForm input.account { border-radius: 10px; width: 258px; margin: 5% 0px 0px; padding: 12px 10px; font-size: 17px; }
 			#forgot { text-decoration: none; color: #5d97b9; font-size: 17px; font-weight: bold; text-align: center; display: block; font-family:HelveticaLTSBold; }
 			.loginForm label { color: #666666; font-size: 17px; font-family:HelveticaLTSBold; margin-top: 15%; padding-left: 10px; }
 		.header {  background: url("../images/loginBg.png") repeat-x left top; min-height: 31px; padding: 6px; }
@@ -70,7 +70,7 @@ a, a:hover{ text-decoration: none; }
 					.square_active { background: #ff9878; color: #ffffff; }
 			.add_note { margin-top: 10px; }
 			.timepicker { margin: 0 auto 10px; }
-				.timepicker input.form-control { height: 116px; width: 134px; font-size: 108px; border: 2px solid #b7b7b7; padding: 6px; line-height: normal; }
+				.timepicker input.form-control { height: 116px; width: 118px; font-size: 108px; border: 2px solid #b7b7b7; padding: 6px; line-height: normal; }
 		.lists {}
 			.lists li { padding: 5px 10px 2px; border-bottom: 1px solid #E6E6E6; font-weight: bold; cursor: pointer; }
 			.lists li.tasks_list { padding: 16px 10px 13px; }
