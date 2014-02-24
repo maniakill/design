@@ -17,6 +17,15 @@
 			<a href="#/expenses_list" class="footer_link" >Expenses</a>
 		</div>
 	</div>
+	<div class="footers left {{pendingAct}}">
+		<div class="footer_active" ng-hide="pending">
+			<div class="blur" ></div>
+		</div>
+		<div class="footer_container" ng-click="go('pending')">
+			<div class="pending_footer"></div>
+			<a href="#/pending" class="footer_link" >Pending</a>
+		</div>
+	</div>
 	<div class="footers left footer_last {{accountAct}}">
 		<div class="footer_active" ng-hide="account">
 			<div class="blur" ></div>

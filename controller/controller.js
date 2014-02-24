@@ -72,7 +72,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
             var time=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
         }
         $scope.no_project = true;
-        
+
         if(!project.taskTimeId[time]){
             project.taskTimeId[time] = {};
         }
@@ -157,6 +157,7 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
         $scope.timesheet = true;
         $scope.expense = true;
         $scope.account = true;
+        $scope.pending = true;
 
         switch($route.current.controller){
             case 'expenses':
@@ -168,6 +169,10 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
             case 'account':
                 $scope.account = false;
                 $scope.accountAct = 'act';
+                break;
+            case 'pending':
+                $scope.pending = false;
+                $scope.pendingAct = 'act';
                 break;
             default:
                 $scope.timesheet = false;
@@ -849,15 +854,17 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
     }
 ]);
 // pending
-ctrl.controller('pending',['$scope', '$location','project',
-    function ($scope, $location,project){
+ctrl.controller('pending',['$scope', '$location','project', '$timeout',
+    function ($scope, $location,project,$timeout){
         var connect = checkConnection();
         /* things to sync:
             project.taskTimeId;
             project.expense
         */
-        console.log(project.expense,project.toSync);
-        // console.log(project.toSync);
+
+        $scope.times = 0;
+        $scope.progress = true;
+
         $scope.max = Object.keys(project.toSync).length;
         $scope.dynamic = 0;
         $scope.type = 'info';
@@ -867,23 +874,29 @@ ctrl.controller('pending',['$scope', '$location','project',
         $scope.running = 0;
         for(x in project.toSync){
             var item = project.toSync[x];
-            if(item.type == 'time'){                
+            if(item.type == 'time'){
                 if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){
                     $scope.running++;
                 }else{
-                    $scope.entries++;    
+                    $scope.entries++;
                 }
             }else{
                 $scope.expenses++;
             }
         }
-        
+
         // connect = 'none';
         $scope.sync = function(){
-            if(connect != 'none' && connect !='unknown'){
-                project.sync();
-            }else{
-                $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ];
+            $scope.max = Object.keys(project.toSync).length;
+            if($scope.max > 0){
+                if(connect != 'none' && connect !='unknown'){
+                    $scope.progress = false;
+                    $scope.times = 0;
+                    $scope.dynamic = 0;
+                    project.sync();
+                }else{
+                    $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ];
+                }
             }
         }
 
@@ -893,6 +906,19 @@ ctrl.controller('pending',['$scope', '$location','project',
 
         $scope.$on('syned', function(arg) {
             $scope.dynamic++;
+        });
+
+        $scope.$on('finish', function(arg) {
+            $scope.times++;
+            if($scope.times > $scope.max){
+                for(x in project.toSync){
+                    project.toSync[x].synced = false;
+                }
+                localStorage.setItem('toSync',JSON.stringify(project.toSync));
+                $timeout(function() {
+                    $scope.progress = true;
+                },1000);
+            }
         });
 
     }
