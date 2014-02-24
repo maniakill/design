@@ -158,6 +158,11 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
         $scope.expense = true;
         $scope.account = true;
         $scope.pending = true;
+        $scope.pend = true;
+        $scope.items = Object.keys(project.toSync).length;
+        if($scope.items > 0){
+            $scope.pend = false
+        }
 
         switch($route.current.controller){
             case 'expenses':
@@ -827,7 +832,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 
     }
 ]);
-//acount
+// acount
 ctrl.controller('account',['$scope', '$location', 'project', '$interval',
     function ($scope, $location, project,$interval){
         $scope.username = localStorage.username;
@@ -843,7 +848,7 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
             project.taskTimeId = {};
             project.taskTime = {};
         }
-        removeStuff();
+        // removeStuff();
         $scope.logout = function (){
             // $interval.cancel(project.interval);
             localStorage.setItem('username','');
