@@ -856,16 +856,23 @@ ctrl.controller('pending',['$scope', '$location','project',
             project.taskTimeId;
             project.expense
         */
+        console.log(project.expense,project.toSync);
+        // console.log(project.toSync);
         $scope.max = Object.keys(project.toSync).length;
         $scope.dynamic = 0;
         $scope.type = 'info';
 
         $scope.entries = 0;
         $scope.expenses = 0;
+        $scope.running = 0;
         for(x in project.toSync){
             var item = project.toSync[x];
-            if(item.type == 'time'){
-                $scope.entries++;
+            if(item.type == 'time'){                
+                if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){
+                    $scope.running++;
+                }else{
+                    $scope.entries++;    
+                }
             }else{
                 $scope.expenses++;
             }
@@ -883,6 +890,10 @@ ctrl.controller('pending',['$scope', '$location','project',
         $scope.closeAlert = function(index) {
             $scope.alerts.splice(index, 1);
         };
+
+        $scope.$on('syned', function(arg) {
+            $scope.dynamic++;
+        });
 
     }
 ]);

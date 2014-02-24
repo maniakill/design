@@ -90,3 +90,5 @@ a, a:hover{ text-decoration: none; }
 .modal-body { padding: 20px 20px 5px; }
 .glyphicon-chevron-up{ background-position: -288px -121px; }
 .glyphicon-chevron-down{ background-position: -312px -121px; }
+.progress { height: 43px; margin-top: 20px; }
+.progress-bar { padding-top: 11px; }

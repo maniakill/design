@@ -871,14 +871,124 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             }
             return true;
         }
-
+        // syncronization function zhe shiit!
         project.sync = function(){            
-            console.log(Object.keys(project.toSync).length);
+            // console.log(project.toSync);
             for(x in project.toSync){
-                var item = project.toSync[x];
-                
-            }
+                var item = project.toSync[x],
+                    itemNr = x;
+                if(item.type == 'time' && !item.synced){
+                    if(typeof(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['task_time_id']) == 'string'){
+                        var sendItem = {};
+                        sendItem.task_time_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['task_time_id'];
+                        sendItem.hours = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['hours'];
+                        sendItem.notes = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['notes'];
+                        $http({
+                            method: 'POST',
+                            url: url+'index.php?do=mobile--mobile-save_time&'+key+'&overwrite=1',
+                            data: 'task_time=' + JSON.stringify(Array(sendItem)),
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        }).then(function(res){
+                            if(res.data.code == 'ok' && res.data.response.updated[0] == item.id){
+                                // delete from sync 
+                                project.toSync[itemNr].synced = true;
+                                if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] != 'active'){
+                                    delete project.toSync[itemNr];
+                                }
+                                $rootScope.$broadcast('syned');
+                                saveTime('toSync', project.toSync);
+                                return project.sync();
+                            }
+                        });
+                        break;
+                    }else{
+                        var sendItem = {};
+                        sendItem.task_time_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['task_time_id'];
+                        sendItem.hours = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['hours'];
+                        sendItem.notes = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['notes'];
+                        $http({
+                            method: 'POST',
+                            url: url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+item.pId+'&customer_id='+item.cId+'&task_id='+item.tId+'&notes='+sendItem.notes+'&hours='+sendItem.hours+'&start='+item.time,
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        }).then(function(res){
+                            
+                            if(res.data.code == 'ok'){
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id] = {};
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].task_time_id = res.data.response.id;
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].task_id = item.tId;
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].project_id = item.pId;
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].customer_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['customer_id'];
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].hours = sendItem.hours;
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].notes = sendItem.notes;
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].active = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'];
+                                delete project.toSync[itemNr];
+                                if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){
+                                    project.taskTime[res.data.response.id] = {};
+                                    project.taskTime[res.data.response.id].start = project.taskTime[sendItem.task_time_id].start;
+                                    project.taskTime[res.data.response.id].pId = item.pId;
+                                    project.taskTime[res.data.response.id].time = item.time;
+                                    delete project.taskTime[sendItem.task_time_id];
+                                    project.addToSync('time',item.time,item.pId,item.cId,item.tId,res.data.response.id);
+                                    project.toSync[itemNr].synced = true;
+                                }
+                                delete project.taskTimeId[sendItem.task_time_id];
+                                $rootScope.$broadcast('syned');
+                                saveTime('toSync', project.toSync);
+                                saveTime('taskTimeId', project.taskTimeId);
+                                saveTime('taskTime', project.taskTime);
+                                return project.sync();
+                            }
+                        });
+                        break;
+                    }                   
+                }else if(item.type=='expense' && !item.synced){
+                    if(typeof(project.expense[item.time][item.id]['id']) == 'string'){}else{
+                        var prId = item.pId,
+                            notes = project.expense[item.time][item.id]['note'],
+                            amount = project.expense[item.time][item.id]['amount'];                            
+                        if(typeof(item.pId)!='string'){
+                            prId = '';
+                        }
+                        $http({
+                            method: 'POST',
+                            url: url+'index.php?do=mobile--mobile-add_expense&'+key,
+                            data: '&project_id='+prId+'&customer_id='+item.cId+'&expense_id='+item.tId+'&note='+notes+'&amount='+amount+'&start='+item.time,
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        }).then(function(res){
+                            console.log(res);
+                            if(res.data.code == 'ok'){
+                                // delete from sync 
 
+                                project.expense[item.time][res.data.response[0].id] = {};
+                                project.expense[item.time][res.data.response[0].id].amount = amount;
+                                project.expense[item.time][res.data.response[0].id].customer_id = item.cId;
+                                project.expense[item.time][res.data.response[0].id].customer_name = project.expense[item.time][item.id]['customer_name'];
+                                project.expense[item.time][res.data.response[0].id].expense_id = item.tId;
+                                project.expense[item.time][res.data.response[0].id].expense_name = project.expense[item.time][item.id]['expense_name'];
+                                project.expense[item.time][res.data.response[0].id].note = notes;
+                                project.expense[item.time][res.data.response[0].id].project_id = res.data.response[0].project_id;
+                                project.expense[item.time][res.data.response[0].id].project_name = project.expense[item.time][item.id]['project_name'];
+                                project.expense[item.time][res.data.response[0].id].unit = project.expense[item.time][item.id]['unit'];
+                                project.expense[item.time][res.data.response[0].id].unit_price = project.expense[item.time][item.id]['unit_price'];;                                
+                                delete project.expense[item.time][itemNr];    
+                                delete project.toSync[itemNr];
+                                $rootScope.$broadcast('syned');
+                                saveTime('toSync', project.toSync);
+                                saveTime('expenses', project.toSync);
+                                return project.sync();
+                            }
+                        });
+                    break;
+                    }
+                }else{
+
+                }                
+            }
+            // mark as sync again
+            for(x in project.toSync){
+                project.toSync[x].synced = false;
+            }
+            saveTime('toSync', project.toSync);
         }
 
         project.addToSync = function(type,time,pId,cId,tId,id){
@@ -895,6 +1005,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             this.cId = cId;
             this.tId = tId;
             this.id = id;
+            this.synced = false;
         }
 
         return project;
