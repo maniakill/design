@@ -862,7 +862,7 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
 ctrl.controller('pending',['$scope', '$location','project', '$timeout',
     function ($scope, $location,project,$timeout){
 
-        // var connect = checkConnection();
+        var connect = checkConnection();
         /* things to sync:
             project.taskTimeId;
             project.expense
