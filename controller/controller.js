@@ -869,8 +869,10 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
 
         $scope.times = 0;
         $scope.progress = true;
-
-        $scope.max = Object.keys(project.toSync).length;
+        $scope.max = 0;
+        if(project.toSync){
+            $scope.max = Object.keys(project.toSync).length;    
+        }        
         $scope.dynamic = 0;
         $scope.type = 'info';
 

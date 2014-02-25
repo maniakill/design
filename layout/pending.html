@@ -1,10 +1,10 @@
 <div ng-include="'layout/header.html'" />
-<div class="add_wrap">
+<!-- <div class="add_wrap">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<ul class="add_ul">
-		<li><span class="square">{{expenses}}</span>New Expense <!-- <span class="arrow abs" ng-hide="no_task"></span> --></li>
-		<li><span class="square">{{running}}</span>Tasks Running <!-- <span class="arrow abs" ng-hide="no_task"></span> --></li>
-		<li class="last_li" ><span class="square">{{entries}}</span>Unsaved Time Entries<!-- <span class="arrow abs" ng-hide="no_task"></span> --></li>
+		<li><span class="square">{{expenses}}</span>New Expense </li>
+		<li><span class="square">{{running}}</span>Tasks Running </li>
+		<li class="last_li" ><span class="square">{{entries}}</span>Unsaved Time Entries</li>
 	</ul>
     <progressbar max="max" value="dynamic" ng-hide="progress"><span style="color:black; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>
 </div>
@@ -12,5 +12,5 @@
 	<form>
 		<input type="submit" class="submit" value="Sync All" ng-click="sync()">
 	</form>
-</div>
+</div> -->
 <div data-ng-include="'layout/footer.html'" />
