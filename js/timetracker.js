@@ -19,11 +19,15 @@ function onDeviceReady() {
 }
 
 function checkConnection() {
+    alert('d');
     if(deviceReady){
+        alert('e');
         var networkState = navigator.connection.type;
     }else{
+        alert('f');
         var networkState = 'browser';
     }
+    alert('z');
     // var states = {};
     // states[Connection.UNKNOWN]  = 'Unknown connection';
     // states[Connection.ETHERNET] = 'Ethernet connection';
