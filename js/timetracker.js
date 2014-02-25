@@ -952,10 +952,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             data: '&project_id='+prId+'&customer_id='+item.cId+'&expense_id='+item.tId+'&note='+notes+'&amount='+amount+'&start='+item.time,
                             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                         }).then(function(res){
-                            console.log(res);
                             if(res.data.code == 'ok'){
                                 // delete from sync
-
                                 project.expense[item.time][res.data.response[0].id] = {};
                                 project.expense[item.time][res.data.response[0].id].amount = amount;
                                 project.expense[item.time][res.data.response[0].id].customer_id = item.cId;
