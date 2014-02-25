@@ -14,28 +14,27 @@
     <preference name="PaginationBreakingMode" value="page" />
     <preference name="PaginationMode" value="unpaginated" />
     <preference name="loglevel" value="DEBUG" />
-    <feature name="Device">
-        <param name="android-package" value="org.apache.cordova.device.Device" />
-    </feature>
-    <feature name="http://api.phonegap.com/1.0/device" />
-    <feature name="NetworkStatus">
-        <param name="ios-package" value="CDVConnection" />
-    </feature>
-    <feature name="NetworkStatus">
-        <param name="android-package" value="org.apache.cordova.networkinformation.NetworkManager" />
-    </feature>
-    <feature name="LocalStorage">
-        <param name="ios-package" value="CDVLocalStorage" />
-    </feature>
-    <feature name="Camera">
-        <param name="ios-package" value="CDVCamera" />
-    </feature>
-    <feature name="App">
-        <param name="android-package" value="org.apache.cordova.App" />
-    </feature>
-    <feature name="Camera">
-        <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
-    </feature>
+    
+    <gap:plugin name="org.apache.cordova.battery-status" />
+    <gap:plugin name="org.apache.cordova.camera" />
+    <gap:plugin name="org.apache.cordova.media-capture" />
+    <gap:plugin name="org.apache.cordova.console" />
+    <gap:plugin name="org.apache.cordova.contacts" />
+    <gap:plugin name="org.apache.cordova.device" />
+    <gap:plugin name="org.apache.cordova.device-motion" />
+    <gap:plugin name="org.apache.cordova.device-orientation" />
+    <gap:plugin name="org.apache.cordova.dialogs" />
+    <gap:plugin name="org.apache.cordova.file" />
+    <gap:plugin name="org.apache.cordova.file-transfer" />
+    <gap:plugin name="org.apache.cordova.geolocation" />
+    <gap:plugin name="org.apache.cordova.globalization" />
+    <gap:plugin name="org.apache.cordova.inappbrowser" />
+    <gap:plugin name="org.apache.cordova.media" />
+    <gap:plugin name="org.apache.cordova.network-information" />
+    <gap:plugin name="org.apache.cordova.splashscreen" />
+    <gap:plugin name="org.apache.cordova.vibration" />
+
+
     <name>SalesAssist TimeTracker</name>
     <description>
         SalesAssist Time Tracker application
