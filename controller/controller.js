@@ -861,14 +861,14 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
 // pending
 ctrl.controller('pending',['$scope', '$location','project', '$timeout',
     function ($scope, $location,project,$timeout){
-        alert('d');
+
         // var connect = checkConnection();
         /* things to sync:
             project.taskTimeId;
             project.expense
         */
 
-        /*$scope.times = 0;
+        $scope.times = 0;
         $scope.progress = true;
         $scope.max = 0;
         if(project.toSync){
@@ -928,7 +928,7 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
                 },1000);
             }
         });
-*/
+
     }
 ]);
 
