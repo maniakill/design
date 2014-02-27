@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('1');
+alert('2');
 var deviceReady = false;
 var pictureSource;
 var destinationType;
@@ -20,7 +20,6 @@ function onDeviceReady() {
 }
 
 function checkConnection() {
-    alert('d');
     if(deviceReady){
         var networkState = navigator.connection.type;
     }else{
@@ -40,7 +39,6 @@ function checkConnection() {
 }
 
 function capturePhoto() {
-    alert('1');
     // console.log(destinationType);
     alert('e '+Camera.DestinationType.DATA_URL);
     alert(navigator.camera.toSource());
@@ -50,6 +48,7 @@ function capturePhoto() {
 }
 
 function onPhotoDataSuccess(imageData) {
+    alert('onPhotoDataSuccess');
   // Uncomment to view the base64-encoded image data
   console.log(imageData);
     alert('capturePhoto2');

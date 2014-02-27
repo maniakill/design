@@ -867,7 +867,7 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
             project.taskTimeId;
             project.expense
         */
-
+        alert(connect);
         $scope.times = 0;
         $scope.progress = true;
         $scope.max = 0;
