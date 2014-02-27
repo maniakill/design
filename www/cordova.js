@@ -6941,6 +6941,7 @@ require('cordova/channel').onNativeReady.fire();
     } catch(err){
         injectPluginScript();
     }*/
+    injectPluginScript();
     finishPluginLoading();
 }(window));
 
