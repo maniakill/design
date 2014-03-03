@@ -1,19 +1,11 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('17');
+alert('18');
 
-var pictureSource;
-var destinationType;
 window.addEventListener('load', function() {
     FastClick.attach(document.body);
 }, false);
 /*
-function onLoad() {
-    document.addEventListener("deviceready", onDeviceReady, false);
-}
-onLoad();
-// device APIs are available
-//
-// phoneGap
+
 function onDeviceReady() {
     alert('onDeviceReady');
     deviceReady = true;
@@ -22,7 +14,7 @@ function onDeviceReady() {
 }
 */
 function checkConnection() {
-    if(deviceReady){
+    if(devReady){
         var networkState = navigator.connection.type;
     }else{
         var networkState = 'browser';
