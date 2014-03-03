@@ -868,67 +868,67 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
             project.expense
         */
         
-        // $scope.times = 0;
-        // $scope.progress = true;
-        // $scope.max = 0;
-        // if(project.toSync){
-        //     $scope.max = Object.keys(project.toSync).length;    
-        // }        
-        // $scope.dynamic = 0;
-        // $scope.type = 'info';
+        $scope.times = 0;
+        $scope.progress = true;
+        $scope.max = 0;
+        if(project.toSync){
+            $scope.max = Object.keys(project.toSync).length;    
+        }        
+        $scope.dynamic = 0;
+        $scope.type = 'info';
 
-        // $scope.entries = 0;
-        // $scope.expenses = 0;
-        // $scope.running = 0;
-        // for(x in project.toSync){
-        //     var item = project.toSync[x];
-        //     if(item.type == 'time'){
-        //         if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){
-        //             $scope.running++;
-        //         }else{
-        //             $scope.entries++;
-        //         }
-        //     }else{
-        //         $scope.expenses++;
-        //     }
-        // }
+        $scope.entries = 0;
+        $scope.expenses = 0;
+        $scope.running = 0;
+        for(x in project.toSync){
+            var item = project.toSync[x];
+            if(item.type == 'time'){
+                if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){
+                    $scope.running++;
+                }else{
+                    $scope.entries++;
+                }
+            }else{
+                $scope.expenses++;
+            }
+        }
 
-        // // connect = 'none';
-        // $scope.sync = function(){
-        //     alert(connect);
-        //     $scope.max = Object.keys(project.toSync).length;
-        //     if($scope.max > 0){
-        //         if(connect != 'none' && connect !='unknown'){
-        //             $scope.progress = false;
-        //             $scope.times = 0;
-        //             $scope.dynamic = 0;
-        //             project.sync();
-        //         }else{
-        //             $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ];
-        //         }
-        //     }
-        // }
+        // connect = 'none';
+        $scope.sync = function(){
+            alert(connect);
+            $scope.max = Object.keys(project.toSync).length;
+            if($scope.max > 0){
+                if(connect != 'none' && connect !='unknown'){
+                    $scope.progress = false;
+                    $scope.times = 0;
+                    $scope.dynamic = 0;
+                    project.sync();
+                }else{
+                    $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ];
+                }
+            }
+        }
 
-        // $scope.closeAlert = function(index) {
-        //     $scope.alerts.splice(index, 1);
-        // };
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
 
-        // $scope.$on('syned', function(arg) {
-        //     $scope.dynamic++;
-        // });
+        $scope.$on('syned', function(arg) {
+            $scope.dynamic++;
+        });
 
-        // $scope.$on('finish', function(arg) {
-        //     $scope.times++;
-        //     if($scope.times > $scope.max){
-        //         for(x in project.toSync){
-        //             project.toSync[x].synced = false;
-        //         }
-        //         localStorage.setItem('toSync',JSON.stringify(project.toSync));
-        //         $timeout(function() {
-        //             $scope.progress = true;
-        //         },1000);
-        //     }
-        // });
+        $scope.$on('finish', function(arg) {
+            $scope.times++;
+            if($scope.times > $scope.max){
+                for(x in project.toSync){
+                    project.toSync[x].synced = false;
+                }
+                localStorage.setItem('toSync',JSON.stringify(project.toSync));
+                $timeout(function() {
+                    $scope.progress = true;
+                },1000);
+            }
+        });
 
     }
 ]);
