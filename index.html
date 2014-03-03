@@ -10,9 +10,9 @@
 		<!-- !css -->
 		<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 	    <script type="text/javascript" charset="utf-8">
-	    var devReady = false,
-	    	pictureSource,
-			destinationType;
+	    var devReady = false;
+	    var	pictureSource;
+		var	destinationType;
 	    // Wait for device API libraries to load
 	    //
 	    function onLoad() {
@@ -25,8 +25,8 @@
 	    function onDeviceReady() {
 	        // Now safe to use device APIs
 	        devReady = true;
-	        pictureSource=navigator.camera.PictureSourceType;
-    		destinationType=navigator.camera.DestinationType;
+	        // pictureSource=navigator.camera.PictureSourceType;
+    		// destinationType=navigator.camera.DestinationType;
 	        alert('onDeviceReady');
 	    }
 
