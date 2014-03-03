@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('27');
+alert('28');
 
 window.addEventListener('load', function() {
     FastClick.attach(document.body);
@@ -16,7 +16,10 @@ function onDeviceReady() {
 function checkConnection() {
     console.log(devReady);
     if(devReady === true){
-        console.log('e',navigator,navigator.connection,navigator.connection.type);
+        console.log('e');
+        console.log(navigator);
+        console.log(navigator.connection);
+        console.log(navigator.connection.type);
         var networkState = navigator.connection.type;
         console.log('e');
     }else{
