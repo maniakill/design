@@ -867,7 +867,7 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
             project.taskTimeId;
             project.expense
         */
-        alert(connect);
+        
         $scope.times = 0;
         $scope.progress = true;
         $scope.max = 0;
@@ -895,6 +895,7 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
 
         // connect = 'none';
         $scope.sync = function(){
+            alert(connect);
             $scope.max = Object.keys(project.toSync).length;
             if($scope.max > 0){
                 if(connect != 'none' && connect !='unknown'){
