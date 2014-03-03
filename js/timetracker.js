@@ -1,12 +1,12 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('13');
+alert('14');
 var deviceReady = false;
 var pictureSource;
 var destinationType;
 window.addEventListener('load', function() {
     FastClick.attach(document.body);
 }, false);
-
+/*
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
 }
@@ -20,7 +20,7 @@ function onDeviceReady() {
     pictureSource=navigator.camera.PictureSourceType;
     destinationType=navigator.camera.DestinationType;
 }
-
+*/
 function checkConnection() {
     if(deviceReady){
         var networkState = navigator.connection.type;

@@ -8,9 +8,28 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 		<link rel="stylesheet" type="text/css" href="css/mobile-css.css">
 		<!-- !css -->
+		<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+	    <script type="text/javascript" charset="utf-8">
+
+	    // Wait for device API libraries to load
+	    //
+	    function onLoad() {
+	    	alert('onload');
+	        document.addEventListener("deviceready", onDeviceReady, false);
+	    }
+
+	    // device APIs are available
+	    //
+	    function onDeviceReady() {
+	        // Now safe to use device APIs
+	        alert('onDeviceReady');
+	    }
+
+	    </script>
+
 		<script src="cordova.js?"></script>
 	</head>
-	<body>
+	<body onload="onLoad()">
 		<div ng-view=""></div>
 		<!-- <mobile-view></mobile-view> -->
 		<!-- javascript -->
