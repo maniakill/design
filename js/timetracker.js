@@ -22,7 +22,7 @@ function onDeviceReady() {
 }
 
 function checkConnection() {
-    alert(deviceready.toSource());
+    alert(deviceReady.toSource());
     if(deviceReady){
         var networkState = navigator.connection.type;
     }else{
