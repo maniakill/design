@@ -105,7 +105,7 @@ var channel = require('cordova/channel');
  * Listen for DOMContentLoaded and notify our channel subscribers.
  */
 document.addEventListener('DOMContentLoaded', function() {
-    channel.onDOMContentLoaded.fire();
+    channel.onDOMContentLoaded.fire();    
 }, false);
 if (document.readyState == 'complete' || document.readyState == 'interactive') {
     channel.onDOMContentLoaded.fire();
@@ -6722,6 +6722,7 @@ window.cordova = require('cordova');
 
     window.setTimeout(function() {
         if (channel.onDeviceReady.state != 2) {
+            alert('deviceready has not fired after 5 seconds.');
             console.log('deviceready has not fired after 5 seconds.');
             logUnfiredChannels(platformInitChannelsArray);
             logUnfiredChannels(channel.deviceReadyChannelsArray);

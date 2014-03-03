@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('4');
+alert('5');
 var deviceReady = false;
 var pictureSource;
 var destinationType;
@@ -7,8 +7,8 @@ window.addEventListener('load', function() {
     FastClick.attach(document.body);
 }, false);
 function onLoad() {
-    alert('onLoad')
-    document.addEventListener("deviceready", onDeviceReady, false);
+    alert('onLoad');
+    document.addEventListener("deviceready", onDeviceReady, onDeviceNotReady);
 }
 onLoad();
 // device APIs are available
@@ -19,6 +19,11 @@ function onDeviceReady() {
     deviceReady = true;
     pictureSource=navigator.camera.PictureSourceType;
     destinationType=navigator.camera.DestinationType;
+}
+
+function onDeviceNotReady(e){
+    alert('onDeviceNotReady');
+    alert(e.toSource);
 }
 
 function checkConnection() {
