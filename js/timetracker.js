@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('2');
+alert('3');
 var deviceReady = false;
 var pictureSource;
 var destinationType;
@@ -14,12 +14,14 @@ onLoad();
 //
 // phoneGap
 function onDeviceReady() {
+    alert('onDeviceReady');
     deviceReady = true;
     pictureSource=navigator.camera.PictureSourceType;
     destinationType=navigator.camera.DestinationType;
 }
 
 function checkConnection() {
+    alert(deviceready);
     if(deviceReady){
         var networkState = navigator.connection.type;
     }else{
