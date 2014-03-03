@@ -1,6 +1,6 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('14');
-var deviceReady = false;
+alert('15');
+
 var pictureSource;
 var destinationType;
 window.addEventListener('load', function() {
@@ -22,6 +22,7 @@ function onDeviceReady() {
 }
 */
 function checkConnection() {
+    console.log(deviceReady);
     if(deviceReady){
         var networkState = navigator.connection.type;
     }else{
