@@ -1,14 +1,14 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('5');
+alert('6');
 var deviceReady = false;
 var pictureSource;
 var destinationType;
 window.addEventListener('load', function() {
     FastClick.attach(document.body);
 }, false);
+
 function onLoad() {
-    alert('onLoad');
-    document.addEventListener("deviceready", onDeviceReady, onDeviceNotReady);
+    document.addEventListener("deviceready", onDeviceReady, false);
 }
 onLoad();
 // device APIs are available
@@ -21,11 +21,6 @@ function onDeviceReady() {
     destinationType=navigator.camera.DestinationType;
 }
 
-function onDeviceNotReady(e){
-    alert('onDeviceNotReady');
-    alert(e.toSource);
-}
-
 function checkConnection() {
     alert(deviceReady.toSource());
     if(deviceReady){
@@ -33,7 +28,6 @@ function checkConnection() {
     }else{
         var networkState = 'browser';
     }
-    alert(networkState);
     // var states = {};
     // states[Connection.UNKNOWN]  = 'Unknown connection';
     // states[Connection.ETHERNET] = 'Ethernet connection';
