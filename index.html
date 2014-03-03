@@ -10,7 +10,7 @@
 		<!-- !css -->
 		<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 	    <script type="text/javascript" charset="utf-8">
-
+	    var devReady = false;
 	    // Wait for device API libraries to load
 	    //
 	    function onLoad() {
@@ -22,6 +22,7 @@
 	    //
 	    function onDeviceReady() {
 	        // Now safe to use device APIs
+	        devReady = true;
 	        alert('onDeviceReady');
 	    }
 

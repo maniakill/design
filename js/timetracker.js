@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('16');
+alert('17');
 
 var pictureSource;
 var destinationType;
