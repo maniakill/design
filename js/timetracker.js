@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('28');
+alert('29');
 
 window.addEventListener('load', function() {
     FastClick.attach(document.body);
@@ -14,28 +14,28 @@ function onDeviceReady() {
 }
 */
 function checkConnection() {
-    console.log(devReady);
     if(devReady === true){
-        console.log('e');
-        console.log(navigator);
-        console.log(navigator.connection);
-        console.log(navigator.connection.type);
+        // console.log('e');
+        // console.log(navigator);
+        // console.log(navigator.connection);
+        // console.log(navigator.connection.type);
         var networkState = navigator.connection.type;
-        console.log('e');
+        // console.log('e');
     }else{
         var networkState = 'browser';
     }
-    console.log(networkState);
-    // var states = {};
-    // states[Connection.UNKNOWN]  = 'Unknown connection';
-    // states[Connection.ETHERNET] = 'Ethernet connection';
-    // states[Connection.WIFI]     = 'WiFi connection';
-    // states[Connection.CELL_2G]  = 'Cell 2G connection';
-    // states[Connection.CELL_3G]  = 'Cell 3G connection';
-    // states[Connection.CELL_4G]  = 'Cell 4G connection';
-    // states[Connection.CELL]     = 'Cell generic connection';
-    // states[Connection.NONE]     = 'No network connection';
-    // alert('Connection type: ' + states[networkState]);
+    // console.log(networkState);
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.CELL]     = 'Cell generic connection';
+    states[Connection.NONE]     = 'No network connection';
+    alert('Connection type: ' + states[networkState]);
+    console.log(states[networkState]);
     return networkState;
 }
 
