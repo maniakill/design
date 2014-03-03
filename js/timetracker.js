@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('3');
+alert('4');
 var deviceReady = false;
 var pictureSource;
 var destinationType;
@@ -7,6 +7,7 @@ window.addEventListener('load', function() {
     FastClick.attach(document.body);
 }, false);
 function onLoad() {
+    alert('onLoad')
     document.addEventListener("deviceready", onDeviceReady, false);
 }
 onLoad();
@@ -21,12 +22,13 @@ function onDeviceReady() {
 }
 
 function checkConnection() {
-    alert(deviceready);
+    alert(deviceready.toSource());
     if(deviceReady){
         var networkState = navigator.connection.type;
     }else{
         var networkState = 'browser';
     }
+    alert(networkState);
     // var states = {};
     // states[Connection.UNKNOWN]  = 'Unknown connection';
     // states[Connection.ETHERNET] = 'Ethernet connection';
