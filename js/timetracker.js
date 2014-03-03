@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('7');
+alert('8');
 var apps = {
     // Application Constructor
     initialize: function() {
