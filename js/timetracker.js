@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('12');
+alert('13');
 var deviceReady = false;
 var pictureSource;
 var destinationType;
