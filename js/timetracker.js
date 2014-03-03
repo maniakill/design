@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('24');
+alert('25');
 
 window.addEventListener('load', function() {
     FastClick.attach(document.body);
@@ -20,6 +20,7 @@ function checkConnection() {
     }else{
         var networkState = 'browser';
     }
+    console.log(networkState);
     // var states = {};
     // states[Connection.UNKNOWN]  = 'Unknown connection';
     // states[Connection.ETHERNET] = 'Ethernet connection';
