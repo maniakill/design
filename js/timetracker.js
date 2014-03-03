@@ -1,5 +1,5 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('23');
+alert('24');
 
 window.addEventListener('load', function() {
     FastClick.attach(document.body);
