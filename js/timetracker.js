@@ -25,11 +25,11 @@ function capturePhoto() {
     console.log(destinationType,pictureSource);
   // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
-    destinationType.DATA_URL });
+     destinationType: destinationType.DATA_URL });
 }
 
 function onPhotoDataSuccess(imageData) {
-    console.log('onPhotoDataSuccess';)
+    console.log('onPhotoDataSuccess');
   // Uncomment to view the base64-encoded image data
   console.log(imageData);
     
