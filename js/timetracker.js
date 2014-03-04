@@ -23,17 +23,16 @@ function checkConnection() {
 
 function capturePhoto() {
     console.log(destinationType,pictureSource);
-    alert('e '+Camera.DestinationType.DATA_URL);
   // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
-    destinationType: 0, sourceType: 1 });
+    destinationType.DATA_URL });
 }
 
 function onPhotoDataSuccess(imageData) {
-    alert('onPhotoDataSuccess');
+    console.log('onPhotoDataSuccess';)
   // Uncomment to view the base64-encoded image data
   console.log(imageData);
-    alert('capturePhoto2');
+    
   // Get image handle
   var smallImage = document.getElementById('smallImage');
 
@@ -46,18 +45,20 @@ function onPhotoDataSuccess(imageData) {
 }
 
 function onFail(message) {
+    console.log('onFail');
     alert('Failed because: ' + message);
 }
 
 function getPhoto(source) {
+    console.log('getPhoto');
   // Retrieve image file location from specified source
   navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
-    destinationType: Camera.DestinationType.FILE_URI,
+    destinationType: destinationType.FILE_URI,
     sourceType: source });
 }
 function onPhotoURISuccess(imageURI) {
   // Uncomment to view the image file URI
-  // console.log(imageURI);
+  console.log(imageURI);
 
   // Get image handle
   //

@@ -519,6 +519,7 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
                     capturePhoto();
                     break;
                 case 'getPhoto(pictureSource.PHOTOLIBRARY)':
+                    alert(pictureSource.PHOTOLIBRARY);
                     getPhoto(pictureSource.PHOTOLIBRARY);
                     break;
             }
@@ -861,8 +862,6 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
 // pending
 ctrl.controller('pending',['$scope', '$location','project', '$timeout',
     function ($scope, $location,project,$timeout){
-
-        // var connect = checkConnection();
         /* things to sync:
             project.taskTimeId;
             project.expense
@@ -897,7 +896,7 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
         $scope.sync = function(){
             var connect = checkConnection();
             $scope.max = Object.keys(project.toSync).length;
-            // if($scope.max > 0){
+            if($scope.max > 0){
                 if(connect != 'none' && connect !='unknown'){
                     $scope.progress = false;
                     $scope.times = 0;
@@ -906,7 +905,7 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
                 }else{
                     $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ];
                 }
-            // }
+            }
         }
 
         $scope.closeAlert = function(index) {
