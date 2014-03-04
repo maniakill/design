@@ -519,7 +519,6 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
                     capturePhoto();
                     break;
                 case 'getPhoto(pictureSource.PHOTOLIBRARY)':
-                    alert(pictureSource.PHOTOLIBRARY);
                     getPhoto(pictureSource.PHOTOLIBRARY);
                     break;
             }
