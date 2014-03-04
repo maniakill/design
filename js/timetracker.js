@@ -1,48 +1,31 @@
 /// <reference path="../Scripts/angular-1.1.4.js" />
-alert('35');
+alert('36');
 
 window.addEventListener('load', function() {
     FastClick.attach(document.body);
 }, false);
-/*
 
-function onDeviceReady() {
-    alert('onDeviceReady');
-    deviceReady = true;
-    pictureSource=navigator.camera.PictureSourceType;
-    destinationType=navigator.camera.DestinationType;
-}
-*/
 function checkConnection() {
     if(devReady === true){
-        // console.log('e');
-        // console.log(navigator);
-        // console.log(navigator.connection);
-        // console.log(navigator.connection.type);
         var networkState = navigator.connection.type;
-        // console.log('e');
     }else{
         var networkState = 'browser';
     }
-    console.log(networkState);
-    var states = {};
-    states[Connection.UNKNOWN]  = 'Unknown connection';
-    states[Connection.ETHERNET] = 'Ethernet connection';
-    states[Connection.WIFI]     = 'WiFi connection';
-    states[Connection.CELL_2G]  = 'Cell 2G connection';
-    states[Connection.CELL_3G]  = 'Cell 3G connection';
-    states[Connection.CELL_4G]  = 'Cell 4G connection';
-    states[Connection.CELL]     = 'Cell generic connection';
-    states[Connection.NONE]     = 'No network connection';
-    alert('Connection type: ' + states[networkState]);
-    console.log(states[networkState]);
+    // var states = {};
+    // states[Connection.UNKNOWN]  = 'Unknown connection';
+    // states[Connection.ETHERNET] = 'Ethernet connection';
+    // states[Connection.WIFI]     = 'WiFi connection';
+    // states[Connection.CELL_2G]  = 'Cell 2G connection';
+    // states[Connection.CELL_3G]  = 'Cell 3G connection';
+    // states[Connection.CELL_4G]  = 'Cell 4G connection';
+    // states[Connection.CELL]     = 'Cell generic connection';
+    // states[Connection.NONE]     = 'No network connection';
     return networkState;
 }
 
 function capturePhoto() {
     // console.log(destinationType);
     alert('e '+Camera.DestinationType.DATA_URL);
-    alert(navigator.camera.toSource());
   // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
     destinationType: 0, sourceType: 1 });
