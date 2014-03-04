@@ -896,10 +896,8 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
         // connect = 'none';
         $scope.sync = function(){
             var connect = checkConnection();
-            alert(connect);
-            console.log(connect);
             $scope.max = Object.keys(project.toSync).length;
-            if($scope.max > 0){
+            // if($scope.max > 0){
                 if(connect != 'none' && connect !='unknown'){
                     $scope.progress = false;
                     $scope.times = 0;
@@ -908,7 +906,7 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
                 }else{
                     $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ];
                 }
-            }
+            // }
         }
 
         $scope.closeAlert = function(index) {
