@@ -22,7 +22,7 @@ function checkConnection() {
 }
 
 function capturePhoto() {
-    // console.log(destinationType);
+    console.log(destinationType,pictureSource);
     alert('e '+Camera.DestinationType.DATA_URL);
   // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
