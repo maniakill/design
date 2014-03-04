@@ -17,6 +17,7 @@
 	    // Wait for device API libraries to load
 	    //
 	    function onLoad() {
+	    	alert('37');
 	        document.addEventListener("deviceready", onDeviceReady, false);
 	    }
 
@@ -25,9 +26,12 @@
 	    function onDeviceReady() {
 	        // Now safe to use device APIs
 	        devReady = true;
+	        console.log(navigator);
 	        pictureSource=navigator.camera.PictureSourceType;
     		destinationType=navigator.camera.DestinationType;
     		console.log(pictureSource,destinationType);
+    		alert(pictureSource);
+    		alert(destinationType);
 	        alert('onDeviceReady');
 	    }
 
