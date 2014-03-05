@@ -35,6 +35,8 @@
         ArkWeb Team
     </author>
     <gap:plugin name="org.apache.cordova.camera" />
+    <gap:plugin name="org.apache.cordova.media-capture" />
+    <gap:plugin name="org.apache.cordova.media" />
     <content src="index.html" />
     <access origin="*" />
 </widget>
