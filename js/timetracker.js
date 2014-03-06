@@ -9,68 +9,34 @@ function checkConnection() {
     }else{
         var networkState = 'browser';
     }
-    // var states = {};
-    // states[Connection.UNKNOWN]  = 'Unknown connection';
-    // states[Connection.ETHERNET] = 'Ethernet connection';
-    // states[Connection.WIFI]     = 'WiFi connection';
-    // states[Connection.CELL_2G]  = 'Cell 2G connection';
-    // states[Connection.CELL_3G]  = 'Cell 3G connection';
-    // states[Connection.CELL_4G]  = 'Cell 4G connection';
-    // states[Connection.CELL]     = 'Cell generic connection';
-    // states[Connection.NONE]     = 'No network connection';
     return networkState;
 }
 
 function capturePhoto() {
-    // console.log(destinationType,pictureSource);
-  // Take picture using device camera and retrieve image as base64-encoded string
+    // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
      destinationType: destinationType.DATA_URL });
 }
 
 function onPhotoDataSuccess(imageData) {
-    // console.log('onPhotoDataSuccess');
-  // Uncomment to view the base64-encoded image data
-  // console.log(imageData);
-
-  // Get image handle
   var smallImage = document.getElementById('smallImage');
-
-  // Unhide image elements
   smallImage.style.display = 'block';
-
-  // Show the captured photo
-  // The in-line CSS rules are used to resize the image
   smallImage.src = "data:image/jpeg;base64," + imageData;
 }
 
 function onFail(message) {
-    // console.log('onFail');
     alert('Failed because: ' + message);
 }
 
 function getPhoto(source) {
-    // console.log('getPhoto');
-  // Retrieve image file location from specified source
-  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+    // Retrieve image file location from specified source
+    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
     destinationType: destinationType.FILE_URI,
     sourceType: source });
 }
 function onPhotoURISuccess(imageURI) {
-  // Uncomment to view the image file URI
-  // console.log(imageURI);
-
-  // Get image handle
-  //
   var largeImage = document.getElementById('smallImage');
-
-  // Unhide image elements
-  //
   largeImage.style.display = 'block';
-
-  // Show the captured photo
-  // The in-line CSS rules are used to resize the image
-  //
   largeImage.src = imageURI;
 }
 
@@ -152,7 +118,6 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 type = 'timesheet';
                 item = project.time;
             }
-            // localStorage.setItem(type, '');
             localStorage.setItem(type, JSON.stringify(item));
         }
 
