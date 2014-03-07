@@ -4,12 +4,10 @@ window.addEventListener('load', function() {
 }, false);
 
 function checkConnection() {
-    alert('checkConnection');
     if(devReady === true){
-        alert('trie');
+        console.log(navigator.connection,navigator.connection.type);
         var networkState = navigator.connection.type;
     }else{
-        alert('false');
         var networkState = 'browser';
     }
     alert('ma-ta');
