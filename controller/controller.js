@@ -894,7 +894,6 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
         // connect = 'none';
         $scope.sync = function(){
             var connect = checkConnection();
-            alert(connect);
             $scope.max = Object.keys(project.toSync).length;
             if(connect != 'none' && connect !='unknown'){
                 if($scope.max > 0){

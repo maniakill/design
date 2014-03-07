@@ -5,12 +5,10 @@ window.addEventListener('load', function() {
 
 function checkConnection() {
     if(devReady === true){
-        console.log(navigator);
         var networkState = navigator.connection.type;
     }else{
         var networkState = 'browser';
     }
-    alert('ma-ta');
     return networkState;
 }
 
@@ -574,7 +572,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 case "expenses":
                     var item = {},
                         amount = project.getAmount(),
-                        t = start;
+                        t = start,
+                        smallImage = document.getElementById('smallImage');
                     item.id = Date.now();
                     item.amount = project.getAmount();
                     item.expense_id = tId;
@@ -585,6 +584,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.unit = project.getExpense(tId).unit;
                     item.unit_price = project.getExpense(tId).unit_price;
                     item.sync = 1;
+                    item.picture = smallImage.src;
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();

@@ -14,9 +14,7 @@
 	    var	pictureSource;
 		var	destinationType;
 	    // Wait for device API libraries to load
-	    //
 	    function onLoad() {
-	    	
 	        document.addEventListener("deviceready", onDeviceReady, false);
 	    }
 
@@ -24,26 +22,8 @@
 	        devReady = true;
 	        pictureSource=navigator.camera.PictureSourceType;
     		destinationType=navigator.camera.DestinationType;    		
-    		alert('56');    		
+    		alert('57');    		
 	    }
-
-	 //    function capturePhoto() {
-	 //    	alert('Photo function');
-		//     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
-		//      destinationType: destinationType.DATA_URL });
-		// }
-
-		// function onPhotoDataSuccess(imageData) {
-		// 	alert('Camera success');
-		//   var smallImage = document.getElementById('smallImage');
-		//   smallImage.style.display = 'block';
-		//   smallImage.src = "data:image/jpeg;base64," + imageData;
-		// }
-
-		// function onFail(message) {
-		//     alert('Failed because: ' + message);
-		// }
-
 	    </script>
 	</head>
 	<body onload="onLoad()">
