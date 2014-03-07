@@ -5,7 +5,7 @@ window.addEventListener('load', function() {
 
 function checkConnection() {
     if(devReady === true){
-        console.log(navigator.connection,navigator.connection.type);
+        console.log(navigator);
         var networkState = navigator.connection.type;
     }else{
         var networkState = 'browser';
