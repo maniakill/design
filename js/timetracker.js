@@ -4,11 +4,15 @@ window.addEventListener('load', function() {
 }, false);
 
 function checkConnection() {
+    alert('checkConnection');
     if(devReady === true){
+        alert('trie');
         var networkState = navigator.connection.type;
     }else{
+        alert('false');
         var networkState = 'browser';
     }
+    alert('ma-ta');
     return networkState;
 }
 
