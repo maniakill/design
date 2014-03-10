@@ -76,7 +76,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         if(!project.taskTimeId[time]){
             project.taskTimeId[time] = {};
         }
-
+        console.log(project.taskTimeId[time], project.time);
         $scope.projects = project.taskTimeId[time];
         if(JSON.stringify(project.taskTimeId[time]) == '{}'){
             $scope.no_project = false;
@@ -659,6 +659,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
         $scope.task_type = [ { title: 'Take Photo', url: 'capturePhoto()' }, { title: 'Go to galery', url: 'getPhoto(pictureSource.PHOTOLIBRARY)'} ];
+        $scope.src = '';
 
         if($routeParams.item){
             if(prj){
@@ -669,9 +670,13 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                     if($routeParams.taskId){
                         var t = project.getExpense($routeParams.taskId);
                         if(t){
+                            console.log(project.expense);
                             $scope.no_task = true;
                             $scope.customer = t.name;
                             $scope.taskId = t.expense_id;
+                            if($routeParams.expId){
+                                // $scope.src = 
+                            }
                         }
                     }
                 }else{
@@ -848,7 +853,7 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
             project.taskTimeId = {};
             project.taskTime = {};
         }
-        // removeStuff();
+        removeStuff();
         $scope.logout = function (){
             // $interval.cancel(project.interval);
             localStorage.setItem('username','');

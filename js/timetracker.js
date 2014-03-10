@@ -187,6 +187,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             this.note = item.note;
             this.project_id = item.project_id;
             this.project_name = item.project_name;
+            this.picture = '';
             this.unit = item.unit;
             this.unit_price = item.unit_price;
             this.sync = item.sync;
@@ -514,10 +515,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     }
                     if(add === true){
                         project.taskTimeId[t][npId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
+                        project.taskTimeId[t][npId].tasks[id].project_id = p;
+                        project.taskTimeId[t][npId].tasks[id].customer_id = pId;
                         saveTime('taskTimeId', project.taskTimeId);
                         project.taskTime[id] = {};
                         project.taskTime[id].start = Date.now();
-                        project.taskTime[id].npId = npId;
+                        project.taskTime[id].pId = npId;
                         project.taskTime[id].time = t;
                         saveTime('taskTime', project.taskTime);
                     }
@@ -535,6 +538,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 }
                                 id = idn;
                                 project.taskTimeId[t][npId].tasks[idn] = new TaskTimeId(ta, p, h, notes, idn);
+                                project.taskTimeId[t][npId].tasks[idn].project_id = npId;
+                                project.taskTimeId[t][npId].tasks[idn].customer_id = pId;
                                 saveTime('taskTimeId', project.taskTimeId);
                                 project.taskTime[idn] = {};
                                 project.taskTime[idn].start = Date.now();
@@ -558,6 +563,17 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         });
                     }else{
                         if(add === true){
+                            var temp_p = new Proj('','','','');
+                            temp_p.customer_id = pId;
+                            temp_p.customer_name = project.getCustomer(pId).customer_name;
+                            temp_p.project_id = p;
+                            temp_p.project_name = 'ad hoc';
+                            temp_p.task = {};
+                            temp_p.task[tId] = new Task('','','','','');
+                            temp_p.task[tId].task_name = project.getAdhocTask(tId).name;
+                            temp_p.task[tId].task_id = tId;
+                            project.time[p] = temp_p;
+                            saveTime();
                             if(project.selectedDate){
                                 $location.path('/timesheet/'+project.selectedDate);
                             }else{
@@ -584,7 +600,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.unit = project.getExpense(tId).unit;
                     item.unit_price = project.getExpense(tId).unit_price;
                     item.sync = 1;
-                    item.picture = smallImage.src;
+                    item.picture = smallImage.src ? smallImage.src : '';
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
@@ -614,6 +630,27 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
 
                             }
                         });
+                        $http({
+                            method: 'POST',
+                            url: url+'index.php?do=mobile--mobile-add_expense&'+key+'&project_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start,
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        }).then(function(res){
+                            if(response.data.code == 'ok'){
+                                delete project.expense[t][item.id];
+                                item.id = response.data.response[0].id;
+                                item.sync = 0;
+                                project.expense[t][item.id] = new Expense(item);
+                                saveTime('expenses', project.expense);
+                                if(project.selectedDate){
+                                    $location.path('/expenses_list/'+project.selectedDate);
+                                }else{
+                                    $location.path('/expenses_list');
+                                }
+                            }else{
+                                $rootScope.$broadcast('addError',response.data.error_code);
+
+                            }
+                        });
                     }else{
                         project.addToSync('expense',t,pId,'',tId,item.id);
                         if(project.selectedDate){
@@ -626,7 +663,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 case "expenses_a":
                     var item = {},
                         amount = project.getAmount(),
-                        t = start;
+                        t = start,
+                        smallImage = document.getElementById('smallImage');
                     item.id = Date.now();
                     item.amount = project.getAmount();
                     item.expense_id = tId;
@@ -639,6 +677,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.customer_id = pId;
                     item.customer_name = project.getCustomer(pId).name;
                     item.sync = 1;
+                    item.picture = smallImage.src ? smallImage.src : '';
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
@@ -797,7 +836,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             for( x in project.taskTime ){
                 if(JSON.stringify(project.taskTime[x]) != '{}' ){
                     var newTime = Math.floor((d-project.taskTime[x].start)/1000);
-                        newTime = newTime/3600;
+                        newTime = newTime/3600;                        
                     if(project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x]){
                         project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].hours = newTime;
                         project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].active = 'active';
@@ -805,7 +844,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     }
                 }
             }
-            // saveTime('taskTime', project.taskTime);
+            saveTime('taskTime', project.taskTime);
         }
         // rune();
 
@@ -821,6 +860,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         }
         // syncronization function zhe shiit!
         project.sync = function(){
+            
             // console.log(project.toSync);
             for(x in project.toSync){
                 var item = project.toSync[x],
@@ -831,6 +871,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         sendItem.task_time_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['task_time_id'];
                         sendItem.hours = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['hours'];
                         sendItem.notes = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['notes'];
+                        console.log(sendItem.task_time_id);
                         $http({
                             method: 'POST',
                             url: url+'index.php?do=mobile--mobile-save_time&'+key+'&overwrite=1',
@@ -844,7 +885,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                     delete project.toSync[itemNr];
                                 }
                                 $rootScope.$broadcast('syned');
-                                saveTime('toSync', project.toSync);
+                                saveTime('toSync', project.toSync);                           
                                 return project.sync();
                             }
                         });
@@ -854,32 +895,44 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         sendItem.task_time_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['task_time_id'];
                         sendItem.hours = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['hours'];
                         sendItem.notes = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['notes'];
+                        sendItem.active = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'];
+                        sendItem.customer_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['customer_id'];
+                        console.log(sendItem.task_time_id);
+                        if(typeof(item.pId) != 'string'){
+                            item.pId = '';
+                        }                        
                         $http({
                             method: 'POST',
                             url: url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+item.pId+'&customer_id='+item.cId+'&task_id='+item.tId+'&notes='+sendItem.notes+'&hours='+sendItem.hours+'&start='+item.time,
                             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                         }).then(function(res){
-
                             if(res.data.code == 'ok'){
+                                item.pId = res.data.response.project_id;
+                                if(!project.taskTimeId[item.time][item.pId]){
+                                    project.taskTimeId[item.time][item.pId] = {};
+                                    project.taskTimeId[item.time][item.pId].id = item.pId;
+                                    project.taskTimeId[item.time][item.pId].tasks = {};
+                                }
                                 project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id] = {};
                                 project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].task_time_id = res.data.response.id;
                                 project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].task_id = item.tId;
                                 project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].project_id = item.pId;
-                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].customer_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['customer_id'];
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].customer_id = sendItem.customer_id;
                                 project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].hours = sendItem.hours;
                                 project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].notes = sendItem.notes;
-                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].active = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'];
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].active = sendItem.active;                                
                                 delete project.toSync[itemNr];
-                                if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){
+                                if(sendItem.active == 'active'){
                                     project.taskTime[res.data.response.id] = {};
                                     project.taskTime[res.data.response.id].start = project.taskTime[sendItem.task_time_id].start;
                                     project.taskTime[res.data.response.id].pId = item.pId;
                                     project.taskTime[res.data.response.id].time = item.time;
                                     delete project.taskTime[sendItem.task_time_id];
                                     project.addToSync('time',item.time,item.pId,item.cId,item.tId,res.data.response.id);
-                                    project.toSync[itemNr].synced = true;
+                                    project.toSync[res.data.response.id].synced = true;
                                 }
-                                delete project.taskTimeId[sendItem.task_time_id];
+                                delete project.taskTimeId[item.time][item.pId]['tasks'][sendItem.task_time_id];
+                                delete project.taskTimeId[item.time][sendItem.task_time_id];
                                 $rootScope.$broadcast('syned');
                                 saveTime('toSync', project.toSync);
                                 saveTime('taskTimeId', project.taskTimeId);
