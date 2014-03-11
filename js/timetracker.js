@@ -966,7 +966,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     if(typeof(project.expense[item.time][item.id]['id']) == 'string'){}else{
                         var prId = item.pId,
                             notes = project.expense[item.time][item.id]['note'],
-                            amount = project.expense[item.time][item.id]['amount'];
+                            amount = project.expense[item.time][item.id]['amount'],
+                            picture = project.expense[item.time][item.id]['picture'];
                         if(typeof(item.pId)!='string'){
                             prId = '';
                         }
@@ -977,6 +978,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                         }).then(function(res){
                             if(res.data.code == 'ok'){
+                                if(picture){
+                                    params = {};
+                                    params.id = response.data.response[0].id;
+                                    urls = url+'index.php?do=mobile--mobile-upload_file&'+key
+                                    uploadPhoto(picture,params,urls)
+                                }
                                 // delete from sync
                                 project.expense[item.time][res.data.response[0].id] = {};
                                 project.expense[item.time][res.data.response[0].id].amount = amount;
