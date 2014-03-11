@@ -659,7 +659,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
         $scope.task_type = [ { title: 'Take Photo', url: 'capturePhoto()' }, { title: 'Go to galery', url: 'getPhoto(pictureSource.PHOTOLIBRARY)'} ];
-        $scope.src = '';
+        $scope.img = '';
 
         if($routeParams.item){
             if(prj){
@@ -674,7 +674,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                             $scope.customer = t.name;
                             $scope.taskId = t.expense_id;
                             if($routeParams.expId){
-                                $scope.src = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
+                                $scope.img = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
                             }
                         }
                     }
@@ -693,7 +693,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                             $scope.customer = t.name;
                             $scope.taskId = t.expense_id;
                             if($routeParams.expId){
-                                $scope.src = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
+                                console.log(project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture']);
+                                $scope.img = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
                             }
                         }
                     }
