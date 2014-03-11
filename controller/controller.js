@@ -693,6 +693,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                             $scope.customer = t.name;
                             $scope.taskId = t.expense_id;
                             if($routeParams.expId){
+                                alert(project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture']);
                                 $scope.img = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
                             }
                         }
