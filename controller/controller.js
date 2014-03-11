@@ -6,7 +6,7 @@ ctrl.controller('start',['$scope', '$timeout', '$location',
         var target = token ? '/timesheet' : '/login';
         $timeout(function() {
             $location.path(target);
-        }, 4000);
+        }, 1000);
     }
 ]);
 // login
