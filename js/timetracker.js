@@ -15,13 +15,14 @@ function checkConnection() {
 function capturePhoto() {
     // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
-     destinationType: destinationType.DATA_URL });
+     destinationType: destinationType.FILE_URI });
 }
 
 function onPhotoDataSuccess(imageData) {
   var smallImage = document.getElementById('smallImage');
   smallImage.style.display = 'block';
-  smallImage.src = "data:image/jpeg;base64," + imageData;
+  // smallImage.src = "data:image/jpeg;base64," + imageData;
+  smallImage.src = imageData;
 }
 
 function onFail(message) {
@@ -72,24 +73,24 @@ app.config(function ($routeProvider) {
         .when('/addNotea/:pId/:tId/:projectId/:taskTimeId/:d/:m/:y',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
         .when('/addNotea/:pId/:tId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
         .when('/addNotea/:pId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
-        .when('/addAmount_expense/:pId/:tId/:expId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
+        .when('/addAmount_expense/:pId/:tId/:expId/:d/:m/:y',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
         .when('/addAmount_expense/:pId/:tId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
         .when('/addAmount_expense/:pId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
-        .when('/addAmount_expensea/:pId/:tId/:expId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
+        .when('/addAmount_expensea/:pId/:tId/:expId/:d/:m/:y',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
         .when('/addAmount_expensea/:pId/:tId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
         .when('/addAmount_expensea/:pId',{controller: 'addAmount',templateUrl: 'layout/addAmount.html'})
-        .when('/addNote_expense/:pId/:tId/:expId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNote_expense/:pId/:tId/:expId/:d/:m/:y',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
         .when('/addNote_expense/:pId/:tId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
         .when('/addNote_expense/:pId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
-        .when('/addNote_expensea/:pId/:tId/:expId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
+        .when('/addNote_expensea/:pId/:tId/:expId/:d/:m/:y',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
         .when('/addNote_expensea/:pId/:tId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
         .when('/addNote_expensea/:pId',{controller: 'addNote',templateUrl: 'layout/addNote.html'})
         .when('/expenses/:item',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
         .when('/expenses/:item/:taskId',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
-        .when('/expenses/:item/:taskId/:expId',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
+        .when('/expenses/:item/:taskId/:expId/:d/:m/:y',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
         .when('/expenses_a/:item',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
         .when('/expenses_a/:item/:taskId',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
-        .when('/expenses_a/:item/:taskId/:expId',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
+        .when('/expenses_a/:item/:taskId/:expId/:d/:m/:y',{controller: 'expenses',templateUrl: 'layout/expenses.html'})
         .when('/account',{controller: 'account',templateUrl: 'layout/account.html'})
         .when('/footer',{controller: 'footer',templateUrl: 'layout/footer.html'})
         .when('/header',{controller: 'header',templateUrl: 'layout/header.html'})
@@ -479,10 +480,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         project.save = function(type, pId, tId,notes){
              // this.data =
             var start = '',
+                start2 = '',
                 // connect = checkConnection();
                 connect = 'none';
             if(project.selectedDate){
                 start = '&start='+project.selectedDate;
+                start2 = project.selectedDate;
             }
 
             switch (type){
@@ -492,7 +495,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         npId = Date.now();
                         p = Date.now(),
                         ta = project.getAdhocTask(tId),
-                        t = start,
+                        t = start2,
                         add = true;
 
                     if(!t){
@@ -588,7 +591,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 case "expenses":
                     var item = {},
                         amount = project.getAmount(),
-                        t = start,
+                        t = start2,
                         smallImage = document.getElementById('smallImage');
                     item.id = Date.now();
                     item.amount = project.getAmount();
@@ -663,7 +666,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 case "expenses_a":
                     var item = {},
                         amount = project.getAmount(),
-                        t = start,
+                        t = start2,
                         smallImage = document.getElementById('smallImage');
                     item.id = Date.now();
                     item.amount = project.getAmount();
@@ -722,7 +725,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         id = Date.now(),
                         p = project.getProject(pId),
                         ta = project.getTask(pId,tId),
-                        t = start,
+                        t = start2,
                         add = true;
                     if(!t){
                         var d = new Date();

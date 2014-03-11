@@ -76,7 +76,7 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
         if(!project.taskTimeId[time]){
             project.taskTimeId[time] = {};
         }
-        console.log(project.taskTimeId[time], project.time);
+
         $scope.projects = project.taskTimeId[time];
         if(JSON.stringify(project.taskTimeId[time]) == '{}'){
             $scope.no_project = false;
@@ -294,7 +294,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                 url += '/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
             }
             if($routeParams.expId){
-                url += '/'+$routeParams.expId;
+                url += '/'+$routeParams.expId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
             }
             $location.path(url);
         }
@@ -670,12 +670,11 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                     if($routeParams.taskId){
                         var t = project.getExpense($routeParams.taskId);
                         if(t){
-                            console.log(project.expense);
                             $scope.no_task = true;
                             $scope.customer = t.name;
                             $scope.taskId = t.expense_id;
                             if($routeParams.expId){
-                                // $scope.src = 
+                                $scope.src = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
                             }
                         }
                     }
@@ -693,6 +692,9 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                             $scope.no_task = true;
                             $scope.customer = t.name;
                             $scope.taskId = t.expense_id;
+                            if($routeParams.expId){
+                                $scope.src = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
+                            }
                         }
                     }
                 }else{
@@ -794,7 +796,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                 url += '/'+tId;
             }
             if($routeParams.expId){
-                url += '/'+$routeParams.expId;
+                url += '/'+$routeParams.expId+'/'+$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
             }
             $location.path(url);
         }
@@ -808,7 +810,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                 url += '/'+tId;
             }
             if($routeParams.expId){
-                url += '/'+$routeParams.expId;
+                url += '/'+$routeParams.expId+'/'+$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
             }
             $location.path(url);
         }
@@ -1118,7 +1120,7 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
         }
         $scope.no_project = true;
         $scope.expense = project.expense[time];
-
+        
         if(JSON.stringify(project.expense[time]) == '{}'){
             $scope.no_project = false;
         }
@@ -1133,9 +1135,9 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
             project.setNote(notes);
             project.setAmount(amount);
             if(adhoc == "ad hoc"){
-                $location.path('/expenses_a/'+cId+'/'+tId+'/'+expId);
+                $location.path('/expenses_a/'+cId+'/'+tId+'/'+expId+'/'+time);
             }else{
-                $location.path('/expenses/'+pId+'/'+tId+'/'+expId);
+                $location.path('/expenses/'+pId+'/'+tId+'/'+expId+'/'+time);
             }
         }
 
