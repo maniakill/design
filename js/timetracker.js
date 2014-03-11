@@ -188,7 +188,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             this.note = item.note;
             this.project_id = item.project_id;
             this.project_name = item.project_name;
-            this.picture = '';
+            this.picture = item.picture ? item.picture : '';
             this.unit = item.unit;
             this.unit_price = item.unit_price;
             this.sync = item.sync;
@@ -681,6 +681,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.customer_name = project.getCustomer(pId).name;
                     item.sync = 1;
                     item.picture = smallImage.src ? smallImage.src : '';
+                    console.log(item.picture);
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
