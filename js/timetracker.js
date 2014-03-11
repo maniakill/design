@@ -41,6 +41,36 @@ function onPhotoURISuccess(imageURI) {
   largeImage.src = imageURI;
 }
 
+/* upload receipt */
+function uploadPhoto(imageURI,params,urls) {
+    var options = new FileUploadOptions();
+    options.fileKey="file_upload";
+    options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+    options.mimeType="image/jpeg";
+
+/*    var params = {};
+    params.value1 = "test";
+    params.value2 = "param";
+*/
+    options.params = params;
+
+    var ft = new FileTransfer();
+    ft.upload(imageURI, encodeURI(urls), win, fail, options);
+}
+
+function win(r) {
+    console.log("Code = " + r.responseCode);
+    console.log("Response = " + r.response);
+    console.log("Sent = " + r.bytesSent);
+}
+
+function fail(error) {
+    alert("An error has occurred: Code = " + error.code);
+    console.log("upload error source " + error.source);
+    console.log("upload error target " + error.target);
+}
+/* upload receipt */
+
 // phoneGap
 var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap']);
 
@@ -632,28 +662,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 $rootScope.$broadcast('addError',response.data.error_code);
 
                             }
-                        });
-                        $http({
-                            method: 'POST',
-                            url: url+'index.php?do=mobile--mobile-add_expense&'+key+'&project_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start,
-                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                        }).then(function(res){
-                            if(response.data.code == 'ok'){
-                                delete project.expense[t][item.id];
-                                item.id = response.data.response[0].id;
-                                item.sync = 0;
-                                project.expense[t][item.id] = new Expense(item);
-                                saveTime('expenses', project.expense);
-                                if(project.selectedDate){
-                                    $location.path('/expenses_list/'+project.selectedDate);
-                                }else{
-                                    $location.path('/expenses_list');
-                                }
-                            }else{
-                                $rootScope.$broadcast('addError',response.data.error_code);
-
-                            }
-                        });
+                        });                        
                     }else{
                         project.addToSync('expense',t,pId,'',tId,item.id);
                         if(project.selectedDate){
@@ -681,7 +690,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.customer_name = project.getCustomer(pId).name;
                     item.sync = 1;
                     item.picture = smallImage.src ? smallImage.src : '';
-                    console.log(item.picture);
+                    
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
@@ -692,7 +701,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     }else{
                         project.expense[t][item.id] = new Expense(item);
                     }
-                    console.log(project.expense[t][item.id]);
+                    
                     saveTime('expenses', project.expense);
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
@@ -701,6 +710,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 item.id = response.data.response[0].id;
                                 item.project_id = response.data.response[0].project_id;
                                 item.sync = 0;
+                                if(item.picture){
+                                    params = {};
+                                    params.id = response.data.response[0].id;
+                                    urls = url+'index.php?do=mobile--mobile-upload_file&'+key
+                                    uploadPhoto(item.picture,params,urls)
+                                }
                                 project.expense[t][item.id] = new Expense(item);
                                 saveTime('expenses', project.expense);
                                 if(project.selectedDate){
