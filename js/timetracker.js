@@ -513,8 +513,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
              // this.data =
             var start = '',
                 start2 = '',
-                // connect = checkConnection();
-                connect = 'none';
+                connect = checkConnection();
+                // connect = 'none';
             if(project.selectedDate){
                 start = '&start='+project.selectedDate;
                 start2 = project.selectedDate;
@@ -982,6 +982,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         }).then(function(res){
                             if(res.data.code == 'ok'){
                                 if(picture){
+                                    alert('p func');
                                     params = {};
                                     params.id = response.data.response[0].id;
                                     urls = url+'index.php?do=mobile--mobile-upload_file&'+key
