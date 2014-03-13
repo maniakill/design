@@ -15,7 +15,7 @@
     <preference name="PaginationMode" value="unpaginated" />
     <preference name="loglevel" value="DEBUG" />
     <name>SalesAssist TimeTracker</name>
-    <feature name="NetworkStatus">
+    <!-- <feature name="NetworkStatus">
         <param name="ios-package" value="CDVConnection" />
     </feature>
     <feature name="Camera">
@@ -32,7 +32,7 @@
     </feature>
     <feature name="FileTransfer">
         <param name="ios-package" value="CDVFileTransfer" />
-    </feature>
+    </feature> -->
 
     <!-- <feature name="Camera">
         <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
@@ -45,11 +45,11 @@
         ArkWeb Team
     </author>
     <gap:plugin name="org.apache.cordova.camera" />
+    <gap:plugin name="org.apache.cordova.file" version="0.2.4" />
+    <gap:plugin name="org.apache.cordova.file-transfer" version="0.3.0" />
     <gap:plugin name="org.apache.cordova.media-capture" />
     <gap:plugin name="org.apache.cordova.media" />
     <gap:plugin name="org.apache.cordova.network-information" />
-    <gap:plugin name="org.apache.cordova.file" />
-    <gap:plugin name="org.apache.cordova.file-transfer" />
     <gap:plugin name="org.apache.cordova.splashscreen" />
     <content src="index.html" />
     <access origin="*" />
