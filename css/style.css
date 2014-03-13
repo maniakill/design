@@ -44,7 +44,7 @@ a, a:hover{ text-decoration: none; }
 			.taskDetail .active { background: #ff9878; border-radius: 5px; }
 				.taskDetail .hourContainer .clock { background: url("../images/clock.png") no-repeat left top; width: 13px; height: 14px; margin-top: 5px; margin-right: 5px; }
 				.taskDetail .active .clock { background: url("../images/clock_active.png") no-repeat left top; }
-				.taskDetail .hourContainer .hours { font-size: 17px; color: #999999; font-family:HelveticaLTSBold; position: relative; top: -2px; }
+				.taskDetail .hourContainer .hours { font-size: 17px; color: #999999; font-family:HelveticaLTSBold; position: relative; top: 0px; }
 				.taskDetail .active .hours { color: #ffffff; }
 		.footer{ height: 49px; background: url('../images/footer-bg.png') repeat-x left top; position: fixed; bottom: 0px; width: 100%; }
 			.footers{ width: 25%; /*padding-right: 2px;*/ background: url('../images/footers-bg.png') repeat-y right top; height: inherit; position: relative; }

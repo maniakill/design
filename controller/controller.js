@@ -865,12 +865,12 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
             project.taskTimeId = {};
             project.taskTime = {};
         }
-        removeStuff();
+        // removeStuff();
         $scope.logout = function (){
             // $interval.cancel(project.interval);
             localStorage.setItem('username','');
             localStorage.setItem('token','');
-            removeStuff(); // this is for testiung only and shall be removed when going live
+            // removeStuff(); // this is for testiung only and shall be removed when going live
             $location.path('/start');
         }
     }
