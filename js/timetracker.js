@@ -54,11 +54,13 @@ function uploadPhoto(imageURI,params,urls) {
 */
     options.params = params;
     var ft = new FileTransfer();
-    console.log(imageURI, encodeURI(urls), win, fail, options);
+    console.log(imageURI, encodeURI(urls) options);
+    alert('file upload');
     ft.upload(imageURI, encodeURI(urls), win, fail, options);
 }
 
 function win(r) {
+    alert('file upload win');
     console.log("Code = " + r.responseCode);
     console.log("Response = " + r.response);
     console.log("Sent = " + r.bytesSent);
