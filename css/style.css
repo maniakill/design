@@ -80,7 +80,7 @@ a, a:hover{ text-decoration: none; }
 				.lists li p { color: #0f0f0f; font-size: 16px; }
 				.lists li span { color: #666666; font-size: 14px; }
 		.textWrap { width: 300px; margin: 10px auto 0; }
-			.noteText { width: 100%; }
+			.noteText { width: 274px; }
 		.no_data { background: url('../images/no-data.png') repeat-x center center; min-height: 356px; }
 			.no_data p { color: #000; font-size: 18px; font-family:HelveticaLTSBold; text-align: center; padding-top: 40%; }
 .glyphicon { background: url("../img/glyphicons-halflings.png") no-repeat left top;height: 14px; vertical-align: text-top; }
@@ -95,3 +95,4 @@ a, a:hover{ text-decoration: none; }
 .glyphicon-chevron-down{ background-position: -312px -121px; }
 .progress { height: 43px; margin-top: 20px; }
 .progress-bar { padding-top: 11px; }
+.form-control { width: 274px; }

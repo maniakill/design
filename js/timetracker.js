@@ -55,7 +55,6 @@ function uploadPhoto(imageURI,params,urls) {
     options.params = params;
     var ft = new FileTransfer();
     console.log(imageURI, encodeURI(urls), options);
-    alert('file upload');
     ft.upload(imageURI, encodeURI(urls), win, fail, options);
 }
 
