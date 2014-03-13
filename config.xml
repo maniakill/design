@@ -28,6 +28,9 @@
         <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
     </feature> -->
     <icon src="icon.png" />
+    <gap:splash src="splash.png" />
+    <gap:platform name="ios" />
+    <gap:platform name="android" />
     <description>
         SalesAssist Time Tracker application
     </description>
