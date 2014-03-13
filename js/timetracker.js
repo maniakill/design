@@ -43,7 +43,9 @@ function onPhotoURISuccess(imageURI) {
 
 /* upload receipt */
 function uploadPhoto(imageURI,params,urls) {
+    alert('uploadPhoto');
     var options = new FileUploadOptions();
+    alert('uploadPhoto1');
     options.fileKey="file_upload";
     options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
     options.mimeType="image/jpeg";
@@ -53,7 +55,9 @@ function uploadPhoto(imageURI,params,urls) {
     params.value2 = "param";
 */
     options.params = params;
+    alert('uploadPhoto2');
     var ft = new FileTransfer();
+    alert('uploadPhoto3');
     console.log(imageURI, encodeURI(urls), options);
     alert('file upload');
     ft.upload(imageURI, encodeURI(urls), win, fail, options);
@@ -715,8 +719,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 if(item.picture){
                                     params = {};
                                     params.id = response.data.response[0].id;
-                                    urls = url+'index.php?do=mobile--mobile-upload_file&'+key
-                                    uploadPhoto(item.picture,params,urls)
+                                    urls = url+'index.php?do=mobile--mobile-upload_file&'+key;
+                                    uploadPhoto(item.picture,params,urls);
                                 }
                                 project.expense[t][item.id] = new Expense(item);
                                 saveTime('expenses', project.expense);
