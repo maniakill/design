@@ -1,5 +1,5 @@
 <div ng-include="'layout/header.html'" />
-<div class="add_wrap">
+<div class="add_wrap scroller">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div class="loginForm">
 		<form>

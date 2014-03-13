@@ -1,5 +1,6 @@
 <div ng-include="'layout/header.html'" />
-<div id="page">
+<div id="page" class="scroller">
+	<!-- <div class="loading scroller modal-backdrop fade in"></div> -->
 	<ul>
 		<li ng-repeat="project in projects" class="projects" ng-hide="project.date">
 			<p class="projectName">{{getP(project.id)}}</p>

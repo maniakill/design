@@ -1,23 +1,25 @@
 <div ng-include="'layout/header.html'" />
-<ul>
-	<li ng-repeat="expens in expense" class="projects">
-		<p class="projectName">{{expens.project_name}}</p>
-		<ul>
-			<li class="taskDetail" ng-click="editTask(expens.project_id, expens.expense_id, expens.note, expens.amount, expens.project_name, expens.customer_id, expens.id)">
-				<div class="right hourContainer ">
-					<span class="hours left">{{expens.amount}}</span>
-				</div>
-				<span class="taskName">{{expens.expense_name}}</span>
-			</li>
-		</ul>	
-	</li>
-</ul>
-<div class="no_data" ng-hide="no_project" >
-	<div class="loginForm">
-		<p>No data to display</p>
-		<form>
-			<input type="submit" class="submit" value="Add new expense" ng-click="addNewTask()">
-		</form>	
+<div class="scroller">
+	<ul>
+		<li ng-repeat="expens in expense" class="projects">
+			<p class="projectName">{{expens.customer_name +' > '+expens.project_name}}</p>
+			<ul>
+				<li class="taskDetail" ng-click="editTask(expens.project_id, expens.expense_id, expens.note, expens.amount, expens.project_name, expens.customer_id, expens.id)">
+					<div class="right hourContainer ">
+						<span class="hours left">{{expens.amount}}</span>
+					</div>
+					<span class="taskName">{{expens.expense_name}}</span>
+				</li>
+			</ul>	
+		</li>
+	</ul>
+	<div class="no_data" ng-hide="no_project" >
+		<div class="loginForm">
+			<p>No data to display</p>
+			<form>
+				<input type="submit" class="submit" value="Add new expense" ng-click="addNewTask()">
+			</form>	
+		</div>
 	</div>
 </div>
 <div data-ng-include="'layout/footer.html'" />

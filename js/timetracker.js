@@ -711,12 +711,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 item.id = response.data.response[0].id;
                                 item.project_id = response.data.response[0].project_id;
                                 item.sync = 0;
-                                if(item.picture){
+                                /*if(item.picture){
                                     params = {};
                                     params.id = response.data.response[0].id;
                                     urls = url+'index.php?do=mobile--mobile-upload_file&'+key;
                                     uploadPhoto(item.picture,params,urls);
-                                }
+                                }*/
                                 project.expense[t][item.id] = new Expense(item);
                                 saveTime('expenses', project.expense);
                                 if(project.selectedDate){
@@ -827,12 +827,14 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         }
         /* end send data to server */
 
-        project.stop = function(item, time){
+        project.stop = function(item, time, redirect){
             item.active = '';
             saveTime('taskTimeId', project.taskTimeId);
             delete project.taskTime[item.task_time_id];
             saveTime('taskTime', project.taskTime);
-            $location.path('/timesheet/'+time);
+            if(!redirect){
+                $location.path('/timesheet/'+time);
+            }
         }
 
         project.start = function(item, time){
@@ -850,7 +852,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         }
 
         // var t = window.setInterval( rune, 1000 ); I don't know why this doesn't work and the line below works
-        project.interval = $interval(rune,1000);
+        project.interval = $interval(rune,10000);
 
         function rune(){
             var d = Date.now();
@@ -859,9 +861,13 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     var newTime = Math.floor((d-project.taskTime[x].start)/1000);
                         newTime = newTime/3600;                        
                     if(project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x]){
-                        project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].hours = newTime;
-                        project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].active = 'active';
-                        saveTime('taskTimeId', project.taskTimeId);
+                        if(newTime > 24){                            
+                            project.stop(project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x],null,true);
+                        }else{
+                            project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].hours = newTime;
+                            project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].active = 'active';
+                            saveTime('taskTimeId', project.taskTimeId);
+                        }
                     }
                 }
             }
@@ -979,13 +985,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                         }).then(function(res){
                             if(res.data.code == 'ok'){
-                                if(picture){
-                                    alert('p func');
+                                /*if(picture){
                                     params = {};
                                     params.id = response.data.response[0].id;
                                     urls = url+'index.php?do=mobile--mobile-upload_file&'+key
                                     uploadPhoto(picture,params,urls)
-                                }
+                                }*/
                                 // delete from sync
                                 project.expense[item.time][res.data.response[0].id] = {};
                                 project.expense[item.time][res.data.response[0].id].amount = amount;

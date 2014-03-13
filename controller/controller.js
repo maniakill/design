@@ -91,7 +91,8 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
 
         $scope.getP = function(item){
             var p = project.getProject(item);
-            return p.project_name;
+            console.log(p);
+            return p.customer_name + ' > ' + p.project_name;
         }
 
         $scope.getTaskName = function(pr, item){
@@ -152,7 +153,9 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
 // footer
 ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project', '$location',
     function ($scope, $routeParams, $route, $modal, project,$location){
-        var d = new Date();
+        var d = new Date(),
+            link = $route.current.originalPath.search('expense');
+            
 
         $scope.timesheet = true;
         $scope.expense = true;
@@ -163,11 +166,11 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
         if($scope.items > 0){
             $scope.pend = false
         }
-
+        // console.log($route.current.controller,$route.current.originalPath);
         switch($route.current.controller){
             case 'expenses':
             case 'expenses_list':
-            case "lists_e":
+            case "lists_e":            
                 $scope.expense = false;
                 $scope.expenseAct = 'act';
                 break;
@@ -193,6 +196,13 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
                 $scope.timesheet = true;
                 $scope.timesheetAct = '';
                 break;
+        }
+
+        if(link > 0){
+            $scope.expense = false;
+            $scope.expenseAct = 'act';
+            $scope.timesheet = true;
+            $scope.timesheetAct = '';                   
         }
 
         $scope.go = function(path){

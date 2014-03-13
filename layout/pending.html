@@ -1,4 +1,5 @@
 <div ng-include="'layout/header.html'" />
+<div class="scroller">
 <div class="add_wrap">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<ul class="add_ul">
@@ -12,5 +13,6 @@
 	<form>
 		<input type="submit" class="submit" value="Sync All" ng-click="sync()">
 	</form>
+</div>
 </div>
 <div data-ng-include="'layout/footer.html'" />

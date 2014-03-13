@@ -20,7 +20,6 @@ a, a:hover{ text-decoration: none; }
 		.logo{ background: url("../images/logo.png") no-repeat top left; width: 264px; height: 45px; margin: 9% auto 3%; }
 		.logo_acount { margin: 1% auto 1%; }
 		.content, .loginForm{ margin: 0 auto; width: 280px; }
-		#page{ overflow: auto; height: 100%; margin-bottom: 49px; }
 			.content p{ color: #1a1a1a; font-size: 16px; font-weight: bold; text-align: center; font-family:HelveticaLTSBold; margin-top: 3%;}
 		.loginForm{ }
 			.loginForm input { border: 1px solid #cccccc; padding: 12px 10px 12px 60px; width: 208px; margin: 0px; color: #000000; font-size: 17px; }
@@ -34,34 +33,34 @@ a, a:hover{ text-decoration: none; }
 			.header .headerB { background: url('../images/button-bg.png') repeat-x left top #245980; border: 1px solid #1d4461; border-radius: 5px; box-shadow: 0 1px 2px #92b3cb; color: white;  font-size: 12px; text-shadow: 0px -1px #013a66; padding: 6px 15px 5px; margin: 0px; line-height: normal; }
 			.header .add, .header .calendar { width: 28px; height: 28px; padding: 0px;  margin-right: 6px; }
 			.header .calendar { margin-right: 0px; }
-			#classSpan, #classSpan1 { font-size: 20px; color: #ffffff; font-family:HelveticaLTSRoman; background: none; border: 0px; box-shadow: 0 0px 0px; cursor: default; padding: 0px 0px 0px; margin: 0px; width: 180px; border-radius: 0px; }
+			#classSpan, #classSpan1 { font-size: 20px; color: #ffffff; font-family:HelveticaLTSRoman; background: none; border: 0px; box-shadow: 0 0px 0px; cursor: default; padding: 0px 0px 0px; margin: 0px; width: 180px; border-radius: 0px; vertical-align: middle; }
 			#classSpan1 { color: #000000; }
-		.projects { border-bottom: 1px solid #e6e6e6;  }
-		.projectName{ font-family:HelveticaLTSBold; font-size: 16px; padding: 7px 10px; /*border-bottom: 1px solid #e6e6e6; */color: #000000; cursor: default; }
-		.taskDetail{ padding: 9px 10px 8px; /*border-bottom: 1px solid #e6e6e6;*/ cursor: pointer; background: url('../images/line-bg.png') repeat-x left bottom; }
+		.projects { border-bottom: 1px solid #e6e6e6;  background: url("../images/line-bg.png") repeat-x scroll left bottom rgba(0, 0, 0, 0); }
+		.projectName{ font-family:HelveticaLTSBold; font-size: 16px; padding: 9px 10px 8px; /*border-bottom: 1px solid #e6e6e6; */color: #000000; cursor: default; }
+		.taskDetail{ padding: 9px 10px 8px; /*border-bottom: 1px solid #e6e6e6;*/ cursor: pointer; /*background: url('../images/line-bg.png') repeat-x left bottom;*/ }
 			.taskDetail .taskName{ font-family:HelveticaLTSRoman; font-size: 16px; color: #666666; }
 		.arrow { background: url("../images/arrow.png") no-repeat left top; width: 10px; height: 15px; margin-top: 4px; }
-			.taskDetail .hourContainer{ margin-right: 15px; padding: 0px 5px 2px; }
+			.taskDetail .hourContainer{ margin-right: 15px; padding: 0px 5px 0px; height: 19px; }
 			.taskDetail .active { background: #ff9878; border-radius: 5px; }
-				.taskDetail .hourContainer .clock { background: url("../images/clock.png") no-repeat left top; width: 13px; height: 14px; margin-top: 4px; margin-right: 5px; }
+				.taskDetail .hourContainer .clock { background: url("../images/clock.png") no-repeat left top; width: 13px; height: 14px; margin-top: 5px; margin-right: 5px; }
 				.taskDetail .active .clock { background: url("../images/clock_active.png") no-repeat left top; }
-				.taskDetail .hourContainer .hours { font-size: 17px; color: #999999; font-family:HelveticaLTSBold; }
+				.taskDetail .hourContainer .hours { font-size: 17px; color: #999999; font-family:HelveticaLTSBold; position: relative; top: -2px; }
 				.taskDetail .active .hours { color: #ffffff; }
 		.footer{ height: 49px; background: url('../images/footer-bg.png') repeat-x left top; position: fixed; bottom: 0px; width: 100%; }
-			.footers{ width: 24%; padding-right: 2px; background: url('../images/footers-bg.png') repeat-y right top; height: inherit; position: relative; }
-			.footer_last{ padding-right: 0px; width: 24%; background: none; }
+			.footers{ width: 25%; /*padding-right: 2px;*/ background: url('../images/footers-bg.png') repeat-y right top; height: inherit; position: relative; }
+			.footer_last{ padding-right: 0px; width: 25%; background: none; }
 				.items{ border: 2px solid #fff; background: #e30b14; -webkit-border-radius: 15px; -moz-border-radius: 15px; border-radius: 15px; color: #fff; font-size: 17px; font-weight: bold; float: right; position: absolute; top: 1px; z-index: 2; padding: 0 6px; right: 3px; box-shadow: 0px 1px 3px #000; }
 				.footer_active{ width: 100%; height: 100%; background: url('../images/active-bg.png') repeat-x left top; position: relative; }
 					.blur{ width: 100%; height: 100%; background: url('../images/active-blur.png') no-repeat center top; }
 			.act .footer_container{ top: -49px; }
-				.footer_container{ position: relative; left: 0px; width: 100%; height: 100%; padding-top: 2px; cursor: pointer; }
+				.footer_container{ position: relative; left: 0px; width: 100%; height: 100%; /*padding-top: 2px;*/ cursor: pointer; }
 					.timesheet_footer, .expenses_footer, .account_footer{ background: url('../images/footer_icon.png') no-repeat 0px 0px; width: 36px; margin: 0 auto; padding-top: 33px; }
 					.expenses_footer{ background: url('../images/footer_icon.png') no-repeat -79px 0px; width: 30px; }
 					.pending_footer{ background: url('../images/footer_icon.png') no-repeat -159px 0px; width: 30px; padding-top: 33px; margin: 0 auto; }
 					.account_footer{ background: url('../images/footer_icon.png') no-repeat -240px 0px; width: 28px; }
 					.footer_link, .footer_link:hover{ display: block; margin: 0 auto; width: 80px; text-align: center; color: #ffffff; font-family:HelveticaLTSBold; font-size: 10px; line-height: normal; text-shadow: 0px -1px #335c80; }
 					.act .footer_link{ text-shadow: 0px 1px #122433; }
-		.add_wrap { padding: 10px; margin-bottom: 50px; }
+		.add_wrap { padding: 10px; }
 			.add_ul { border: 1px solid #ABABAB; border-radius: 12px; }
 				.add_ul li { line-height: normal; font-size: 17px; font-family:HelveticaLTSBold; border-bottom: 1px solid #ABABAB; padding: 7px 10px 10px; cursor: pointer; }
 				.add_ul .dropdown-menu li { padding: 0; border-bottom: 0px; }
@@ -96,3 +95,5 @@ a, a:hover{ text-decoration: none; }
 .progress { height: 43px; margin-top: 20px; }
 .progress-bar { padding-top: 11px; }
 .form-control { width: 274px; }
+.scroller { overflow: auto; -webkit-overflow-scrolling: touch; position: absolute; top: 43px; bottom: 50px; left: 0px; right: 0px; }
+/*.loading { height: 100%; background: url("../images/ajax-loader.gif") no-repeat scroll center center; }*/
