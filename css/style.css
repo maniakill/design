@@ -33,16 +33,16 @@ a, a:hover{ text-decoration: none; }
 			.header .headerB { background: url('../images/button-bg.png') repeat-x left top #245980; border: 1px solid #1d4461; border-radius: 5px; box-shadow: 0 1px 2px #92b3cb; color: white;  font-size: 12px; text-shadow: 0px -1px #013a66; padding: 6px 15px 5px; margin: 0px; line-height: normal; }
 			.header .add, .header .calendar { width: 28px; height: 28px; padding: 0px;  margin-right: 6px; }
 			.header .calendar { margin-right: 0px; }
-			#classSpan, #classSpan1 { font-size: 20px; color: #ffffff; font-family:HelveticaLTSRoman; background: none; border: 0px; box-shadow: 0 0px 0px; cursor: default; padding: 0px 0px 0px; margin: 0px; width: 180px; border-radius: 0px; vertical-align: middle; }
-			#classSpan1 { color: #000000; }
+			#classSpan, #classSpan1 { font-size: 20px; color: #ffffff; font-family:HelveticaLTSRoman; background: none; border: 0px; box-shadow: 0 0px 0px; cursor: default; padding: 0px 0px 0px; margin: 0px; width: 180px; border-radius: 0px; vertical-align: middle; height: 20px; }
+			#classSpan1 { color: #000000; margin-top: 4px; }
 		.projects { border-bottom: 1px solid #e6e6e6;  background: url("../images/line-bg.png") repeat-x scroll left bottom rgba(0, 0, 0, 0); }
 		.projectName{ font-family:HelveticaLTSBold; font-size: 16px; padding: 9px 10px 8px; /*border-bottom: 1px solid #e6e6e6; */color: #000000; cursor: default; }
 		.taskDetail{ padding: 9px 10px 8px; /*border-bottom: 1px solid #e6e6e6;*/ cursor: pointer; /*background: url('../images/line-bg.png') repeat-x left bottom;*/ }
 			.taskDetail .taskName{ font-family:HelveticaLTSRoman; font-size: 16px; color: #666666; }
 		.arrow { background: url("../images/arrow.png") no-repeat left top; width: 10px; height: 15px; margin-top: 4px; }
-			.taskDetail .hourContainer{ margin-right: 15px; padding: 0px 5px 0px; height: 19px; }
+			.taskDetail .hourContainer{ margin-right: 15px; padding: 0px 5px 0px; height: 22px; }
 			.taskDetail .active { background: #ff9878; border-radius: 5px; }
-				.taskDetail .hourContainer .clock { background: url("../images/clock.png") no-repeat left top; width: 13px; height: 14px; margin-top: 5px; margin-right: 5px; }
+				.taskDetail .hourContainer .clock { background: url("../images/clock.png") no-repeat left top; width: 13px; height: 14px; margin-top: 5px; margin-right: 5px; margin-bottom: -4px; }
 				.taskDetail .active .clock { background: url("../images/clock_active.png") no-repeat left top; }
 				.taskDetail .hourContainer .hours { font-size: 17px; color: #999999; font-family:HelveticaLTSBold; position: relative; top: 2px; }
 				.taskDetail .active .hours { color: #ffffff; }
@@ -68,7 +68,7 @@ a, a:hover{ text-decoration: none; }
 				.add_ul li.notes { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 					#add_calendar{ margin-top: -1px; margin-left: -4px; margin-right: 10px; background: url('../images/calendar_add.png') left top; width: 28px; height: 28px; }
 						.datePicker li { color: #333333; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 10px; line-height: 20px; }
-					.square { display: inline-block; background: #c9dde9; border-radius: 5px; margin: 0px 8px -3px -3px; color: #326488; padding: 3px 10px 4px; }
+					.square { display: inline-block; background: #c9dde9; border-radius: 5px; margin: 0px 8px -3px -3px; color: #326488; padding: 6px 10px 0px; }
 					.square_active { background: #ff9878; color: #ffffff; }
 			.add_note { margin-top: 10px; }
 			.timepicker { margin: 0 auto 10px; }
