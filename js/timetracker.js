@@ -512,8 +512,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
              // this.data =
             var start = '',
                 start2 = '',
-                // connect = checkConnection();
-                connect = 'none';
+                connect = checkConnection();
+                // connect = 'none';
             if(project.selectedDate){
                 start = '&start='+project.selectedDate;
                 start2 = project.selectedDate;
@@ -714,12 +714,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 item.id = response.data.response[0].id;
                                 item.project_id = response.data.response[0].project_id;
                                 item.sync = 0;
-                                /*if(item.picture){
+                                if(item.picture){
                                     params = {};
                                     params.id = response.data.response[0].id;
                                     urls = url+'index.php?do=mobile--mobile-upload_file&'+key;
                                     uploadPhoto(item.picture,params,urls);
-                                }*/
+                                }
                                 project.expense[t][item.id] = new Expense(item);
                                 saveTime('expenses', project.expense);
                                 if(project.selectedDate){
