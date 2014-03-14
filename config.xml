@@ -13,7 +13,9 @@
     <preference name="PageLength" value="0" />
     <preference name="PaginationBreakingMode" value="page" />
     <preference name="PaginationMode" value="unpaginated" />
-    <preference name="loglevel" value="DEBUG" />    
+    <preference name="loglevel" value="DEBUG" />
+    <preference name="SplashScreen" value="splash" />
+    <preference name="SplashScreenDelay" value="50000" />
     <name>SalesAssist TimeTracker</name>
     <feature name="NetworkStatus">
         <param name="ios-package" value="CDVConnection" />
