@@ -1,7 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="eu.salesassist.timetracker" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap = "http://phonegap.com/ns/1.0">
+<widget 
+    id="eu.salesassist.timetracker" 
+    version="0.0.1" 
+    xmlns="http://www.w3.org/ns/widgets" 
+    xmlns:gap = "http://phonegap.com/ns/1.0"
+    xmlns:android   = "http://schemas.android.com/apk/res/android"
+
+    >
     <name>SalesAssist TimeTracker</name>
-    <preference name="AllowInlineMediaPlayback" value="false" />
+    <!-- <preference name="AllowInlineMediaPlayback" value="false" />
     <preference name="BackupWebStorage" value="cloud" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="EnableViewportScale" value="false" />
@@ -15,9 +22,12 @@
     <preference name="PaginationMode" value="unpaginated" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="SplashScreen" value="splash" />
-    <preference name="SplashScreenDelay" value="10000" />
-    <name>SalesAssist TimeTracker</name>
-    <feature name="NetworkStatus">
+    <preference name="SplashScreenDelay" value="10000" /> -->
+
+    <preference name="orientation" value="landscape" />
+    <preference name="phonegap-version" value="3.3.0" />
+    <preference name="fullscreen" value="true" />
+    <!-- <feature name="NetworkStatus">
         <param name="ios-package" value="CDVConnection" />
     </feature>
     <feature name="Camera">
@@ -43,7 +53,7 @@
     </feature>
     <feature name="SplashScreen">
         <param name="ios-package" value="CDVSplashScreen" />
-    </feature>
+    </feature> -->
     <!-- <feature name="Camera">
         <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
     </feature> -->
