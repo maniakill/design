@@ -74,8 +74,8 @@
     <gap:plugin name="org.apache.cordova.splashscreen" />
     <gap:plugin name="org.apache.cordova.file" />
     <gap:plugin name="org.apache.cordova.file-transfer" />
-    <gap:plugin name="File" value="org.apache.cordova.core.FileUtils" />
-    <gap:plugin name="FileTransfer" value="org.apache.cordova.core.FileTransfer" />
+    <!-- <gap:plugin name="File" value="org.apache.cordova.core.FileUtils" /> -->
+    <!-- <gap:plugin name="FileTransfer" value="org.apache.cordova.core.FileTransfer" /> -->
     <content src="index.html" />
     <access origin="*" />
 </widget>
