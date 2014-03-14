@@ -24,6 +24,19 @@
     <feature name="NetworkStatus">
         <param name="android-package" value="org.apache.cordova.networkinformation.NetworkManager" />
     </feature>
+    <feature name="File">
+        <param name="android-package" value="org.apache.cordova.file.FileUtils" />
+    </feature>
+    <feature name="FileTransfer">
+        <param name="android-package" value="org.apache.cordova.filetransfer.FileTransfer" />
+    </feature>
+    <feature name="File">
+        <param name="ios-package" value="CDVFile" />
+    </feature>
+    <feature name="FileTransfer">
+        <param name="ios-package" value="CDVFileTransfer" />
+    </feature>
+
     <!-- <feature name="Camera">
         <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
     </feature> -->
@@ -41,8 +54,8 @@
     <gap:plugin name="org.apache.cordova.media-capture" />
     <gap:plugin name="org.apache.cordova.media" />
     <gap:plugin name="org.apache.cordova.network-information" />
-    <gap:plugin name="org.apache.cordova.file" version="0.2.4" />
-    <gap:plugin name="org.apache.cordova.file-transfer" />
+    <!-- <gap:plugin name="org.apache.cordova.file" version="0.2.4" /> -->
+    <!-- <gap:plugin name="org.apache.cordova.file-transfer" /> -->
     <content src="index.html" />
     <access origin="*" />
 </widget>
