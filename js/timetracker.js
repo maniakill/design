@@ -47,7 +47,7 @@ function uploadPhoto(imageURI,params,urls) {
     options.fileKey="file_upload";
     options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
     options.mimeType="image/jpeg";
-    
+
 /*    var params = {};
     params.value1 = "test";
     params.value2 = "param";
@@ -313,9 +313,9 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 project.expense[t] = {};
                 project.expense[t][id] = new Expense(item);
             }else{
-                // if(!project.expense[t][id]){
+                if(!project.expense[t][id]){
                     project.expense[t][id] = new Expense(item);
-                // }
+                }
             }
             saveTime('expenses', project.expense);
         }
@@ -512,8 +512,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
              // this.data =
             var start = '',
                 start2 = '',
-                connect = checkConnection();
-                // connect = 'none';
+                // connect = checkConnection();
+                connect = 'none';
             if(project.selectedDate){
                 start = '&start='+project.selectedDate;
                 start2 = project.selectedDate;
@@ -631,10 +631,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.note = notes;
                     item.project_id = pId;
                     item.project_name = project.getProject(pId).project_name;
+                    item.customer_id = project.getProject(pId).customer_id;
+                    item.customer_name = project.getProject(pId).customer_name;
                     item.unit = project.getExpense(tId).unit;
                     item.unit_price = project.getExpense(tId).unit_price;
                     item.sync = 1;
-                    item.picture = smallImage.src ? smallImage.src : '';                    
+                    item.picture = smallImage.src ? smallImage.src : '';
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
@@ -645,6 +647,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     }else{
                         project.expense[t][item.id] = new Expense(item);
                     }
+
                     saveTime('expenses', project.expense);
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&project_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
@@ -663,7 +666,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 $rootScope.$broadcast('addError',response.data.error_code);
 
                             }
-                        });                        
+                        });
                     }else{
                         project.addToSync('expense',t,pId,'',tId,item.id);
                         if(project.selectedDate){
@@ -688,10 +691,10 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.unit = project.getExpense(tId).unit;
                     item.unit_price = project.getExpense(tId).unit_price;
                     item.customer_id = pId;
-                    item.customer_name = project.getCustomer(pId).name;
+                    item.customer_name = project.getCustomer(pId).customer_name;
                     item.sync = 1;
                     item.picture = smallImage.src ? smallImage.src : '';
-                    
+
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
@@ -702,7 +705,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     }else{
                         project.expense[t][item.id] = new Expense(item);
                     }
-                    
+
                     saveTime('expenses', project.expense);
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
@@ -827,6 +830,14 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         }
         /* end send data to server */
 
+        project.updateExpense = function(time,item,amount,note){
+            project.expense[time][item]['amount'] = amount;
+            project.expense[time][item]['notes'] = note;
+            saveTime('expenses', project.expense);
+            project.addToSync('expense',time,project.expense[time][item]['project_id'],project.expense[time][item]['customer_id'],project.expense[time][item]['expense_id'],item);
+            $location.path('/expenses_list/'+time);
+        }
+
         project.stop = function(item, time, redirect){
             item.active = '';
             saveTime('taskTimeId', project.taskTimeId);
@@ -859,9 +870,9 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             for( x in project.taskTime ){
                 if(JSON.stringify(project.taskTime[x]) != '{}' ){
                     var newTime = Math.floor((d-project.taskTime[x].start)/1000);
-                        newTime = newTime/3600;                        
+                        newTime = newTime/3600;
                     if(project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x]){
-                        if(newTime > 24){                            
+                        if(newTime > 24){
                             project.stop(project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x],null,true);
                         }else{
                             project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].hours = newTime;
@@ -887,7 +898,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         }
         // syncronization function zhe shiit!
         project.sync = function(){
-            
+
             // console.log(project.toSync);
             for(x in project.toSync){
                 var item = project.toSync[x],
@@ -898,7 +909,6 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         sendItem.task_time_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['task_time_id'];
                         sendItem.hours = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['hours'];
                         sendItem.notes = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['notes'];
-                        console.log(sendItem.task_time_id);
                         $http({
                             method: 'POST',
                             url: url+'index.php?do=mobile--mobile-save_time&'+key+'&overwrite=1',
@@ -912,7 +922,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                     delete project.toSync[itemNr];
                                 }
                                 $rootScope.$broadcast('syned');
-                                saveTime('toSync', project.toSync);                           
+                                saveTime('toSync', project.toSync);
                                 return project.sync();
                             }
                         });
@@ -924,10 +934,9 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         sendItem.notes = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['notes'];
                         sendItem.active = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'];
                         sendItem.customer_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['customer_id'];
-                        console.log(sendItem.task_time_id);
                         if(typeof(item.pId) != 'string'){
                             item.pId = '';
-                        }                        
+                        }
                         $http({
                             method: 'POST',
                             url: url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+item.pId+'&customer_id='+item.cId+'&task_id='+item.tId+'&notes='+sendItem.notes+'&hours='+sendItem.hours+'&start='+item.time,
@@ -947,7 +956,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].customer_id = sendItem.customer_id;
                                 project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].hours = sendItem.hours;
                                 project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].notes = sendItem.notes;
-                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].active = sendItem.active;                                
+                                project.taskTimeId[item.time][item.pId]['tasks'][res.data.response.id].active = sendItem.active;
                                 delete project.toSync[itemNr];
                                 if(sendItem.active == 'active'){
                                     project.taskTime[res.data.response.id] = {};
@@ -970,7 +979,33 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         break;
                     }
                 }else if(item.type=='expense' && !item.synced){
-                    if(typeof(project.expense[item.time][item.id]['id']) == 'string'){}else{
+                    if(typeof(project.expense[item.time][item.id]['id']) == 'string'){
+                        var prId = item.id,
+                            notes = project.expense[item.time][item.id]['note'],
+                            amount = project.expense[item.time][item.id]['amount'],
+                            picture = project.expense[item.time][item.id]['picture'];
+                        $http({
+                            method: 'POST',
+                            url: url+'index.php?do=mobile--mobile-update_expense&'+key,
+                            data: '&id='+prId+'&note='+notes+'&amount='+amount+'&start='+item.time,
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        }).then(function(res){
+                            if(res.data.code == 'ok'){
+                                /*if(picture){
+                                    params = {};
+                                    params.id = response.data.response[0].id;
+                                    urls = url+'index.php?do=mobile--mobile-upload_file&'+key
+                                    uploadPhoto(picture,params,urls)
+                                }*/
+                                // delete from sync
+                                delete project.toSync[itemNr];
+                                $rootScope.$broadcast('syned');
+                                saveTime('toSync', project.toSync);
+                                return project.sync();
+                            }
+                        });
+                        break;
+                    }else{
                         var prId = item.pId,
                             notes = project.expense[item.time][item.id]['note'],
                             amount = project.expense[item.time][item.id]['amount'],
@@ -1025,6 +1060,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 project.toSync[id] = new SyncItem(type,time,pId,cId,tId,id);
                 saveTime('toSync', project.toSync);
             }
+            // trebuie gandit
         }
 
         function SyncItem(type,time,pId,cId,tId,id){
