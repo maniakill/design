@@ -15,13 +15,13 @@ function checkConnection() {
 function capturePhoto() {
     // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
-     destinationType: destinationType.FILE_URI });
+     destinationType: destinationType.DATA_URI });
 }
 
 function onPhotoDataSuccess(imageData) {
   var smallImage = document.getElementById('smallImage');
   smallImage.style.display = 'block';
-  // smallImage.src = "data:image/jpeg;base64," + imageData;
+  smallImage.src = "data:image/jpeg;base64," + imageData;
   smallImage.src = imageData;
 }
 
@@ -32,12 +32,13 @@ function onFail(message) {
 function getPhoto(source) {
     // Retrieve image file location from specified source
     navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
-    destinationType: destinationType.FILE_URI,
+    destinationType: destinationType.DATA_URI,
     sourceType: source });
 }
 function onPhotoURISuccess(imageURI) {
   var largeImage = document.getElementById('smallImage');
   largeImage.style.display = 'block';
+  smallImage.src = "data:image/jpeg;base64," + imageData;
   largeImage.src = imageURI;
 }
 
@@ -714,12 +715,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 item.id = response.data.response[0].id;
                                 item.project_id = response.data.response[0].project_id;
                                 item.sync = 0;
-                                if(item.picture){
+                                /*if(item.picture){
                                     params = {};
                                     params.id = response.data.response[0].id;
                                     urls = url+'index.php?do=mobile--mobile-upload_file&'+key;
                                     uploadPhoto(item.picture,params,urls);
-                                }
+                                }*/
                                 project.expense[t][item.id] = new Expense(item);
                                 saveTime('expenses', project.expense);
                                 if(project.selectedDate){
