@@ -15,7 +15,7 @@
     <preference name="PaginationMode" value="unpaginated" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="SplashScreen" value="splash" />
-    <preference name="SplashScreenDelay" value="50000" />
+    <preference name="SplashScreenDelay" value="10000" />
     <name>SalesAssist TimeTracker</name>
     <feature name="NetworkStatus">
         <param name="ios-package" value="CDVConnection" />
@@ -38,7 +38,12 @@
     <feature name="FileTransfer">
         <param name="ios-package" value="CDVFileTransfer" />
     </feature>
-
+    <feature name="SplashScreen">
+        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
+    </feature>
+    <feature name="SplashScreen">
+        <param name="ios-package" value="CDVSplashScreen" />
+    </feature>
     <!-- <feature name="Camera">
         <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
     </feature> -->
