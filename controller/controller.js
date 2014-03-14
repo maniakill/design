@@ -91,7 +91,6 @@ ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$l
 
         $scope.getP = function(item){
             var p = project.getProject(item);
-            console.log(p);
             return p.customer_name + ' > ' + p.project_name;
         }
 
@@ -155,7 +154,7 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
     function ($scope, $routeParams, $route, $modal, project,$location){
         var d = new Date(),
             link = $route.current.originalPath.search('expense');
-            
+
 
         $scope.timesheet = true;
         $scope.expense = true;
@@ -164,13 +163,13 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
         $scope.pend = true;
         $scope.items = Object.keys(project.toSync).length;
         if($scope.items > 0){
-            $scope.pend = false
+            $scope.pend = false;
         }
         // console.log($route.current.controller,$route.current.originalPath);
         switch($route.current.controller){
             case 'expenses':
             case 'expenses_list':
-            case "lists_e":            
+            case "lists_e":
                 $scope.expense = false;
                 $scope.expenseAct = 'act';
                 break;
@@ -202,8 +201,15 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
             $scope.expense = false;
             $scope.expenseAct = 'act';
             $scope.timesheet = true;
-            $scope.timesheetAct = '';                   
+            $scope.timesheetAct = '';
         }
+
+        $scope.$on('syned', function(arg) {
+            $scope.items = Object.keys(project.toSync).length;
+            if($scope.items < 1 ){
+                $scope.pend = true;
+            }
+        });
 
         $scope.go = function(path){
             $location.path('/'+path);
@@ -740,7 +746,11 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                 return false;
             }
             var notes = project.getNote();
-            project.save(type,$routeParams.item,$routeParams.taskId,notes);
+            if($routeParams.expId){
+                project.updateExpense($routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y,$routeParams.expId,project.getAmount(),project.getNote());
+            }else{
+                project.save(type,$routeParams.item,$routeParams.taskId,notes);
+            }
         }
 
         $scope.today = function() {
@@ -882,13 +892,13 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
             project.taskTimeId;
             project.expense
         */
-        
+
         $scope.times = 0;
         $scope.progress = true;
         $scope.max = 0;
         if(project.toSync){
-            $scope.max = Object.keys(project.toSync).length;    
-        }        
+            $scope.max = Object.keys(project.toSync).length;
+        }
         $scope.dynamic = 0;
         $scope.type = 'info';
 
@@ -919,7 +929,7 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
                     $scope.dynamic = 0;
                     project.sync();
                 }else{
-                    $scope.alerts = [ { type: 'info', msg: 'No items to synchronize.' } ];    
+                    $scope.alerts = [ { type: 'info', msg: 'No items to synchronize.' } ];
                 }
             }else{
                 $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ];
@@ -1130,7 +1140,7 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
         }
         $scope.no_project = true;
         $scope.expense = project.expense[time];
-        
+
         if(JSON.stringify(project.expense[time]) == '{}'){
             $scope.no_project = false;
         }
