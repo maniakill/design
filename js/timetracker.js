@@ -22,7 +22,7 @@ function onPhotoDataSuccess(imageData) {
   var smallImage = document.getElementById('smallImage');
   smallImage.style.display = 'block';
   smallImage.src = "data:image/jpeg;base64," + imageData;
-  smallImage.src = imageData;
+  // smallImage.src = imageData;
 }
 
 function onFail(message) {
@@ -38,8 +38,8 @@ function getPhoto(source) {
 function onPhotoURISuccess(imageURI) {
   var largeImage = document.getElementById('smallImage');
   largeImage.style.display = 'block';
-  smallImage.src = "data:image/jpeg;base64," + imageData;
-  largeImage.src = imageURI;
+  smallImage.src = "data:image/jpeg;base64," + imageURI;
+  // largeImage.src = imageURI;
 }
 
 /* upload receipt */
