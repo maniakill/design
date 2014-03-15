@@ -32,7 +32,7 @@ function onFail(message) {
 
 function getPhoto(source) {
     // Retrieve image file location from specified source
-    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 45,targetWidth: 500,
+    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 75,targetWidth: 500,
     targetHeight: 500,
     destinationType: destinationType.DATA_URL,
     sourceType: source });
