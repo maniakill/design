@@ -712,18 +712,17 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     
                     saveTime('expenses', project.expense);
                     if(connect != 'none' && connect !='unknown'){
-                        $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
+                        var pic = '';
+                        if(item.picture){
+                            pic ='picture='+item.picture;
+                        }
+                        $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start+pic).then(function(response){
                             if(response.data.code == 'ok'){
                                 delete project.expense[t][item.id];
                                 item.id = response.data.response[0].id;
                                 item.project_id = response.data.response[0].project_id;
                                 item.sync = 0;
-                                /*if(item.picture){
-                                    params = {};
-                                    params.id = response.data.response[0].id;
-                                    urls = url+'index.php?do=mobile--mobile-upload_file&'+key;
-                                    uploadPhoto(item.picture,params,urls);
-                                }*/
+                                
                                 project.expense[t][item.id] = new Expense(item);
                                 saveTime('expenses', project.expense);
                                 if(project.selectedDate){
@@ -834,9 +833,10 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         }
         /* end send data to server */
 
-        project.updateExpense = function(time,item,amount,note){
+        project.updateExpense = function(time,item,amount,note,picture){
             project.expense[time][item]['amount'] = amount;
             project.expense[time][item]['notes'] = note;
+            project.expense[time][item]['picture'] = picture;
             saveTime('expenses', project.expense);
             project.addToSync('expense',time,project.expense[time][item]['project_id'],project.expense[time][item]['customer_id'],project.expense[time][item]['expense_id'],item);
             $location.path('/expenses_list/'+time);
@@ -989,20 +989,19 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         var prId = item.id,
                             notes = project.expense[item.time][item.id]['note'],
                             amount = project.expense[item.time][item.id]['amount'],
-                            picture = project.expense[item.time][item.id]['picture'];
+                            picture = project.expense[item.time][item.id]['picture'],
+                            pic = '';
+                            if(picture){
+                                pic = 'picture='+picture;
+                            }
                         $http({
                             method: 'POST',
                             url: url+'index.php?do=mobile--mobile-update_expense&'+key,
-                            data: '&id='+prId+'&note='+notes+'&amount='+amount+'&start='+item.time,
+                            data: '&id='+prId+'&note='+notes+'&amount='+amount+pic+'&start='+item.time,
                             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                         }).then(function(res){
                             if(res.data.code == 'ok'){
-                                /*if(picture){
-                                    params = {};
-                                    params.id = response.data.response[0].id;
-                                    urls = url+'index.php?do=mobile--mobile-upload_file&'+key
-                                    uploadPhoto(picture,params,urls)
-                                }*/
+                                
                                 // delete from sync
                                 delete project.toSync[itemNr];
                                 $rootScope.$broadcast('syned');

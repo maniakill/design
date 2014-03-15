@@ -747,7 +747,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
             }
             var notes = project.getNote();
             if($routeParams.expId){
-                project.updateExpense($routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y,$routeParams.expId,project.getAmount(),project.getNote());
+                project.updateExpense($routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y,$routeParams.expId,project.getAmount(),project.getNote(),project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture']);
             }else{
                 project.save(type,$routeParams.item,$routeParams.taskId,notes);
             }
