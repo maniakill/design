@@ -1,4 +1,3 @@
-/// <reference path="../Scripts/angular-1.1.4.js" />
 window.addEventListener('load', function() {
     FastClick.attach(document.body);
 }, false);
@@ -37,9 +36,7 @@ function onPhotoURISuccess(imageURI) {
   smallImage.src = "data:image/jpeg;base64," + imageURI;
 }
 
-// phoneGap
 var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap']);
-
 //This configures the routes and associates each route with a view and a controller
 app.config(function ($routeProvider) {
     $routeProvider
@@ -1036,7 +1033,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 project.toSync[id] = new SyncItem(type,time,pId,cId,tId,id);
                 saveTime('toSync', project.toSync);
             }
-            // trebuie gandit
+            // trebuie gandit ce fac cand au acelasi id expens si task_time_id
         }
 
         function SyncItem(type,time,pId,cId,tId,id){
