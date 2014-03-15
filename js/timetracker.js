@@ -32,8 +32,8 @@ function onFail(message) {
 
 function getPhoto(source) {
     // Retrieve image file location from specified source
-    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 45,targetWidth: 100,
-    targetHeight: 100,
+    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 45,targetWidth: 500,
+    targetHeight: 500,
     destinationType: destinationType.DATA_URL,
     sourceType: source });
 }
@@ -697,15 +697,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.customer_id = pId;
                     item.customer_name = project.getCustomer(pId).customer_name;
                     item.sync = 1;
-                    item.picture = item.id;
-                    // console.log(smallImage.src);
-                    alert('ma-ta '+item.id+' fucking work');
-                    localStorage.setItem(item.id,smallImage.src);
-                    alert('ma-ta');
-                    /*if(smallImage.src){
-                        localStorage.setItem(item.id,smallImage.src)
-                    }*/
-
+                    item.picture = smallImage.src ? smallImage.src : '';
+                    
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
