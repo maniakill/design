@@ -694,9 +694,9 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.customer_id = pId;
                     item.customer_name = project.getCustomer(pId).customer_name;
                     item.sync = 1;
-                    item.picture = smallImage.src ? smallImage.src : '';
-                    console.log(smallImage.src);
-                    alert(smallImage.src);
+                    item.picture = item.id;
+                    // console.log(smallImage.src);
+                    localStorage.setItem(item.id,smallImage.src);
                     /*if(smallImage.src){
                         localStorage.setItem(item.id,smallImage.src)
                     }*/
@@ -711,7 +711,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     }else{
                         project.expense[t][item.id] = new Expense(item);
                     }
-                    alert('d');
+                    
                     saveTime('expenses', project.expense);
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
