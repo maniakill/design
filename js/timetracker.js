@@ -714,7 +714,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     if(connect != 'none' && connect !='unknown'){
                         var pic = '';
                         if(item.picture){
-                            pic ='picture='+item.picture;
+                            pic ='&picture='+item.picture;
                         }
                         /*$http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start+pic).then(function(response){
                             if(response.data.code == 'ok'){
@@ -1016,7 +1016,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             picture = project.expense[item.time][item.id]['picture'],
                             pic = '';
                             if(picture){
-                                pic = 'picture='+picture;
+                                pic = '&picture='+picture;
                             }
                         $http({
                             method: 'POST',
