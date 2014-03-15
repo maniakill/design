@@ -13,7 +13,6 @@ function checkConnection() {
 }
 
 function capturePhoto() {
-    // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,targetWidth: 1024,
     targetHeight: 1024,
      destinationType: destinationType.DATA_URL });
@@ -23,7 +22,6 @@ function onPhotoDataSuccess(imageData) {
   var smallImage = document.getElementById('smallImage');
   smallImage.style.display = 'block';
   smallImage.src = "data:image/jpeg;base64," + imageData;
-  // smallImage.src = imageData;
 }
 
 function onFail(message) {
@@ -31,7 +29,6 @@ function onFail(message) {
 }
 
 function getPhoto(source) {
-    // Retrieve image file location from specified source
     navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,targetWidth: 1024,
     targetHeight: 1024,
     destinationType: destinationType.DATA_URL,
@@ -41,38 +38,7 @@ function onPhotoURISuccess(imageURI) {
   var largeImage = document.getElementById('smallImage');
   largeImage.style.display = 'block';
   smallImage.src = "data:image/jpeg;base64," + imageURI;
-  // largeImage.src = imageURI;
 }
-
-/* upload receipt */
-function uploadPhoto(imageURI,params,urls) {
-    var options = new FileUploadOptions();
-    options.fileKey="file_upload";
-    options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-    options.mimeType="image/jpeg";
-
-/*    var params = {};
-    params.value1 = "test";
-    params.value2 = "param";
-*/
-    options.params = params;
-    var ft = new FileTransfer();
-    ft.upload(imageURI, encodeURI(urls), win, fail, options);
-}
-
-function win(r) {
-    alert('file upload win');
-    console.log("Code = " + r.responseCode);
-    console.log("Response = " + r.response);
-    console.log("Sent = " + r.bytesSent);
-}
-
-function fail(error) {
-    alert("An error has occurred: Code = " + error.code);
-    console.log("upload error source " + error.source);
-    console.log("upload error target " + error.target);
-}
-/* upload receipt */
 
 // phoneGap
 var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap']);
@@ -241,7 +207,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                 customerItem.id = item.customer_id;
                 customerItem.name = item.customer_name;
                 saveCustomer(customerItem);
-            // save the custoemr
+            // save the customer
             if(!project.time[id]){
                 project.time[id] = new Proj(item, show, saveT, time);
             }else{
@@ -915,7 +881,6 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         }
         // syncronization function zhe shiit!
         project.sync = function(){
-
             // console.log(project.toSync);
             for(x in project.toSync){
                 var item = project.toSync[x],

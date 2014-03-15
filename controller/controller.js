@@ -165,7 +165,7 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
         if($scope.items > 0){
             $scope.pend = false;
         }
-        // console.log($route.current.controller,$route.current.originalPath);
+        
         switch($route.current.controller){
             case 'expenses':
             case 'expenses_list':
