@@ -671,6 +671,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         $scope.customer = 'Select Expense';
         $scope.project = 'Project Name';
         $scope.task = 'Receipt Photo';
+        $scope.displayIt = 'display: none';
         $scope.amount = project.getAmount() ? project.getAmount() : 'Select Amount';
         $scope.notes =  project.getNote() ? project.getNote() : 'Add note';
         $scope.no_task = false;
@@ -691,6 +692,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                             $scope.taskId = t.expense_id;
                             if($routeParams.expId){
                                 $scope.img = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
+                                $scope.task="";
+                                $scope.displayIt='';
                             }
                         }
                     }
@@ -710,6 +713,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                             $scope.taskId = t.expense_id;
                             if($routeParams.expId){
                                 $scope.img = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
+                                $scope.task="";
+                                $scope.displayIt='';
                             }
                         }
                     }

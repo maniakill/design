@@ -14,8 +14,7 @@ function checkConnection() {
 
 function capturePhoto() {
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,targetWidth: 1024,
-    targetHeight: 1024,
-     destinationType: destinationType.DATA_URL });
+    targetHeight: 1024,destinationType: destinationType.DATA_URL });
 }
 
 function onPhotoDataSuccess(imageData) {
@@ -30,9 +29,7 @@ function onFail(message) {
 
 function getPhoto(source) {
     navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,targetWidth: 1024,
-    targetHeight: 1024,
-    destinationType: destinationType.DATA_URL,
-    sourceType: source });
+    targetHeight: 1024, destinationType: destinationType.DATA_URL, sourceType: source });
 }
 function onPhotoURISuccess(imageURI) {
   var largeImage = document.getElementById('smallImage');
