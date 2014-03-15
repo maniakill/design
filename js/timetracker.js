@@ -14,7 +14,8 @@ function checkConnection() {
 
 function capturePhoto() {
     // Take picture using device camera and retrieve image as base64-encoded string
-    navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
+    navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 45,targetWidth: 100,
+    targetHeight: 100,
      destinationType: destinationType.DATA_URL });
 }
 
@@ -31,7 +32,8 @@ function onFail(message) {
 
 function getPhoto(source) {
     // Retrieve image file location from specified source
-    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 45,targetWidth: 100,
+    targetHeight: 100,
     destinationType: destinationType.DATA_URL,
     sourceType: source });
 }
@@ -39,6 +41,7 @@ function onPhotoURISuccess(imageURI) {
   var largeImage = document.getElementById('smallImage');
   largeImage.style.display = 'block';
   smallImage.src = "data:image/jpeg;base64," + imageURI;
+  console.log(imageURI);
   // largeImage.src = imageURI;
 }
 
@@ -881,6 +884,8 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         newTime = newTime/3600;
                     if(project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x]){
                         if(newTime > 24){
+                            project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].hours = 24;
+                            saveTime('taskTimeId', project.taskTimeId);
                             project.stop(project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x],null,true);
                         }else{
                             project.taskTimeId[project.taskTime[x].time][project.taskTime[x].pId].tasks[x].hours = newTime;
