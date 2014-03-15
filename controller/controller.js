@@ -1,6 +1,6 @@
-var ctrl = angular.module('ctrl', []);
+var ctrl=angular.module('ctrl',[]);
 // start
-ctrl.controller('start',['$scope', '$timeout', '$location',
+ctrl.controller('start',['$scope','$timeout','$location',
     function ($scope,$timeout,$location){
         var token = localStorage.getItem('token');
         var target = token ? '/timesheet' : '/login';
@@ -8,85 +8,78 @@ ctrl.controller('start',['$scope', '$timeout', '$location',
     }
 ]);
 // login
-ctrl.controller('login',['$scope', '$http', '$templateCache','$location', '$timeout',
+ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout',
     function ($scope, $http, $templateCache, $location, $timeout) {
         $scope.method = 'POST';
         $scope.url = 'https://go.salesassist.eu/pim/mobile/';
         $scope.loged = '';
         $scope.params = [];
         $scope.fetch = function() {
-            $scope.params['username'] = $scope.username;
-            $scope.params['password'] = $scope.password;
+            $scope.params['username']=$scope.username;
+            $scope.params['password']=$scope.password;
             if($scope.params['username'] && $scope.params['password']){
-                $http({method: $scope.method, url: $scope.url, cache: $templateCache, params: $scope.params }).
-                success(function(data, status) {
+                $http({method:$scope.method,url:$scope.url,cache:$templateCache,params:$scope.params}).
+                success(function(data,status) {
                     if(data.code == 'ok'){
                         localStorage.setItem('token',data.response);
                         localStorage.setItem('username',$scope.params['username']);
                         $location.path('/timesheet');
                     }else{
-                        $scope.alerts = [ { type: 'error', msg: data.error_code } ];
+                        $scope.alerts=[{type:'error',msg:data.error_code}];
                         $timeout(function(){ $scope.closeAlert(0); },3000);
                     }
                 }).
-                error(function(data, status) {
-                    $scope.alerts = [ { type: 'error', msg: 'Server error. Please try later' } ];
+                error(function(data,status){
+                    $scope.alerts=[{type:'error',msg:'Server error. Please try later'}];
                     $timeout(function(){ $scope.closeAlert(0); },3000);
                 });
             }else{
-                $scope.alerts = [ { type: 'error', msg: 'Please fill all the fields' } ];
+                $scope.alerts=[{type:'error',msg:'Please fill all the fields'}];
                 $timeout(function(){ $scope.closeAlert(0); },3000);
             }
         };
-        $scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
+        $scope.closeAlert=function(index){$scope.alerts.splice(index,1);};
     }
 ]);
 // timesheet
-ctrl.controller('timesheet',['$scope', '$timeout','project', '$routeParams', '$location',
-    function ($scope, $timeout ,project, $routeParams, $location){
-        $scope.projects = [];
-        if($routeParams.y && $routeParams.m && $routeParams.d){ var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
-        else{ var d = new Date(), time=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear(); }
-        $scope.no_project = true;
-        if(!project.taskTimeId[time]){ project.taskTimeId[time] = {}; }
+ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$location',
+    function ($scope,$timeout,project,$routeParams,$location){
+        $scope.projects=[];
+        if($routeParams.y && $routeParams.m && $routeParams.d){ var time=$routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
+        else{ var d=new Date(), time=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear(); }
+        $scope.no_project=true;
+        if(!project.taskTimeId[time]){ project.taskTimeId[time]={}; }
         $scope.projects = project.taskTimeId[time];
-        if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project = false; }
-
+        if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project=false; }
         project.getTime(time).then(function(){
-            $scope.no_project = true;
-            if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project = false; }
+            $scope.no_project=true;
+            if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project=false; }
         });
-
-        $scope.getP = function(item){
-            var p = project.getProject(item);
-            return p.customer_name + ' > ' + p.project_name;
+        $scope.getP=function(item){
+            var p=project.getProject(item);
+            return p.customer_name+' > '+p.project_name;
         }
-        $scope.getTaskName = function(pr, item){
-            var t = project.getTask(pr, item);
+        $scope.getTaskName = function(pr,item){
+            var t=project.getTask(pr,item);
             return t.task_name;
         }
-        $scope.showh = function(item){
-            return number2hour(item);
-        }
-        $scope.test = function(){
-            $scope.projects.task[0].hours='1:00';
-        }
+        $scope.showh=function(item){ return number2hour(item); }
+        $scope.test=function(){ $scope.projects.task[0].hours='1:00'; }
         function number2hour(number){
             var value = '0:00';
             if(isNaN(number) === true){ return value; }
             else{
                 var minutes = number;
-                if(isNaN(minutes)){ minutes = 0; }
-                minutes = Math.round(minutes * 60);
-                if(minutes >=60){
-                    var n = Math.floor(minutes/60);
-                    minutes = minutes - (60*n);
-                    if(minutes.toString().length == 1){ minutes = '0'+minutes; }
-                    value = n +":"+minutes;
-                }
-                else{
-                    if(minutes.toString().length == 1){ minutes = '0'+minutes; }
-                    value = "0:"+minutes;
+                if(isNaN(minutes)){ minutes=0; }
+                minutes = Math.round(minutes*60);
+                if(minutes >= 60){
+                    var n=Math.floor(minutes/60);
+                    minutes=minutes-(60*n);
+                    if(minutes.toString().length == 1){ minutes='0'+minutes; }
+                    value=n+":"+minutes;
+                }else{
+                    if(minutes.toString().length == 1){ minutes='0'+minutes; }
+                    value="0:"+minutes;
                 }
             }
             return value;
