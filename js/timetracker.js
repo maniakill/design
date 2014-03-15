@@ -706,8 +706,9 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     }else{
                         project.expense[t][item.id] = new Expense(item);
                     }
-
+                    alert('d');
                     saveTime('expenses', project.expense);
+                    alert('e');
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start).then(function(response){
                             if(response.data.code == 'ok'){
