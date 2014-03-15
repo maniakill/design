@@ -14,8 +14,8 @@ function checkConnection() {
 
 function capturePhoto() {
     // Take picture using device camera and retrieve image as base64-encoded string
-    navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 45,targetWidth: 100,
-    targetHeight: 100,
+    navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,targetWidth: 1024,
+    targetHeight: 1024,
      destinationType: destinationType.DATA_URL });
 }
 
@@ -32,8 +32,8 @@ function onFail(message) {
 
 function getPhoto(source) {
     // Retrieve image file location from specified source
-    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 75,targetWidth: 500,
-    targetHeight: 500,
+    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,targetWidth: 1024,
+    targetHeight: 1024,
     destinationType: destinationType.DATA_URL,
     sourceType: source });
 }
