@@ -875,7 +875,7 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
             project.taskTimeId = {};
             project.taskTime = {};
         }
-        removeStuff();
+        // removeStuff();
         $scope.logout = function (){
             // $interval.cancel(project.interval);
             localStorage.setItem('username','');
