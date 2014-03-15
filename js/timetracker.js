@@ -716,7 +716,31 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         if(item.picture){
                             pic ='picture='+item.picture;
                         }
-                        $http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start+pic).then(function(response){
+                        /*$http.get(url+'index.php?do=mobile--mobile-add_expense&'+key+'&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start+pic).then(function(response){
+                            if(response.data.code == 'ok'){
+                                delete project.expense[t][item.id];
+                                item.id = response.data.response[0].id;
+                                item.project_id = response.data.response[0].project_id;
+                                item.sync = 0;
+                                
+                                project.expense[t][item.id] = new Expense(item);
+                                saveTime('expenses', project.expense);
+                                if(project.selectedDate){
+                                    $location.path('/expenses_list/'+project.selectedDate);
+                                }else{
+                                    $location.path('/expenses_list');
+                                }
+                            }else{
+                                $rootScope.$broadcast('addError',response.data.error_code);
+
+                            }
+                        });*/
+                        $http({
+                            method: 'POST',
+                            url: url+'index.php?do=mobile--mobile-add_expense&'+key,
+                            data: '&customer_id='+pId+'&expense_id='+tId+'&note='+notes+'&amount='+amount+start+pic,
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        }).then(function(response){
                             if(response.data.code == 'ok'){
                                 delete project.expense[t][item.id];
                                 item.id = response.data.response[0].id;
