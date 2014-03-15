@@ -1016,6 +1016,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             picture = project.expense[item.time][item.id]['picture'],
                             pic = '';
                             if(picture){
+                                console.log(picture);
                                 pic = '&picture='+picture;
                             }
                         $http({
