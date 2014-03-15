@@ -696,7 +696,9 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.sync = 1;
                     item.picture = item.id;
                     // console.log(smallImage.src);
+                    alert('ma-ta '+item.id+' fucking work');
                     localStorage.setItem(item.id,smallImage.src);
+                    alert('ma-ta');
                     /*if(smallImage.src){
                         localStorage.setItem(item.id,smallImage.src)
                     }*/
