@@ -484,8 +484,9 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.customer_name = project.getCustomer(pId).customer_name;
                     item.sync = 1;
                     item.picture = smallImage.src.search('data') > 0 ? smallImage.src : '';
-                    alert(smallImage.src);
-                    alert(smallImage.src.search('data'));           
+                    console.log(smallImage.src);
+                    // alert(smallImage.src);
+                    // alert(smallImage.src.search('data'));           
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
