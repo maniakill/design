@@ -160,7 +160,6 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
         $scope.timesheet = true;
         $scope.add_page = true;
         $scope.add_note = true;
-
         switch($route.current.controller){
             case 'timesheet':
                 $scope.timesheet = false;
@@ -179,7 +178,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             case 'lists':
             case 'lists_a':
             case 'lists_e':
-                $scope.add_page = false;
+                $scope.add_page = false;                
                 break;
             case 'expenses':
                 $scope.add_page = false;
@@ -211,6 +210,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
         $scope.dateOptions = { 'year-format': "'yy'", 'starting-day': 1 };
         $scope.times = function(){
             var url = link2;
+            if($route.current.controller=='lists_e'){ url='expenses_list'; }
             if($routeParams.y && $routeParams.m && $routeParams.d){ url += '/'+ $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y; }
             $location.path(url);
         }
@@ -445,7 +445,6 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
         $scope.tasks = [];
         $scope.projectList = true;
         $scope.taskList = true;
-
         if($routeParams.customerId){
             $scope.taskList = false;
             $scope.customerId = $routeParams.customerId;
@@ -456,7 +455,6 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
             $scope.items = project.customers;
             project.getCustomerList();
         }
-
         $scope.open = function (pId,tId){
             if(tId){ $location.path(link+pId+'/'+tId); }
             else{ $location.path(link+pId); }
@@ -642,6 +640,7 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
             localStorage.setItem('taskTimeId', '');
             localStorage.setItem('expenses', '');
             localStorage.setItem('toSync', '');
+            localStorage.setItem('customers', '');
             project.time = {};
             project.taskTimeId = {};
             project.taskTime = {};
