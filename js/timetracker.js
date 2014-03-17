@@ -397,6 +397,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 project.taskTime[idn].pId = npId;
                                 project.taskTime[idn].time = t;
                                 saveTime('taskTime', project.taskTime);
+                                if(add === true){ project.addToSync('time',t,npId,pId,tId,id); }
                                 if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                                 else{ $location.path('/timesheet'); }
                             }else{
@@ -417,11 +418,11 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             temp_p.task[tId].task_id = tId;
                             project.time[p] = temp_p;
                             saveTime();
+                            project.addToSync('time',t,p,pId,tId,id);
                             if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                             else{ $location.path('/timesheet'); }
                         }
-                    }
-                    if(add === true){ project.addToSync('time',t,npId,pId,tId,id); }
+                    }                    
                     break;
                 case "expenses":
                     var item = {}, amount = project.getAmount(), t = start2, smallImage = document.getElementById('smallImage');
@@ -555,6 +556,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 project.taskTime[idn].pId = pId;
                                 project.taskTime[idn].time = t;
                                 saveTime('taskTime', project.taskTime);
+                                if(add === true){ project.addToSync('time',t,pId,'',tId,id); }
                                 if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                                 else{ $location.path('/timesheet'); }
                             }else{
@@ -564,11 +566,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         });
                     }else{
                         if(add === true){
+                            project.addToSync('time',t,pId,'',tId,id); 
                             if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                             else{ $location.path('/timesheet'); }
                         }
                     }
-                    if(add === true){ project.addToSync('time',t,pId,'',tId,id); }
+                    
                 break;
             }
         }

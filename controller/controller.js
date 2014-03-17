@@ -628,7 +628,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         /*modalend*/
     }
 ]);
-// acount
+// account
 ctrl.controller('account',['$scope', '$location', 'project', '$interval',
     function ($scope, $location, project,$interval){
         $scope.username = localStorage.username;
@@ -645,7 +645,7 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
             project.taskTimeId = {};
             project.taskTime = {};
         }
-        // removeStuff();
+        removeStuff();
         $scope.logout = function (){
             // $interval.cancel(project.interval);
             localStorage.setItem('username','');
