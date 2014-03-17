@@ -438,7 +438,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.unit = project.getExpense(tId).unit;
                     item.unit_price = project.getExpense(tId).unit_price;
                     item.sync = 1;
-                    item.picture = smallImage.src ? smallImage.src : '';
+                    item.picture = smallImage.src.search('data') > 0 ? smallImage.src : '';
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
@@ -483,7 +483,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     item.customer_id = pId;
                     item.customer_name = project.getCustomer(pId).customer_name;
                     item.sync = 1;
-                    item.picture = smallImage.src ? smallImage.src : '';                    
+                    item.picture = smallImage.src.search('data') > 0 ? smallImage.src : '';                    
                     if(!t){
                         var d = new Date();
                         t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
