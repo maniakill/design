@@ -645,7 +645,7 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
             project.taskTimeId = {};
             project.taskTime = {};
         }
-        removeStuff();
+        // removeStuff();
         $scope.logout = function (){
             // $interval.cancel(project.interval);
             localStorage.setItem('username','');
@@ -674,9 +674,9 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
         for(x in project.toSync){
             var item = project.toSync[x];
             if(item.type == 'time'){
-                if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){ $scope.running++; }
-                else{ $scope.entries++; }
-            }else{ $scope.expenses++; }
+                if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){ $scope.running++; $scope.run = 'square_active'; }
+                else{ $scope.entries++; $scope.ent='square_active'; }
+            }else{ $scope.expenses++; $scope.exp='square_active'; }
         }
 
         // connect = 'none';
