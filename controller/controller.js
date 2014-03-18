@@ -103,7 +103,7 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
         $scope.pend = true;
         $scope.items = Object.keys(project.toSync).length;
         if($scope.items > 0){ $scope.pend = false; }
-        
+
         switch($route.current.controller){
             case 'expenses':
             case 'expenses_list':
@@ -178,7 +178,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             case 'lists':
             case 'lists_a':
             case 'lists_e':
-                $scope.add_page = false;                
+                $scope.add_page = false;
                 break;
             case 'expenses':
                 $scope.add_page = false;
@@ -417,7 +417,7 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
             $scope.taskList = false;
             $scope.projectId = $routeParams.projectId;
             $scope.tasks = project.time[$scope.projectId].task;
-            project.getProjectTaskList($scope.projectId);           
+            project.getProjectTaskList($scope.projectId);
         }else{
             $scope.projectList = false;
             $scope.items = noAdHocP($scope.projs);
@@ -518,7 +518,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                                 $scope.img = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
                                 if($scope.img){
                                     $scope.task="";
-                                    $scope.displayIt='';    
+                                    $scope.displayIt='';
                                 }
                             }
                         }
@@ -539,8 +539,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                                 $scope.img = project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture'];
                                 if($scope.img){
                                     $scope.task="";
-                                    $scope.displayIt='';    
-                                }                                
+                                    $scope.displayIt='';
+                                }
                             }
                         }
                     }
@@ -565,9 +565,10 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                 $timeout(function(){ $scope.closeAlert(0); },3000);
                 return false;
             }
-            var notes = project.getNote();
-            if($routeParams.expId){ project.updateExpense($routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y,$routeParams.expId,project.getAmount(),project.getNote(),project.expense[$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y][$routeParams.expId]['picture']); }
-            else{ project.save(type,$routeParams.item,$routeParams.taskId,notes); }
+            if($routeParams.expId){
+                var smallImage = document.getElementById('smallImage'), pic = smallImage.src.search('base64') > 0 ? smallImage.src : '';
+                project.updateExpense($routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y,$routeParams.expId,project.getAmount(),project.getNote(),pic); }
+            else{ project.save(type,$routeParams.item,$routeParams.taskId,project.getNote()); }
         }
         $scope.today = function() {
             if($routeParams.y && $routeParams.m && $routeParams.d){ $scope.dta = new Date($routeParams.y, $routeParams.m-1, $routeParams.d); }
