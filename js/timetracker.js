@@ -307,7 +307,6 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         project.getExpenses = function(time){
             this.data = $http.get(url+'index.php?do=mobile-expenses&'+key+'&start='+time).then(function(response){
                 if(response.data.code == 'ok'){
-                    console.log(response);
                     if(typeof(response.data.response.expense) == 'object'){
                         var ex = response.data.response.expense;
                         for(x in ex){ saveExpenses(ex[x], time); }
