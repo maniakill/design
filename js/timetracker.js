@@ -155,7 +155,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             this.expense_id = item.expense_id;
             this.unit = item.unit;
             this.unit_price = item.unit_price;
-            this.name = item.name;
+            this.name = item.expense_name ? item.expense_name : item.name;
         }
         var save = function(item, show, saveT, time){
             var id = item.project_id;
@@ -217,10 +217,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         var saveExpenses = function(item, time){
             var id = item.id;
             var t = time;
+            saveExpens(item);
             if(!t){
                 var d = new Date();
                 t = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
             }
+            save(item,false,true,t);
             if(!project.expense[t]){
                 project.expense[t] = {};
                 project.expense[t][id] = new Expense(item);
@@ -232,6 +234,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         var saveExpens = function(item){
             var id = item.expense_id;
             if(!project.expenseList[id]){ project.expenseList[id] = new Expenses(item); }
+            saveTime('expensesList', project.expenseList);
         }
         /* end store data */
         /* requests */
@@ -271,7 +274,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             this.data = $http.get(url+'index.php?do=mobile-customer_list&'+key+'&all=1').then(function(response){
                 if(typeof(response.data.response[0].customers) == 'object'){
                     var cu = response.data.response[0].customers;
-                    for(x in cu){ saveCustomer(cu[x],true); }                    
+                    for(x in cu){ saveCustomer(cu[x],true); }
                 }
                 return response.data;
             });
@@ -295,7 +298,6 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     if(typeof(response.data.response[0].expense) == 'object'){
                         var ex = response.data.response[0].expense;
                         for(x in ex){ saveExpens(ex[x]); }
-                        saveTime('expensesList', project.expenseList);
                     }
                 }
                 return response.data.response;
@@ -305,6 +307,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         project.getExpenses = function(time){
             this.data = $http.get(url+'index.php?do=mobile-expenses&'+key+'&start='+time).then(function(response){
                 if(response.data.code == 'ok'){
+                    console.log(response);
                     if(typeof(response.data.response.expense) == 'object'){
                         var ex = response.data.response.expense;
                         for(x in ex){ saveExpenses(ex[x], time); }
@@ -422,7 +425,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                             if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                             else{ $location.path('/timesheet'); }
                         }
-                    }                    
+                    }
                     break;
                 case "expenses":
                     var item = {}, amount = project.getAmount(), t = start2, smallImage = document.getElementById('smallImage');
@@ -491,7 +494,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                     if(!project.expense[t]){
                         project.expense[t] = {};
                         project.expense[t][item.id] = new Expense(item);
-                    }else{ project.expense[t][item.id] = new Expense(item); }                    
+                    }else{ project.expense[t][item.id] = new Expense(item); }
                     saveTime('expenses', project.expense);
                     if(connect != 'none' && connect !='unknown'){
                         var pic = '';
@@ -502,7 +505,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 delete project.expense[t][item.id];
                                 item.id = response.data.response[0].id;
                                 item.project_id = response.data.response[0].project_id;
-                                item.sync = 0;                                
+                                item.sync = 0;
                                 project.expense[t][item.id] = new Expense(item);
                                 saveTime('expenses', project.expense);
                                 if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
@@ -566,12 +569,12 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         });
                     }else{
                         if(add === true){
-                            project.addToSync('time',t,pId,'',tId,id); 
+                            project.addToSync('time',t,pId,'',tId,id);
                             if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                             else{ $location.path('/timesheet'); }
                         }
                     }
-                    
+
                 break;
             }
         }
@@ -702,7 +705,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         if(picture){ pic = '&picture='+picture; }
                         $http({ method: 'POST', url: url+'index.php?do=mobile--mobile-update_expense&'+key, data: '&id='+prId+'&note='+notes+'&amount='+amount+pic+'&start='+item.time, headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
                         .then(function(res){
-                            if(res.data.code == 'ok'){                                
+                            if(res.data.code == 'ok'){
                                 delete project.toSync[itemNr];
                                 $rootScope.$broadcast('syned');
                                 saveTime('toSync', project.toSync);
