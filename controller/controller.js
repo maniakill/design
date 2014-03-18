@@ -8,8 +8,8 @@ ctrl.controller('start',['$scope','$timeout','$location',
     }
 ]);
 // login
-ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout',
-    function ($scope, $http, $templateCache, $location, $timeout) {
+ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout','$routeParams','project',
+    function ($scope,$http,$templateCache,$location,$timeout,$routeParams,project) {
         $scope.method = 'POST';
         $scope.url = 'https://go.salesassist.eu/pim/mobile/';
         $scope.loged = '';
@@ -23,6 +23,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
                     if(data.code == 'ok'){
                         localStorage.setItem('token',data.response);
                         localStorage.setItem('username',$scope.params['username']);
+                        project.setKey();
                         $location.path('/timesheet');
                     }else{
                         $scope.alerts=[{type:'error',msg:data.error_code}];
@@ -37,8 +38,9 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
                 $scope.alerts=[{type:'error',msg:'Please fill all the fields'}];
                 $timeout(function(){ $scope.closeAlert(0); },3000);
             }
-        };
-        $scope.closeAlert=function(index){$scope.alerts.splice(index,1);};
+        }
+        $scope.closeAlert=function(index){$scope.alerts.splice(index,1);}
+        if($routeParams.error){ $scope.alerts=[{type:'error',msg:$routeParams.error}]; $timeout(function(){ $scope.closeAlert(0); },3000); }
     }
 ]);
 // timesheet
@@ -404,8 +406,8 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
     }
 ]);
 // lists
-ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
-    function ($scope, $http, $location, project, $routeParams, $route){
+ctrl.controller('lists',['$scope','$location','project','$routeParams','$route',
+    function ($scope,$location,project,$routeParams,$route){
         var link = $route.current.originalPath == '/lists/expense/' ? '/expenses/' : '/add/';
         $scope.projs = project.time;
         $scope.items = [];
@@ -438,8 +440,8 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
     }
 ]);
 // lists_a
-ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
-    function ($scope, $http, $location, project, $routeParams, $route){
+ctrl.controller('lists_a',['$scope','$location','project','$routeParams','$route',
+    function ($scope,$location,project,$routeParams,$route){
         var link = $route.current.originalPath == '/lists_a/expense/' ? '/expenses_a/' : '/add_a/';
         $scope.items = [];
         $scope.tasks = [];
@@ -462,19 +464,17 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
     }
 ]);
 // lists
-ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
-    function ($scope, $http, $location, project, $routeParams, $route){
+ctrl.controller('lists_e',['$scope','$location','project','$routeParams','$route',
+    function ($scope,$location,project,$routeParams,$route){
         var prj = $route.current.originalPath.search('_ea') > 0 ? false : true;
         var link = prj ? '/expenses/' : '/expenses_a/' ;
         $scope.expense = project.expenseList;
         $scope.projectId = $routeParams.projectId;
         project.getExpensesList();
-
         $scope.open = function (pId,tId){
             if(tId){ $location.path(link+pId+'/'+tId); }
             else{ $location.path(link+pId); }
         }
-
     }
 ]);
 // addNote
