@@ -30,6 +30,7 @@ app.config(function ($routeProvider) {
     $routeProvider
         .when('/',{controller: 'start',templateUrl: 'layout/start.html'})
         .when('/login',{controller: 'login',templateUrl: 'layout/login.html'})
+        .when('/login/:error',{controller: 'login',templateUrl: 'layout/login.html'})
         .when('/timesheet',{controller: 'timesheet',templateUrl: 'layout/timesheet.html'})
         .when('/timesheet/:d/:m/:y',{controller: 'timesheet',templateUrl: 'layout/timesheet.html'})
         .when('/expenses_list',{controller: 'expenses_list',templateUrl: 'layout/expenses_list.html'})
@@ -78,8 +79,8 @@ app.config(function ($routeProvider) {
         .when('/pending',{controller: 'pending',templateUrl: 'layout/pending.html'})
         .otherwise({ redirectTo: '/' });
 });
-app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$interval',
-    function ($http, $templateCache, $location, $rootScope, $interval) {
+app.factory('project', ['$http','$templateCache','$location','$rootScope','$interval',
+    function ($http,$templateCache,$location,$rootScope,$interval) {
         var project = {}, url = 'https://go.salesassist.eu/pim/mobile/', key = 'api_key='+localStorage.token+'&username='+localStorage.username, obj = {};
         /* store data */
         project.time = localStorage.getItem('timesheet') ? JSON.parse(localStorage.getItem('timesheet')) : {};
@@ -240,20 +241,26 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
         /* requests */
         project.getTime = function(time) {
             this.data = $http.get(url+'index.php?do=mobile-time&'+key+'&start='+time).then(function(response){
-                if(typeof(response.data.response.project) == 'object' ){
-                    var pr = response.data.response.project;
-                    for(x in pr){ save(pr[x], false, true, time); }
+                if(response.data.code=='ok'){
+                    if(typeof(response.data.response.project) == 'object' ){
+                        var pr = response.data.response.project;
+                        for(x in pr){ save(pr[x], false, true, time); }
+                    }
                 }
+                if(response.data.code=='error'){ project.logout(response.data); }
                 return response.data;
             });
             return this.data;
         }
         project.getProjectList = function(){
             this.data = $http.get(url+'index.php?do=mobile-project_list&'+key+'&all=1').then(function(response){
-                if(typeof(response.data.response[0].projects) == 'object'){
-                    var pr = response.data.response[0].projects;
-                    for(x in pr){ save(pr[x], true); }
+                if(response.data.code=='ok'){
+                    if(typeof(response.data.response[0].projects) == 'object'){
+                        var pr = response.data.response[0].projects;
+                        for(x in pr){ save(pr[x], true); }
+                    }
                 }
+                if(response.data.code=='error'){ project.logout(response.data); }
                 return response.data;
             });
             return this.data;
@@ -265,17 +272,20 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         var ta = response.data.response.tasks;
                         for(x in ta){ saveTask(item,ta[x],true); }
                     }
-                }
+                }else{ project.logout(response.data); }
                 return response.data.response;
             });
             return this.data;
         }
         project.getCustomerList = function(){
             this.data = $http.get(url+'index.php?do=mobile-customer_list&'+key+'&all=1').then(function(response){
-                if(typeof(response.data.response[0].customers) == 'object'){
-                    var cu = response.data.response[0].customers;
-                    for(x in cu){ saveCustomer(cu[x],true); }
+                if(response.data.code=='ok'){
+                    if(typeof(response.data.response[0].customers) == 'object'){
+                        var cu = response.data.response[0].customers;
+                        for(x in cu){ saveCustomer(cu[x],true); }
+                    }
                 }
+                if(response.data.code =='error'){ project.logout(response.data); }
                 return response.data;
             });
             return this.data;
@@ -287,7 +297,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         var ad = response.data.response.tasks;
                         for(x in ad){ saveAdhocTask(ad[x],true); }
                     }
-                }
+                }else{ project.logout(response.data); }
                 return response.data.response;
             });
             return this.data;
@@ -299,7 +309,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         var ex = response.data.response[0].expense;
                         for(x in ex){ saveExpens(ex[x]); }
                     }
-                }
+                }else{ project.logout(response.data); }
                 return response.data.response;
             });
             return this.data;
@@ -311,7 +321,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                         var ex = response.data.response.expense;
                         for(x in ex){ saveExpenses(ex[x], time); }
                     }
-                }
+                }else{ project.logout(response.data); }
                 return response.data;
             });
             return this.data;
@@ -403,7 +413,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                                 else{ $location.path('/timesheet'); }
                             }else{
-                                if(response.data){ $rootScope.$broadcast('addError',response.data.error_code); }
+                                if(response.data){ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
                                 else{ $rootScope.$broadcast('addError',response.error_code); }
                             }
                         });
@@ -463,7 +473,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 saveTime('expenses', project.expense);
                                 if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
                                 else{ $location.path('/expenses_list'); }
-                            }else{ $rootScope.$broadcast('addError',response.data.error_code); }
+                            }else{ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
                         });
                     }else{
                         project.addToSync('expense',t,pId,'',tId,item.id);
@@ -509,7 +519,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 saveTime('expenses', project.expense);
                                 if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
                                 else{ $location.path('/expenses_list'); }
-                            }else{ $rootScope.$broadcast('addError',response.data.error_code); }
+                            }else{ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
                         });
                     }else{
                         project.addToSync('expense',t,item.project_id,pId,tId,item.id);
@@ -562,7 +572,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                                 else{ $location.path('/timesheet'); }
                             }else{
-                                if(response.data){ $rootScope.$broadcast('addError',response.data.error_code); }
+                                if(response.data){ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
                                 else{ $rootScope.$broadcast('addError',response.error_code); }
                             }
                         });
@@ -649,7 +659,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 $rootScope.$broadcast('syned');
                                 saveTime('toSync', project.toSync);
                                 return project.sync();
-                            }else{ project.toSync[itemNr].synced = true; }
+                            }else{ project.toSync[itemNr].synced = true; if(res.data.code=='error'){ project.logout(res.data); } }
                         });
                         break;
                     }else{
@@ -694,7 +704,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 saveTime('taskTimeId', project.taskTimeId);
                                 saveTime('taskTime', project.taskTime);
                                 return project.sync();
-                            }else{ project.toSync[itemNr].synced = true; }
+                            }else{ project.toSync[itemNr].synced = true; if(res.data.code=='error'){ project.logout(res.data); } }
                         });
                         break;
                     }
@@ -709,7 +719,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 $rootScope.$broadcast('syned');
                                 saveTime('toSync', project.toSync);
                                 return project.sync();
-                            }else{ project.toSync[itemNr].synced = true; }
+                            }else{ project.toSync[itemNr].synced = true; if(res.data.code=='error'){ project.logout(res.data); } }
                         });
                         break;
                     }else{
@@ -737,7 +747,7 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
                                 saveTime('toSync', project.toSync);
                                 saveTime('expenses', project.toSync);
                                 return project.sync();
-                            }else{ project.toSync[itemNr].synced = true; }
+                            }else{ project.toSync[itemNr].synced = true; if(res.data.code=='error'){ project.logout(res.data); } }
                         });
                     break;
                     }
@@ -761,6 +771,14 @@ app.factory('project', ['$http','$templateCache', '$location', '$rootScope', '$i
             this.id = id;
             this.synced = false;
         }
+        project.logout = function(code){
+            if(code.error_code=='authentication required' || code.error_code=='wrong username'){
+                localStorage.setItem('username','');
+                localStorage.setItem('token','');
+                $location.path('/login/'+code.error_code);
+            }// else unknown error!!! and we don't need to relog the user
+        }
+        project.setKey = function(){ key = 'api_key='+localStorage.token+'&username='+localStorage.username; }
         return project;
     }
 ]);
