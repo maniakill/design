@@ -1,15 +1,15 @@
 var ctrl=angular.module('ctrl',[]);
 // start
-ctrl.controller('start',['$scope','$timeout','$location','project',
-    function ($scope,$timeout,$location,project){
+ctrl.controller('start',['$scope','$timeout','$location',
+    function ($scope,$timeout,$location){
         var token = localStorage.getItem('token');
         var target = token ? '/timesheet' : '/login';
-        $timeout(function() { project.go(target); /*$location.path(target);*/ }, 1000);
+        $timeout(function() { $location.path(target); }, 1000);
     }
 ]);
 // login
-ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout','$routeParams','project',
-    function ($scope,$http,$templateCache,$location,$timeout,$routeParams,project) {
+ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout',
+    function ($scope, $http, $templateCache, $location, $timeout) {
         $scope.method = 'POST';
         $scope.url = 'https://go.salesassist.eu/pim/mobile/';
         $scope.loged = '';
@@ -23,8 +23,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
                     if(data.code == 'ok'){
                         localStorage.setItem('token',data.response);
                         localStorage.setItem('username',$scope.params['username']);
-                        project.setKey();
-                        project.go('/timesheet');//$location.path('/timesheet');
+                        $location.path('/timesheet');
                     }else{
                         $scope.alerts=[{type:'error',msg:data.error_code}];
                         $timeout(function(){ $scope.closeAlert(0); },3000);
@@ -38,9 +37,8 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
                 $scope.alerts=[{type:'error',msg:'Please fill all the fields'}];
                 $timeout(function(){ $scope.closeAlert(0); },3000);
             }
-        }
-        $scope.closeAlert=function(index){$scope.alerts.splice(index,1);}
-        if($routeParams.error){ $scope.alerts=[{type:'error',msg:$routeParams.error}]; $timeout(function(){ $scope.closeAlert(0); },3000); }
+        };
+        $scope.closeAlert=function(index){$scope.alerts.splice(index,1);};
     }
 ]);
 // timesheet
@@ -88,8 +86,8 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
         }
         $scope.editTask = function(pId, tId, notes, adhoc, cId, taskTimeId){
             project.setNote(notes);
-            if(adhoc == 'ad hoc'){ project.go('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time); /*$location.path('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time);*/ }
-            else{ project.go('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time); /*$location.path('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time);*/ }
+            if(adhoc == 'ad hoc'){ $location.path('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time); }
+            else{ $location.path('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time); }
         }
         $scope.addNewTask = function(){ project.addNewTask(); }
     }
@@ -148,8 +146,7 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
             $scope.items = Object.keys(project.toSync).length;
             if($scope.items < 1 ){ $scope.pend = true; }
         });
-        $scope.go = function(path){ project.go('/'+path); }
-        // $scope.go = function(path){ $location.path('/'+path); }
+        $scope.go = function(path){ $location.path('/'+path); }
     }
 ]);
 // header
@@ -215,7 +212,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             var url = link2;
             if($route.current.controller=='lists_e'){ url='expenses_list'; }
             if($routeParams.y && $routeParams.m && $routeParams.d){ url += '/'+ $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y; }
-            project.go(url); //$location.path(url);
+            $location.path(url);
         }
         $scope.addpage = function(write){
             if(write){
@@ -229,7 +226,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
                 url += '/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
             }
             if($routeParams.expId){ url += '/'+$routeParams.expId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
-            project.go(url); //$location.path(url);
+            $location.path(url);
         }
 
         /*modal*/
@@ -294,7 +291,9 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
                         $scope.mytime = d;
                     }
                 }
-            }else{ project.go('/timesheet'); /* $location.path('/timesheet');*/ }
+            }else{
+                $location.path('/timesheet');
+            }
         }
 
         $scope.today = function() { $scope.dta = new Date(); };
@@ -305,7 +304,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
             }
         };
         $scope.selectTask = function(id){
-            if(!$routeParams.taskTimeId){ project.go('/lists/'+id); /* $location.path('/lists/'+id);*/ }
+            if(!$routeParams.taskTimeId){ $location.path('/lists/'+id); }
         }
 
         $scope.dateOptions = { 'year-format': "'yy'", 'starting-day': 1 };
@@ -362,7 +361,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
             var url = '/addNote/'+pId;
             if(tId){ url += '/'+tId; }
             if($routeParams.taskTimeId){ url += '/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
-            project.go(url); //$location.path(url);
+            $location.path(url);
         }
         $scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
         $scope.$on('addError', function(arg,args) {
@@ -372,20 +371,20 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
     }
 ]);
 // task_type
-ctrl.controller('task_type',['$scope','$modalInstance','items','$location','types','project',
-    function ($scope,$modalInstance,items,$location,types,project) {
+ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'types',
+    function ($scope, $modalInstance, items, $location, types) {
         $scope.items = items;
         $scope.types = types;
 
         $scope.open = function(url){
-            project.go(url); //$location.path(url);
+            $location.path(url);
             $scope.cancel();
         }
         $scope.cancel = function () { $modalInstance.dismiss('cancel'); };
     }
 ]);
-ctrl.controller('task_type1',['$scope','$modalInstance','items', 'types','project',
-    function ($scope,$modalInstance,items,types,project) {
+ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 'types',
+    function ($scope, $modalInstance, items, $location, types) {
         $scope.items = items;
         $scope.types = types;
 
@@ -405,8 +404,8 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', 'types','projec
     }
 ]);
 // lists
-ctrl.controller('lists',['$scope','$location','project','$routeParams','$route',
-    function ($scope,$location,project,$routeParams,$route){
+ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
+    function ($scope, $http, $location, project, $routeParams, $route){
         var link = $route.current.originalPath == '/lists/expense/' ? '/expenses/' : '/add/';
         $scope.projs = project.time;
         $scope.items = [];
@@ -428,8 +427,8 @@ ctrl.controller('lists',['$scope','$location','project','$routeParams','$route',
         }
 
         $scope.open = function (pId,tId){
-            if(tId){ project.go(link+pId+'/'+tId); /*$location.path(link+pId+'/'+tId);*/ }
-            else{ project.go(link+pId); /*$location.path(link+pId);*/ }
+            if(tId){ $location.path(link+pId+'/'+tId); }
+            else{ $location.path(link+pId); }
         }
         function noAdHocP(p){
             var ps = {};
@@ -439,8 +438,8 @@ ctrl.controller('lists',['$scope','$location','project','$routeParams','$route',
     }
 ]);
 // lists_a
-ctrl.controller('lists_a',['$scope','$location','project','$routeParams','$route',
-    function ($scope,$location,project,$routeParams,$route){
+ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
+    function ($scope, $http, $location, project, $routeParams, $route){
         var link = $route.current.originalPath == '/lists_a/expense/' ? '/expenses_a/' : '/add_a/';
         $scope.items = [];
         $scope.tasks = [];
@@ -457,23 +456,25 @@ ctrl.controller('lists_a',['$scope','$location','project','$routeParams','$route
             project.getCustomerList();
         }
         $scope.open = function (pId,tId){
-            if(tId){ project.go(link+pId+'/'+tid);/* $location.path(link+pId+'/'+tId);*/ }
-            else{ project.go(link+pId); /*$location.path(link+pId);*/ }
+            if(tId){ $location.path(link+pId+'/'+tId); }
+            else{ $location.path(link+pId); }
         }
     }
 ]);
 // lists
-ctrl.controller('lists_e',['$scope','$location','project','$routeParams','$route',
-    function ($scope,$location,project,$routeParams,$route){
+ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
+    function ($scope, $http, $location, project, $routeParams, $route){
         var prj = $route.current.originalPath.search('_ea') > 0 ? false : true;
         var link = prj ? '/expenses/' : '/expenses_a/' ;
         $scope.expense = project.expenseList;
         $scope.projectId = $routeParams.projectId;
         project.getExpensesList();
+
         $scope.open = function (pId,tId){
-            if(tId){project.go(link+pId+'/'+tid);/* $location.path(link+pId+'/'+tId);*/ }
-            else{ project.go(link+pId);/*$location.path(link+pId);*/ }
+            if(tId){ $location.path(link+pId+'/'+tId); }
+            else{ $location.path(link+pId); }
         }
+
     }
 ]);
 // addNote
@@ -522,7 +523,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                             }
                         }
                     }
-                }else{ project.go('/expenses_list'); /*$location.path('/expenses_list');*/ }
+                }else{ $location.path('/expenses_list'); }
             }else{
                 var p = project.getCustomer($routeParams.item);
                 if(p){
@@ -543,7 +544,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
                             }
                         }
                     }
-                }else{ project.go('/expenses_list'); /*$location.path('/expenses_list');*/ }
+                }else{ $location.path('/expenses_list'); }
             }
         }
 
@@ -577,8 +578,8 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
         $scope.open = function() { if(!$routeParams.expId){ $timeout(function() { $scope.opened = true; }); } };
         $scope.selectExpense = function(id){
             if(!$routeParams.expId){
-                if(prj){ project.go('/lists_e/'+id); /*$location.path('/lists_e/'+id);*/ }
-                else{ project.go('/lists_ea/'+id);/* $location.path('/lists_ea/'+id);*/ }
+                if(prj){ $location.path('/lists_e/'+id); }
+                else{ $location.path('/lists_ea/'+id); }
             }
         }
         $scope.dateOptions = { 'year-format': "'yy'", 'starting-day': 1 };
@@ -603,14 +604,14 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
             if(!prj){ url = '/addNote_expensea/'+pId; }
             if(tId){ url += '/'+tId; }
             if($routeParams.expId){ url += '/'+$routeParams.expId+'/'+$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y; }
-            project.go(url);//$location.path(url);
+            $location.path(url);
         }
         $scope.addAmount = function(pId,tId){
             var url = '/addAmount_expense/'+pId;
             if(!prj){ url = '/addAmount_expensea/'+pId; }
             if(tId){ url += '/'+tId; }
             if($routeParams.expId){ url += '/'+$routeParams.expId+'/'+$routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y; }
-            project.go(url);//$location.path(url);
+            $location.path(url);
         }
         $scope.selectTask = function(){ $scope.add(); }
 
@@ -651,13 +652,13 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
             localStorage.setItem('username','');
             localStorage.setItem('token','');
             // removeStuff(); // this is for testiung only and shall be removed when going live
-            project.go('/start');//$location.path('/start');
+            $location.path('/start');
         }
     }
 ]);
 // pending
-ctrl.controller('pending',['$scope','project', '$timeout',
-    function ($scope,project,$timeout){
+ctrl.controller('pending',['$scope', '$location','project', '$timeout',
+    function ($scope, $location,project,$timeout){
         /* things to sync:
             project.taskTimeId;
             project.expense
@@ -749,7 +750,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
                         $scope.mytime = d;
                     }
                 }
-            }else{ project.go('/timesheet'); /*$location.path('/timesheet');*/ }
+            }else{ $location.path('/timesheet'); }
         }
         $scope.today = function() {
             if($routeParams.y && $routeParams.m && $routeParams.d){ $scope.dta = new Date($routeParams.y, $routeParams.m-1, $routeParams.d); }
@@ -757,7 +758,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
         };
         $scope.today();
         $scope.open = function() { if(!$routeParams.taskTimeId){ $timeout(function() { $scope.opened = true; }); } };
-        $scope.selectTask = function(id){ if(!$routeParams.taskTimeId){ project.go('/lists_a/'+id); /*$location.path('/lists_a/'+id);*/ } }
+        $scope.selectTask = function(id){ if(!$routeParams.taskTimeId){ $location.path('/lists_a/'+id); } }
         $scope.dateOptions = { 'year-format': "'yy'", 'starting-day': 1 };
         /*timepicker*/
         $scope.hstep = 1;
@@ -795,7 +796,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
             var url = '/addNotea/'+pId;
             if(tId){ url += '/'+tId; }
             if($routeParams.taskTimeId){ url += '/'+ $routeParams.projectId +'/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
-            project.go(url);//$location.path(url);
+            $location.path(url);
         }
         $scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
         $scope.$on('addError', function(arg,args) {
@@ -821,8 +822,8 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
         $scope.editTask = function(pId, tId, notes, amount, adhoc, cId, expId){
             project.setNote(notes);
             project.setAmount(amount);
-            if(adhoc == "ad hoc"){ project.go('/expenses_a/'+cId+'/'+tId+'/'+expId+'/'+time); /*$location.path('/expenses_a/'+cId+'/'+tId+'/'+expId+'/'+time);*/ }
-            else{ project.go('/expenses/'+pId+'/'+tId+'/'+expId+'/'+time); /*$location.path('/expenses/'+pId+'/'+tId+'/'+expId+'/'+time);*/ }
+            if(adhoc == "ad hoc"){ $location.path('/expenses_a/'+cId+'/'+tId+'/'+expId+'/'+time); }
+            else{ $location.path('/expenses/'+pId+'/'+tId+'/'+expId+'/'+time); }
         }
         $scope.addNewTask = function(){ project.addNewTask(); }
     }
