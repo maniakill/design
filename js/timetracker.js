@@ -25,7 +25,7 @@ function onPhotoURISuccess(imageURI) {
   smallImage.src = "data:image/jpeg;base64," + imageURI;
 }
 
-var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap']);
+var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap','ngAnimate']);
 app.config(function ($routeProvider) {
     $routeProvider
         .when('/',{controller: 'start',templateUrl: 'layout/start.html'})
@@ -410,8 +410,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                                 project.taskTime[idn].time = t;
                                 saveTime('taskTime', project.taskTime);
                                 if(add === true){ project.addToSync('time',t,npId,pId,tId,id); }
-                                if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
-                                else{ $location.path('/timesheet'); }
+                                if(project.selectedDate){ project.go('/timesheet/'+project.selectedDate);/* $location.path('/timesheet/'+project.selectedDate);*/ }
+                                else{ project.go('/timesheet');/* $location.path('/timesheet');*/ }
                             }else{
                                 if(response.data){ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
                                 else{ $rootScope.$broadcast('addError',response.error_code); }
@@ -431,8 +431,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                             project.time[p] = temp_p;
                             saveTime();
                             project.addToSync('time',t,p,pId,tId,id);
-                            if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
-                            else{ $location.path('/timesheet'); }
+                            if(project.selectedDate){project.go('/timesheet/'+project.selectedDate); /*$location.path('/timesheet/'+project.selectedDate);*/ }
+                            else{ project.go('/timesheet'); /*$location.path('/timesheet');*/ }
                         }
                     }
                     break;
@@ -471,14 +471,14 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                                 item.sync = 0;
                                 project.expense[t][item.id] = new Expense(item);
                                 saveTime('expenses', project.expense);
-                                if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
-                                else{ $location.path('/expenses_list'); }
+                                if(project.selectedDate){ project.go('/expenses_list/'+project.selectedDate); /*$location.path('/expenses_list/'+project.selectedDate);*/ }
+                                else{ project.go('/expenses_list'); /*$location.path('/expenses_list');*/ }
                             }else{ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
                         });
                     }else{
                         project.addToSync('expense',t,pId,'',tId,item.id);
-                        if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
-                        else{ $location.path('/expenses_list'); }
+                        if(project.selectedDate){ project.go('/expenses_list/'+project.selectedDate); /*$location.path('/expenses_list/'+project.selectedDate);*/ }
+                        else{ project.go('/expenses_list'); /*$location.path('/expenses_list');*/ }
                     }
                     break;
                 case "expenses_a":
@@ -517,14 +517,14 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                                 item.sync = 0;
                                 project.expense[t][item.id] = new Expense(item);
                                 saveTime('expenses', project.expense);
-                                if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
-                                else{ $location.path('/expenses_list'); }
+                                if(project.selectedDate){ project.go('/expenses_list/'+project.selectedDate); /*$location.path('/expenses_list/'+project.selectedDate);*/ }
+                                else{ project.go('/expenses_list'); /*$location.path('/expenses_list');*/ }
                             }else{ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
                         });
                     }else{
                         project.addToSync('expense',t,item.project_id,pId,tId,item.id);
-                        if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
-                        else{ $location.path('/expenses_list'); }
+                        if(project.selectedDate){ project.go('/expenses_list/'+project.selectedDate); /*$location.path('/expenses_list/'+project.selectedDate);*/ }
+                        else{ project.go('/expenses_list'); /*$location.path('/expenses_list');*/ }
                     }
                     break;
                 default:
@@ -569,8 +569,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                                 project.taskTime[idn].time = t;
                                 saveTime('taskTime', project.taskTime);
                                 if(add === true){ project.addToSync('time',t,pId,'',tId,id); }
-                                if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
-                                else{ $location.path('/timesheet'); }
+                                if(project.selectedDate){ project.go('/timesheet/'+project.selectedDate); /*$location.path('/timesheet/'+project.selectedDate);*/ }
+                                else{ project.go('/timesheet'); /*$location.path('/timesheet');*/ }
                             }else{
                                 if(response.data){ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
                                 else{ $rootScope.$broadcast('addError',response.error_code); }
@@ -579,8 +579,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                     }else{
                         if(add === true){
                             project.addToSync('time',t,pId,'',tId,id);
-                            if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
-                            else{ $location.path('/timesheet'); }
+                            if(project.selectedDate){ project.go('/timesheet/'+project.selectedDate); /*$location.path('/timesheet/'+project.selectedDate);*/ }
+                            else{ project.go('/timesheet'); /*$location.path('/timesheet');*/ }
                         }
                     }
 
@@ -594,14 +594,14 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
             project.expense[time][item]['picture'] = picture;
             saveTime('expenses', project.expense);
             project.addToSync('expense',time,project.expense[time][item]['project_id'],project.expense[time][item]['customer_id'],project.expense[time][item]['expense_id'],item);
-            $location.path('/expenses_list/'+time);
+            project.go('/expenses_list/'+time); /*$location.path('/expenses_list/'+time);*/
         }
         project.stop = function(item, time, redirect){
             item.active = '';
             saveTime('taskTimeId', project.taskTimeId);
             delete project.taskTime[item.task_time_id];
             saveTime('taskTime', project.taskTime);
-            if(!redirect){ $location.path('/timesheet/'+time); }
+            if(!redirect){ project.go('/timesheet/'+time); /*$location.path('/timesheet/'+time);*/ }
         }
         project.start = function(item, time){
             project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
@@ -614,7 +614,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
             project.taskTime[item.task_time_id].pId = item.project_id;
             project.taskTime[item.task_time_id].time = time;
             saveTime('taskTime', project.taskTime);
-            $location.path('/timesheet/'+time);
+            project.go('/timesheet/'+time); /*$location.path('/timesheet/'+time);*/
         }
         // var t = window.setInterval( rune, 1000 ); I don't know why this doesn't work and the line below works
         project.interval = $interval(rune,1000);
@@ -775,10 +775,11 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
             if(code.error_code=='authentication required' || code.error_code=='wrong username'){
                 localStorage.setItem('username','');
                 localStorage.setItem('token','');
-                $location.path('/login/'+code.error_code);
+                project.go('/login/'+code.error_code); // $location.path('/login/'+code.error_code);
             }// else unknown error!!! and we don't need to relog the user
         }
         project.setKey = function(){ key = 'api_key='+localStorage.token+'&username='+localStorage.username; }
+        project.go = function(path){ $rootScope.pageAnimationClass ='slideLeft'; $location.path(path); }
         return project;
     }
 ]);
