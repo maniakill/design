@@ -5,12 +5,12 @@
     xmlns="http://www.w3.org/ns/widgets" 
     xmlns:gap = "http://phonegap.com/ns/1.0"
     xmlns:android   = "http://schemas.android.com/apk/res/android"
-
     >
     <name>SalesAssist TimeTracker</name>
+    <preference name="DisallowOverscroll" value="true" />
     <!-- <preference name="AllowInlineMediaPlayback" value="false" />
     <preference name="BackupWebStorage" value="cloud" />
-    <preference name="DisallowOverscroll" value="true" />
+    
     <preference name="EnableViewportScale" value="false" />
     <preference name="KeyboardDisplayRequiresUserAction" value="true" />
     <preference name="MediaPlaybackRequiresUserAction" value="false" />
@@ -27,36 +27,7 @@
     <preference name="orientation" value="both" />
     <preference name="phonegap-version" value="3.3.0" />
     <preference name="fullscreen" value="true" />
-    <!-- <feature name="NetworkStatus">
-        <param name="ios-package" value="CDVConnection" />
-    </feature>
-    <feature name="Camera">
-        <param name="ios-package" value="CDVCamera" />
-    </feature>
-    <feature name="NetworkStatus">
-        <param name="android-package" value="org.apache.cordova.networkinformation.NetworkManager" />
-    </feature>
-    <feature name="File">
-        <param name="android-package" value="org.apache.cordova.file.FileUtils" />
-    </feature>
-    <feature name="FileTransfer">
-        <param name="android-package" value="org.apache.cordova.filetransfer.FileTransfer" />
-    </feature>
-    <feature name="File">
-        <param name="ios-package" value="CDVFile" />
-    </feature>
-    <feature name="FileTransfer">
-        <param name="ios-package" value="CDVFileTransfer" />
-    </feature>
-    <feature name="SplashScreen">
-        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
-    </feature>
-    <feature name="SplashScreen">
-        <param name="ios-package" value="CDVSplashScreen" />
-    </feature> -->
-    <!-- <feature name="Camera">
-        <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
-    </feature> -->
+    
     <icon src="icon.png" />
     <gap:splash src="splash.png" />
     <gap:platform name="ios" />
@@ -72,10 +43,6 @@
     <gap:plugin name="org.apache.cordova.media" />
     <gap:plugin name="org.apache.cordova.network-information" />
     <gap:plugin name="org.apache.cordova.splashscreen" />
-    <!-- <gap:plugin name="org.apache.cordova.file" />
-    <gap:plugin name="org.apache.cordova.file-transfer" /> -->
-    <!-- <gap:plugin name="File" value="org.apache.cordova.core.FileUtils" /> -->
-    <!-- <gap:plugin name="FileTransfer" value="org.apache.cordova.core.FileTransfer" /> -->
     <content src="index.html" />
     <access origin="*" />
 </widget>
