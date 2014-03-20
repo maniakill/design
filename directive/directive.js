@@ -2,7 +2,7 @@ app.animation('.my-crazy-animation', function() {
 return {
 enter: function(element, done) {
   console.log('enter');
-  element.removeClass('anim-leave').addClass('anim anim-enter').animate({ right: '0' },1000, done);
+  element.css({'right': '-100%' }).removeClass('anim-leave').addClass('anim anim-enter').animate({ right: '0' },1000, done);
   
 //run the animation here and call done when the animation is complete
 return function(cancelled) {
