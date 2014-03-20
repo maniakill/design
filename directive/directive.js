@@ -3,7 +3,7 @@ return {
 enter: function(element, done) {
   console.log('enter');
   // element.css({'right': '-100%' }).removeClass('anim-leave').addClass('anim anim-enter').animate({ right: '0' },1000, done);
-  element.css({'opacity':'0'}).animate({'opacity':'1'},1000,done);
+  element.css({'opacity':'0'}).animate({'opacity':'1'},800,done);
   
 //run the animation here and call done when the animation is complete
 return function(cancelled) {
@@ -18,7 +18,7 @@ leave: function(element, done) { console.log('leave');
   // element.removeClass('anim-enter').addClass('anim anim-leave').animate({
   //       left: '0'
   //     },1000, done);
-element.css({'opacity':'1'}).animate({'opacity':'0'},1000,done);
+element.css({'opacity':'1'}).animate({'opacity':'0'},500,done);
           },
 move: function(element, done) { console.log('move'); },
  
