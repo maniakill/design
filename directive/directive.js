@@ -1,34 +1,34 @@
-app.animation('.anim', function() {
-  return {
-    enter : function(element, done) {
-      jQuery(element).animate({
-width: "70%",
-opacity: 0.4,
-marginLeft: "0.6in",
-fontSize: "3em",
-borderWidth: "10px"
-}, 1500 );
-
-      return function(cancelled) {
-        /* this (optional) function is called when the animation is complete
-           or when the animation has been cancelled (which is when
-           another animation is started on the same element while the
-           current animation is still in progress). */
-        if(cancelled) {
-          jQuery(element).stop();
-        }
-      }
-    },
-
-    leave : function(element, done) { done(); },
-    move : function(element, done) { done(); },
-
-    beforeAddClass : function(element, className, done) { done(); },
-    addClass : function(element, className, done) { done(); },
-
-    beforeRemoveClass : function(element, className, done) { done(); },
-    removeClass : function(element, className, done) { done(); },
-
-    allowCancel : function(element, event, className) {}
-  };
+app.animation('.my-crazy-animation', function() {
+return {
+enter: function(element, done) {
+  console.log('enter');
+  element.removeClass('anim-leave').addClass('anim anim-enter').animate({ right: '0' },1000, done);
+  
+//run the animation here and call done when the animation is complete
+return function(cancelled) {
+  console.log('cancelled');
+//this (optional) function will be called when the animation
+//completes or when the animation is cancelled (the cancelled
+//flag will be set to true if cancelled).
+};
+},
+leave: function(element, done) { console.log('leave'); 
+  element.removeClass('anim-enter').addClass('anim anim-leave').animate({
+        left: '0'
+      },1000, done);
+          },
+move: function(element, done) { console.log('move'); },
+ 
+//animation that can be triggered before the class is added
+beforeAddClass: function(element, className, done) { console.log('beforeAddClass');},
+ 
+//animation that can be triggered after the class is added
+addClass: function(element, className, done) { console.log('addClass'); },
+ 
+//animation that can be triggered before the class is removed
+beforeRemoveClass: function(element, className, done) { console.log('beforeRemoveClass'); },
+ 
+//animation that can be triggered after the class is removed
+removeClass: function(element, className, done) { console.log('removeClass'); }
+};
 });

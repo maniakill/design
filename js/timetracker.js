@@ -25,7 +25,7 @@ function onPhotoURISuccess(imageURI) {
   smallImage.src = "data:image/jpeg;base64," + imageURI;
 }
 
-var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap']);
+var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap','ngAnimate']);
 app.config(function ($routeProvider) {
     $routeProvider
         .when('/',{controller: 'start',templateUrl: 'layout/start.html'})
