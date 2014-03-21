@@ -33,7 +33,7 @@
     <gap:splash src="res2/screen/ios/screen-iphone-portrait-2x.png" gap:platform="ios" width="640" height="960" />
     <gap:splash src="res2/screen/ios/screen-iphone-portrait-568h-2x.png" gap:platform="ios" width="640" height="1136" />
     <gap:splash src="res2/screen/ios/screen-ipad-landscape.png" gap:platform="ios" width="1024" height="748" />
-    <gap:splash src="res2/screen/ios/screen-ipad-portrait.png" gap:platform="ios" width="768" height="1024" />
+    <!-- <gap:splash src="res2/screen/ios/screen-ipad-portrait.png" gap:platform="ios" width="768" height="1024" /> -->
 
     <!-- retina iPad support: PhoneGap 2.5.0+ only -->
     <gap:splash src="res2/screen/ios/screen-ipad-landscape-2x.png" gap:platform="ios" width="2048" height="1536" />
