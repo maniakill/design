@@ -26,6 +26,7 @@
     <preference name="orientation" value="both" />
     <preference name="phonegap-version" value="3.3.0" />
     <preference name="fullscreen" value="true" />
+    <preference name="EnableViewportScale" value="true"/>
     
     <icon src="icon.png" />
     <gap:splash src="splash.png" />
