@@ -647,7 +647,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                 var item = project.toSync[x], itemNr = x;
                 if(item.type == 'time' && !item.synced){
                     if(typeof(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['task_time_id']) == 'string'){
-                        var sendItem = {};
+                        var sendItem = {},syncedI = 'active';
                         sendItem.task_time_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['task_time_id'];
                         sendItem.hours = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['hours'];
                         sendItem.notes = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['notes'];
@@ -655,15 +655,15 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                         .then(function(res){
                             if(res.data.code == 'ok' && res.data.response.updated[0] == item.id){
                                 project.toSync[itemNr].synced = true;
-                                if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] != 'active'){ delete project.toSync[itemNr]; }
-                                $rootScope.$broadcast('syned');
+                                if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] != 'active'){ delete project.toSync[itemNr]; syncedI = 'time'; }
+                                $rootScope.$broadcast('syned',syncedI);
                                 saveTime('toSync', project.toSync);
                                 return project.sync();
                             }else{ project.toSync[itemNr].synced = true; if(res.data.code=='error'){ project.logout(res.data); } }
                         });
                         break;
                     }else{
-                        var sendItem = {};
+                        var sendItem = {},syncedI = 'time';
                         sendItem.task_time_id = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['task_time_id'];
                         sendItem.hours = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['hours'];
                         sendItem.notes = project.taskTimeId[item.time][item.pId]['tasks'][item.id]['notes'];
@@ -696,10 +696,11 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                                     delete project.taskTime[sendItem.task_time_id];
                                     project.addToSync('time',item.time,item.pId,item.cId,item.tId,res.data.response.id);
                                     project.toSync[res.data.response.id].synced = true;
+                                    syncedI = 'active';
                                 }
                                 delete project.taskTimeId[item.time][item.pId]['tasks'][sendItem.task_time_id];
                                 delete project.taskTimeId[item.time][sendItem.task_time_id];
-                                $rootScope.$broadcast('syned');
+                                $rootScope.$broadcast('syned',syncedI);
                                 saveTime('toSync', project.toSync);
                                 saveTime('taskTimeId', project.taskTimeId);
                                 saveTime('taskTime', project.taskTime);
@@ -716,7 +717,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                         .then(function(res){
                             if(res.data.code == 'ok'){
                                 delete project.toSync[itemNr];
-                                $rootScope.$broadcast('syned');
+                                $rootScope.$broadcast('syned','expense');
                                 saveTime('toSync', project.toSync);
                                 return project.sync();
                             }else{ project.toSync[itemNr].synced = true; if(res.data.code=='error'){ project.logout(res.data); } }
@@ -743,7 +744,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                                 project.expense[item.time][res.data.response[0].id].picture = project.expense[item.time][item.id]['picture'];
                                 delete project.expense[item.time][item.id];
                                 delete project.toSync[itemNr];
-                                $rootScope.$broadcast('syned');
+                                $rootScope.$broadcast('syned','expense');
                                 saveTime('toSync', project.toSync);
                                 saveTime('expenses', project.toSync);
                                 return project.sync();

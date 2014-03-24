@@ -694,7 +694,14 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
             }else{ $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ]; }
         }
         $scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
-        $scope.$on('syned', function(arg) { $scope.dynamic++; });
+        $scope.$on('syned', function(arg,item) { 
+            $scope.dynamic++; 
+            switch(item){
+                case 'time': $scope.entries--; if($scope.entries < 1 ){ $scope.ent=''; } break;
+                case 'expense': $scope.expenses--; if($scope.expenses < 1){ $scope.exp=''; } break;
+                default: break;
+            }
+        });
         $scope.$on('finish', function(arg) {
             $scope.times++;
             if($scope.times > $scope.max){
