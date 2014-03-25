@@ -348,9 +348,10 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
         project.setDate = function(time){ project.selectedDate = time; }
         /* end geters and seters */
         /* send data to server */
-        project.save = function(type, pId, tId,notes){
+        project.save = function(type, pId, tId,notes,noStart){
             var start = '',
                 start2 = '',
+                noStart = noStart ? true : false,
                 connect = checkConnection();
                 // connect = 'none';
             if(project.selectedDate){
@@ -381,11 +382,13 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                         project.taskTimeId[t][npId].tasks[id].project_id = p;
                         project.taskTimeId[t][npId].tasks[id].customer_id = pId;
                         saveTime('taskTimeId', project.taskTimeId);
-                        project.taskTime[id] = {};
-                        project.taskTime[id].start = Date.now();
-                        project.taskTime[id].pId = npId;
-                        project.taskTime[id].time = t;
-                        saveTime('taskTime', project.taskTime);
+                        if(noStart === false){
+                            project.taskTime[id] = {};
+                            project.taskTime[id].start = Date.now()-h*3600*1000;
+                            project.taskTime[id].pId = npId;
+                            project.taskTime[id].time = t;
+                            saveTime('taskTime', project.taskTime);
+                        }
                     }
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&customer_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
@@ -404,15 +407,19 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                                 project.taskTimeId[t][npId].tasks[idn].project_id = npId;
                                 project.taskTimeId[t][npId].tasks[idn].customer_id = pId;
                                 saveTime('taskTimeId', project.taskTimeId);
-                                project.taskTime[idn] = {};
-                                project.taskTime[idn].start = Date.now();
-                                project.taskTime[idn].pId = npId;
-                                project.taskTime[idn].time = t;
-                                saveTime('taskTime', project.taskTime);
-                                if(add === true){ project.addToSync('time',t,npId,pId,tId,id); }
+                                if(noStart === false){
+                                    project.taskTime[idn] = {};
+                                    project.taskTime[idn].start = Date.now()-h*3600*1000;
+                                    project.taskTime[idn].pId = npId;
+                                    project.taskTime[idn].time = t;
+                                    saveTime('taskTime', project.taskTime);
+                                }
+                                if(add === true && noStart===false){ project.addToSync('time',t,npId,pId,tId,id); }
                                 if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                                 else{ $location.path('/timesheet'); }
                             }else{
+                                delete project.taskTimeId[t][npId];
+                                delete project.taskTime[id];
                                 if(response.data){ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
                                 else{ $rootScope.$broadcast('addError',response.error_code); }
                             }
@@ -430,7 +437,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                             temp_p.task[tId].task_id = tId;
                             project.time[p] = temp_p;
                             saveTime();
-                            project.addToSync('time',t,p,pId,tId,id);
+                            if(noStart === false){ project.addToSync('time',t,p,pId,tId,id); }
                             if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                             else{ $location.path('/timesheet'); }
                         }
@@ -548,11 +555,13 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                     if(add === true){
                         project.taskTimeId[t][pId].tasks[id] = new TaskTimeId(ta, p, h, notes, id);
                         saveTime('taskTimeId', project.taskTimeId);
-                        project.taskTime[id] = {};
-                        project.taskTime[id].start = Date.now();
-                        project.taskTime[id].pId = pId;
-                        project.taskTime[id].time = t;
-                        saveTime('taskTime', project.taskTime);
+                        if(noStart === false){
+                            project.taskTime[id] = {};
+                            project.taskTime[id].start = Date.now()-h*3600*1000;
+                            project.taskTime[id].pId = pId;
+                            project.taskTime[id].time = t;
+                            saveTime('taskTime', project.taskTime);
+                        }
                     }
                     if(connect != 'none' && connect !='unknown'){
                         $http.get(url+'index.php?do=mobile--mobile-add_task&'+key+'&project_id='+pId+'&task_id='+tId+'&notes='+notes+'&hours='+h+start).then(function(response){
@@ -563,22 +572,26 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                                 id=idn;
                                 project.taskTimeId[t][pId].tasks[idn] = new TaskTimeId(ta, p, h, notes, idn);
                                 saveTime('taskTimeId', project.taskTimeId);
-                                project.taskTime[idn] = {};
-                                project.taskTime[idn].start = Date.now();
-                                project.taskTime[idn].pId = pId;
-                                project.taskTime[idn].time = t;
-                                saveTime('taskTime', project.taskTime);
-                                if(add === true){ project.addToSync('time',t,pId,'',tId,id); }
+                                if(noStart === false){
+                                    project.taskTime[idn] = {};
+                                    project.taskTime[idn].start = Date.now()-h*3600*1000;
+                                    project.taskTime[idn].pId = pId;
+                                    project.taskTime[idn].time = t;
+                                    saveTime('taskTime', project.taskTime);
+                                }
+                                if(add === true && noStart === false){ project.addToSync('time',t,pId,'',tId,id); }
                                 if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                                 else{ $location.path('/timesheet'); }
                             }else{
+                                delete project.taskTime[id];
+                                for(x in project.taskTimeId[t]){ if(x == pId){ for(y in project.taskTimeId[t][x].tasks){ if(project.taskTimeId[t][x].tasks[y].task_id == tId){ delete project.taskTimeId[t][x].tasks[y]; } } } }
                                 if(response.data){ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
                                 else{ $rootScope.$broadcast('addError',response.error_code); }
                             }
                         });
                     }else{
                         if(add === true){
-                            project.addToSync('time',t,pId,'',tId,id);
+                            if(noStart === false){ project.addToSync('time',t,pId,'',tId,id); }
                             if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
                             else{ $location.path('/timesheet'); }
                         }
@@ -597,6 +610,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
             $location.path('/expenses_list/'+time);
         }
         project.stop = function(item, time, redirect){
+            project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
             item.active = '';
             saveTime('taskTimeId', project.taskTimeId);
             delete project.taskTime[item.task_time_id];
@@ -605,6 +619,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
         }
         project.start = function(item, time){
             project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
+            item.hours =  project.getHours();
             item.active = 'active';
             saveTime('taskTimeId', project.taskTimeId);
             var d = Date.now();
@@ -614,6 +629,13 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
             project.taskTime[item.task_time_id].pId = item.project_id;
             project.taskTime[item.task_time_id].time = time;
             saveTime('taskTime', project.taskTime);
+            $location.path('/timesheet/'+time);
+        }
+        project.update = function(item,time){
+            project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
+            item.notes =  project.getNote();
+            item.hours =  project.getHours();
+            saveTime('taskTimeId', project.taskTimeId);
             $location.path('/timesheet/'+time);
         }
         // var t = window.setInterval( rune, 1000 ); I don't know why this doesn't work and the line below works

@@ -85,8 +85,9 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
             return value;
         }
         $scope.editTask = function(pId, tId, notes, adhoc, cId, taskTimeId){
+            var ad_hoc=adhoc.search('ad hoc') > 0 ? true : false;
             project.setNote(notes);
-            if(adhoc == 'ad hoc'){ $location.path('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time); }
+            if(ad_hoc === true){ $location.path('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time); }
             else{ $location.path('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time); }
         }
         $scope.addNewTask = function(){ project.addNewTask(); }
@@ -150,8 +151,8 @@ ctrl.controller('footer',['$scope', '$routeParams', '$route', '$modal', 'project
     }
 ]);
 // header
-ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$route', '$modal', 'project',
-    function ($scope, $timeout, $routeParams, $location, $route, $modal, project){
+ctrl.controller('header',['$scope','$timeout','$routeParams','$location','$route','$modal','project','$rootScope',
+    function ($scope,$timeout,$routeParams,$location,$route,$modal,project,$rootScope){
         var link = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('expensea') > 0 ? '/expenses_a/' : '/expenses/') : ( $route.current.originalPath.search('Notea') > 0 ? '/add_a/' : '/add/'),
             link2 = $route.current.originalPath.search('expense') > 0 ? '/expenses_list' : '/timesheet',
             note = $route.current.originalPath.search('Amount') > 0 ? false : true,
@@ -160,6 +161,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
         $scope.timesheet = true;
         $scope.add_page = true;
         $scope.add_note = true;
+        $scope.save_time = true;
         switch($route.current.controller){
             case 'timesheet':
                 $scope.timesheet = false;
@@ -174,6 +176,7 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             case 'add':
             case 'add_a':
                 $scope.add_page = false;
+                $scope.save_time = false;
                 break;
             case 'lists':
             case 'lists_a':
@@ -228,7 +231,22 @@ ctrl.controller('header',['$scope', '$timeout', '$routeParams', '$location', '$r
             if($routeParams.expId){ url += '/'+$routeParams.expId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
             $location.path(url);
         }
-
+        $scope.saveT=function(){
+            if(!$routeParams.item){
+                $rootScope.$broadcast('addError',"Please select a "+alertText[0]);
+                return false;
+            }
+            if(!$routeParams.taskId){
+                $rootScope.$broadcast('addError',"Please select a "+alertText[1]);
+                return false;
+            }
+            var notes = project.getNote();
+            if($routeParams.taskTimeId){
+                var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y, item=project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId];
+                project.update(item,time);
+            }
+            else{ project.save(type,$routeParams.item,$routeParams.taskId,notes,true); }
+        }
         /*modal*/
         $scope.add = function () {
             var modalInstance = $modal.open({
@@ -342,18 +360,15 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
                 return false;
             }
             var notes = project.getNote();
+            $scope.changed();
             if($routeParams.taskTimeId){ project.start(item,$scope.time2); }
             else{ project.save('',$routeParams.item,$routeParams.taskId,notes); }
         }
 
         $scope.stop = function(){ project.stop(item,$scope.time2); }
         $scope.changed = function () {
-            if(!$routeParams.taskTimeId){
-                var hours = $scope.mytime.getHours(),
-                minutes = $scope.mytime.getMinutes();
-                t = hours + minutes/60;
-                project.setHours(t);
-            }
+            var hours = $scope.mytime.getHours(), minutes = $scope.mytime.getMinutes(), t = hours + minutes/60;
+            project.setHours(t);
         };
         /*timepicker end*/
 
@@ -657,8 +672,8 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
     }
 ]);
 // pending
-ctrl.controller('pending',['$scope', '$location','project', '$timeout',
-    function ($scope, $location,project,$timeout){
+ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
+    function ($scope,$location,project,$timeout,$route){
         /* things to sync:
             project.taskTimeId;
             project.expense
@@ -679,16 +694,15 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
                 else{ $scope.entries++; $scope.ent='square_active'; }
             }else{ $scope.expenses++; $scope.exp='square_active'; }
         }
-
         // connect = 'none';
         $scope.sync = function(){
             var connect = checkConnection();
-            $scope.max = Object.keys(project.toSync).length;
             if(connect != 'none' && connect !='unknown'){
+                $scope.max = Object.keys(project.toSync).length;
                 if($scope.max > 0){
-                    $scope.progress = false;
-                    $scope.times = 0;
+                    $scope.open();
                     $scope.dynamic = 0;
+                    $scope.times = 0;    
                     project.sync();
                 }else{ $scope.alerts = [ { type: 'info', msg: 'No items to synchronize.' } ]; }
             }else{ $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ]; }
@@ -707,9 +721,10 @@ ctrl.controller('pending',['$scope', '$location','project', '$timeout',
             if($scope.times > $scope.max){
                 for(x in project.toSync){ project.toSync[x].synced = false; }
                 localStorage.setItem('toSync',JSON.stringify(project.toSync));
-                $timeout(function() { $scope.progress = true; },1000);
+                $timeout(function() { $scope.progress = true; $route.reload(); },1000);
             }
         });
+        $scope.open = function(){ $timeout(function(){ $scope.progress = false; }); }
     }
 ]);
 // add adhoc
@@ -793,11 +808,15 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
             if(!$routeParams.item){ alert("Please select a "+alertText[0]); return false; }
             if(!$routeParams.taskId){ alert("Please select a "+alertText[1]); return false; }
             var notes = project.getNote();
+            $scope.changed();
             if($routeParams.taskTimeId){ project.start(item,$scope.time2); }
             else{ project.save('add_a',$routeParams.item,$routeParams.taskId,notes); }
         }
         $scope.stop = function(){ project.stop(item,$scope.time2); }
-        $scope.changed = function () { console.log('Time changed to: ' + $scope.mytime); };
+        $scope.changed = function () { 
+            var hours = $scope.mytime.getHours(), minutes = $scope.mytime.getMinutes(), t = hours + minutes/60;
+            project.setHours(t);
+        };
         /*timepicker end*/
         $scope.addNote = function(pId,tId){
             var url = '/addNotea/'+pId;
