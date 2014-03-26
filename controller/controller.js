@@ -243,6 +243,7 @@ ctrl.controller('header',['$scope','$timeout','$routeParams','$location','$route
             }
             var notes = project.getNote();
             if($routeParams.taskTimeId){
+                $rootScope.$broadcast('changed');
                 var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y, item=project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId];
                 project.update(item,time);
             }
@@ -384,6 +385,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
             $scope.alerts = [ { type: 'error', msg: args } ];
             $timeout(function(){ $scope.closeAlert(0); },3000);
         });
+        $scope.$on('changed',function(arg){ $scope.changed(); });
     }
 ]);
 // task_type
