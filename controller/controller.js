@@ -38,7 +38,8 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
                 $timeout(function(){ $scope.closeAlert(0); },3000);
             }
         };
-        $scope.closeAlert=function(index){$scope.alerts.splice(index,1);};
+        $scope.closeAlert=function(index){$scope.alerts.splice(index,1);}
+        $scope.openInBrowser=function(){ window.open('http://apache.org', '_system', 'location=yes'); }
     }
 ]);
 // timesheet
