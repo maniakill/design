@@ -22,7 +22,7 @@
     <preference name="loglevel" value="DEBUG" />
     <preference name="SplashScreen" value="splash" />
     <preference name="SplashScreenDelay" value="10000" /> -->
-
+    <preference name="LogLevel" value="ERROR"/>
     <preference name="orientation" value="both" />
     <preference name="phonegap-version" value="3.3.0" />
     <preference name="fullscreen" value="true" />
