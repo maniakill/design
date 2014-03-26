@@ -39,7 +39,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
             }
         };
         $scope.closeAlert=function(index){$scope.alerts.splice(index,1);}
-        $scope.openInBrowser=function(){ window.open('http://apache.org', '_system', 'location=yes'); }
+        $scope.openInBrowser=function(){ window.open('https://go.salesassist.eu', '_system', 'location=yes'); }
     }
 ]);
 // timesheet
