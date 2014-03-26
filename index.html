@@ -12,12 +12,7 @@
 		<script type="text/javascript" charset="utf-8">
 	    var devReady = false; var	pictureSource; var	destinationType;
 	    function onLoad() { document.addEventListener("deviceready", onDeviceReady, false); }
-	    function onDeviceReady() { devReady = true; pictureSource=navigator.camera.PictureSourceType; destinationType=navigator.camera.DestinationType; 
-	    var ref = window.open('http://apache.org', '_system', 'location=yes');
-         ref.addEventListener('loadstart', function() { alert('start: ' + event.url); });
-         ref.addEventListener('loadstop', function() { alert('stop: ' + event.url); });
-         ref.addEventListener('exit', function() { alert(event.type); });
-	    }
+	    function onDeviceReady() { devReady = true; pictureSource=navigator.camera.PictureSourceType; destinationType=navigator.camera.DestinationType; }
 	    </script>
 	</head>
 	<body onload="onLoad()">
