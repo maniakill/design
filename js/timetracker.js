@@ -635,7 +635,9 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
             project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
             item.notes =  project.getNote();
             item.hours =  project.getHours();
-            project.taskTime[item.task_time_id].start = Date.now()-item.hours*3600*1000;
+            if(project.taskTime[item.task_time_id]){
+                project.taskTime[item.task_time_id].start = Date.now()-item.hours*3600*1000;
+            }
             saveTime('taskTimeId', project.taskTimeId);
             saveTime('taskTime', project.taskTime);
             $location.path('/timesheet/'+time);
