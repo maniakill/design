@@ -23,6 +23,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
                     if(data.code == 'ok'){
                         localStorage.setItem('token',data.response);
                         localStorage.setItem('username',$scope.params['username']);
+                        project.setKey();
                         $location.path('/timesheet');
                     }else{
                         $scope.alerts=[{type:'error',msg:data.error_code}];
