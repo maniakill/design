@@ -38,7 +38,7 @@ a, a:hover{ text-decoration: none; }
 		.projects { border-bottom: 1px solid #e6e6e6;  background: url("../images/line-bg.png") repeat-x scroll left bottom rgba(0, 0, 0, 0); }
 		.projectName{ font-family:HelveticaLTSBold; font-size: 16px; padding: 9px 10px 8px; /*border-bottom: 1px solid #e6e6e6; */color: #000000; cursor: default; }
 		.taskDetail{ padding: 9px 10px 8px; /*border-bottom: 1px solid #e6e6e6;*/ cursor: pointer; /*background: url('../images/line-bg.png') repeat-x left bottom;*/ }
-		.taskDetail:active{  background: -webkit-linear-gradient(#E6E6E6, #ffffff);  background: -o-linear-gradient(#E6E6E6, #ffffff);  background: -moz-linear-gradient(#E6E6E6, #ffffff);  background: linear-gradient(#E6E6E6, #ffffff); }
+		/*.taskDetail:active{  background: -webkit-linear-gradient(#E6E6E6, #ffffff);  background: -o-linear-gradient(#E6E6E6, #ffffff);  background: -moz-linear-gradient(#E6E6E6, #ffffff);  background: linear-gradient(#E6E6E6, #ffffff); }*/
 			.taskDetail .taskName{ font-family:HelveticaLTSRoman; font-size: 16px; color: #666666; }
 		.arrow { background: url("../images/arrow.png") no-repeat left top; width: 10px; height: 15px; margin-top: 4px; }
 			.taskDetail .hourContainer{ margin-right: 15px; padding: 0px 5px 0px; height: 22px; }
