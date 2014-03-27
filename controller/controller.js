@@ -8,8 +8,8 @@ ctrl.controller('start',['$scope','$timeout','$location',
     }
 ]);
 // login
-ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout',
-    function ($scope, $http, $templateCache, $location, $timeout) {
+ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout','project'
+    function ($scope,$http,$templateCache,$location,$timeout,project) {
         $scope.method = 'POST';
         $scope.url = 'https://go.salesassist.eu/pim/mobile/';
         $scope.loged = '';
