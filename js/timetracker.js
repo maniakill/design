@@ -83,17 +83,21 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
     function ($http,$templateCache,$location,$rootScope,$interval) {
         var project = {}, url = 'https://go.salesassist.eu/pim/mobile/', key = 'api_key='+localStorage.token+'&username='+localStorage.username, obj = {};
         /* store data */
-        project.time = localStorage.getItem('timesheet') ? JSON.parse(localStorage.getItem('timesheet')) : {};
-        project.customers = localStorage.getItem('customers') ? JSON.parse(localStorage.getItem('customers')) : {};
-        project.adhocTask = localStorage.getItem('adhocTasksList') ? JSON.parse(localStorage.getItem('adhocTasksList')) : {};
-        project.expense = localStorage.getItem('expenses') ? JSON.parse(localStorage.getItem('expenses')) : {};
-        project.expenseList = localStorage.getItem('expensesList') ? JSON.parse(localStorage.getItem('expensesList')) : {};
-        project.taskTimeId = localStorage.getItem('taskTimeId') ? JSON.parse(localStorage.getItem('taskTimeId')) : {};
-        project.taskTime = localStorage.getItem('taskTime') ? JSON.parse(localStorage.getItem('taskTime')) : {};
-        project.toSync = localStorage.getItem('toSync') ? JSON.parse(localStorage.getItem('toSync')) : {};
+        var init = function(){
+        project.time = localStorage.getItem('timesheet'+localStorage.username) ? JSON.parse(localStorage.getItem('timesheet'+localStorage.username)) : {};
+        project.customers = localStorage.getItem('customers'+localStorage.username) ? JSON.parse(localStorage.getItem('customers'+localStorage.username)) : {};
+        project.adhocTask = localStorage.getItem('adhocTasksList'+localStorage.username) ? JSON.parse(localStorage.getItem('adhocTasksList'+localStorage.username)) : {};
+        project.expense = localStorage.getItem('expenses'+localStorage.username) ? JSON.parse(localStorage.getItem('expenses'+localStorage.username)) : {};
+        project.expenseList = localStorage.getItem('expensesList'+localStorage.username) ? JSON.parse(localStorage.getItem('expensesList'+localStorage.username)) : {};
+        project.taskTimeId = localStorage.getItem('taskTimeId'+localStorage.username) ? JSON.parse(localStorage.getItem('taskTimeId'+localStorage.username)) : {};
+        project.taskTime = localStorage.getItem('taskTime'+localStorage.username) ? JSON.parse(localStorage.getItem('taskTime'+localStorage.username)) : {};
+        project.toSync = localStorage.getItem('toSync'+localStorage.username) ? JSON.parse(localStorage.getItem('toSync'+localStorage.username)) : {};
+        }
+        init(); 
         var saveTime = function(type, item){
+            if(!localStorage.username){ return false; }
             if(!type){ type = 'timesheet'; item = project.time; }
-            localStorage.setItem(type, JSON.stringify(item));
+            localStorage.setItem(type+localStorage.username, JSON.stringify(item));
         }
         function TaskTimeId(item, pr, h, notes, id){
             this.task_time_id = id;
@@ -804,7 +808,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                 $location.path('/login/'+code.error_code);
             }// else unknown error!!! and we don't need to relog the user
         }
-        project.setKey = function(){ key = 'api_key='+localStorage.token+'&username='+localStorage.username; }
+        project.setKey = function(){ key = 'api_key='+localStorage.token+'&username='+localStorage.username; init(); }
         return project;
     }
 ]);
