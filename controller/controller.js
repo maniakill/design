@@ -724,7 +724,7 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
             $scope.times++;
             if($scope.times > $scope.max){
                 for(x in project.toSync){ project.toSync[x].synced = false; }
-                project.saveStuff('toSync',JSON.stringify(project.toSync));
+                project.saveStuff('toSync',project.toSync);
                 $timeout(function() { $scope.progress = true; $route.reload(); },1000);
             }
         });
