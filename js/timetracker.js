@@ -93,7 +93,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
         project.taskTime = localStorage.getItem('taskTime'+localStorage.username) ? JSON.parse(localStorage.getItem('taskTime'+localStorage.username)) : {};
         project.toSync = localStorage.getItem('toSync'+localStorage.username) ? JSON.parse(localStorage.getItem('toSync'+localStorage.username)) : {};
         }
-        init(); 
+        init();
         var saveTime = function(type, item){
             if(!localStorage.username){ return false; }
             if(!type){ type = 'timesheet'; item = project.time; }
@@ -808,6 +808,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
                 $location.path('/login/'+code.error_code);
             }// else unknown error!!! and we don't need to relog the user
         }
+        project.saveStuff = function(type,item){ saveTime(type,item); }
         project.setKey = function(){ key = 'api_key='+localStorage.token+'&username='+localStorage.username; init(); }
         return project;
     }

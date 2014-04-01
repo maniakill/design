@@ -706,14 +706,14 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
                 if($scope.max > 0){
                     $scope.open();
                     $scope.dynamic = 0;
-                    $scope.times = 0;    
+                    $scope.times = 0;
                     project.sync();
                 }else{ $scope.alerts = [ { type: 'info', msg: 'No items to synchronize.' } ]; }
             }else{ $scope.alerts = [ { type: 'error', msg: 'No internet access. Please connect to the internet and then use the sync button.' } ]; }
         }
         $scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
-        $scope.$on('syned', function(arg,item) { 
-            $scope.dynamic++; 
+        $scope.$on('syned', function(arg,item) {
+            $scope.dynamic++;
             switch(item){
                 case 'time': $scope.entries--; if($scope.entries < 1 ){ $scope.ent=''; } break;
                 case 'expense': $scope.expenses--; if($scope.expenses < 1){ $scope.exp=''; } break;
@@ -724,7 +724,7 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
             $scope.times++;
             if($scope.times > $scope.max){
                 for(x in project.toSync){ project.toSync[x].synced = false; }
-                localStorage.setItem('toSync',JSON.stringify(project.toSync));
+                project.saveStuff('toSync',JSON.stringify(project.toSync));
                 $timeout(function() { $scope.progress = true; $route.reload(); },1000);
             }
         });
@@ -817,7 +817,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
             else{ project.save('add_a',$routeParams.item,$routeParams.taskId,notes); }
         }
         $scope.stop = function(){ project.stop(item,$scope.time2); }
-        $scope.changed = function () { 
+        $scope.changed = function () {
             var hours = $scope.mytime.getHours(), minutes = $scope.mytime.getMinutes(), t = hours + minutes/60;
             project.setHours(t);
         };
