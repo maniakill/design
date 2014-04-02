@@ -50,6 +50,9 @@
 
 
     <gap:platform name="ios" />
+    <gap:config-file platform="ios" parent="CFBundleVersion">
+        <string>27</string>
+    </gap:config-file>
     <gap:platform name="android" />
     <description>
         SalesAssist Time Tracker application
