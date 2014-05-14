@@ -1,5 +1,6 @@
+<div id="loading"></div>
 <div ng-include="'layout/header.html'" />
-<div class="add_wrap scroller">
+<div class="add_wrap scroller" ng-hide="hideE" >
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div class="loginForm">
 		<form>
@@ -15,5 +16,21 @@
 		<li class="notes" ng-click="addAmount(projectId,taskId)">{{amount}}<span class="arrow abs" ></span></li>
 		<li class="last_li" ng-click="selectTask(projectId)"><img id="smallImage" style="{{displayIt}}" src="{{img}}" />{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
 	</ul>
+</div>
+<div class="textWrap scroller" ng-show="show_amount">
+	<div class="loginForm">
+		<form>
+			<input type="submit" class="submit" value="Save" ng-click="saveAmount()">
+		</form>
+	</div>
+	<input type="number" value="{{amount}}" ng-model="amount" class="form-control" number />
+</div>
+<div class="textWrap scroller" ng-show="show_note">
+	<div class="loginForm">
+		<form>
+			<input type="submit" class="submit" value="Save" ng-click="saveNote()">
+		</form>
+	</div>
+	<textarea class="noteText form-control" ng-model="notes" rows="8">{{notes}}</textarea>
 </div>
 <div data-ng-include="'layout/footer.html'" />
