@@ -109,3 +109,4 @@ a, a:hover{ text-decoration: none; }
 .add_ul li.last_li { border-radius: 0 0 12px 12px; }
 .add_ul li:first-child {border-radius: 12px 12px 0 0; }
 .add_ul.add_note li { border-radius: 12px; }
+#loading { background: url('../images/ajax-loader.gif') no-repeat center center #fff; opacity: .8; position: absolute; height: 100%; width: 100%; z-index: 1; display: none; }
