@@ -1,8 +1,9 @@
+<div id="loading"></div>
 <div ng-include="'layout/header.html'" />
 <div class="scroller">
 	<ul class="lists">
 	    <li ng-repeat="task in expense" ng-click="open(projectId,task.expense_id)" class="tasks_list">
-	        <p>{{ task.name }}</p>    	
+	        <p>{{ task.name }}</p>
 	    </li>
 	</ul>
 </div>
