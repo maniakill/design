@@ -1,3 +1,4 @@
+<div id="loading"></div>
 <div ng-include="'layout/header.html'" />
 <div class="scroller">
 	<ul>
@@ -10,7 +11,7 @@
 					</div>
 					<span class="taskName">{{expens.expense_name}}</span>
 				</li>
-			</ul>	
+			</ul>
 		</li>
 	</ul>
 	<div class="no_data" ng-hide="no_project" >
@@ -18,7 +19,7 @@
 			<p>No data to display</p>
 			<form>
 				<input type="submit" class="submit" value="Add new expense" ng-click="addNewTask()">
-			</form>	
+			</form>
 		</div>
 	</div>
 </div>
