@@ -1,5 +1,6 @@
+<div id="loading"></div>
 <div ng-include="'layout/header.html'" />
-<div class="add_wrap scroller">
+<div class="add_wrap scroller" ng-hide="show_amount">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:300px">
 		<timepicker hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
@@ -8,7 +9,7 @@
 		<form>
 			<input ng-hide="mode" type="submit" class="submit" value="Start" ng-click="save()">
 			<input ng-show="mode" type="submit" class="submit" value="Stop" ng-click="stop()">
-		</form>	
+		</form>
 	</div>
 	<ul class="add_ul">
 		<li class="datePicker"><a herf="#" ng-click="open()" id="add_calendar" class="left"></a>
@@ -20,5 +21,13 @@
 	<ul class="add_ul add_note">
 		<li class="last_li notes" ng-click="addNote(projectId,taskId)">{{notes}}<span class="arrow abs" ></span></li>
 	</ul>
+</div>
+<div class="textWrap scroller" ng-show="show_amount">
+	<div class="loginForm">
+		<form>
+			<input type="submit" class="submit" value="Save" ng-click="saveNote()">
+		</form>
+	</div>
+	<textarea class="noteText form-control" ng-model="notes" rows="8">{{notes}}</textarea>
 </div>
 <div data-ng-include="'layout/footer.html'" />
