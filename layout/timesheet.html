@@ -1,6 +1,6 @@
+<div id="loading"></div>
 <div ng-include="'layout/header.html'" />
 <div id="page" class="scroller">
-	<!-- <div class="loading scroller modal-backdrop fade in"></div> -->
 	<ul>
 		<li ng-repeat="project in projects" class="projects" ng-hide="project.date">
 			<p class="projectName">{{getP(project.id)}}</p>
@@ -12,7 +12,7 @@
 					</div>
 					<span class="taskName">{{getTaskName(project.id, task.task_id)}}</span>
 				</li>
-			</ul>	
+			</ul>
 		</li>
 	</ul>
 	<div class="no_data" ng-hide="no_project" >
@@ -20,7 +20,7 @@
 			<p>No data to display</p>
 			<form>
 				<input type="submit" class="submit" value="Add new task" ng-click="addNewTask()">
-			</form>	
+			</form>
 		</div>
 	</div>
 </div>
