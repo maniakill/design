@@ -243,7 +243,6 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		/* end store data */
 		/* requests */
 		project.getTime = function(time) {
-			project.loading();
 			this.data = $http.get(url+'index.php?do=mobile-time&'+key+'&start='+time).then(function(response){
 				if(response.data.code=='ok'){
 					if(typeof(response.data.response.project) == 'object' ){
@@ -328,7 +327,6 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			return this.data;
 		}
 		project.getExpenses = function(time){
-			project.loading();
 			this.data = $http.get(url+'index.php?do=mobile-expenses&'+key+'&start='+time).then(function(response){
 				if(response.data.code == 'ok'){
 					if(typeof(response.data.response.expense) == 'object'){
@@ -655,13 +653,11 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			saveTime('taskTime', project.taskTime);
 			$location.path('/timesheet/'+time);
 		}
-		project.update = function(item,time){
+		project.update = function(item,time,scope){
 			project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
-			item.notes =  project.getNote();
+			item.notes =  scope.notes;
 			item.hours =  project.getHours();
-			if(project.taskTime[item.task_time_id]){
-				project.taskTime[item.task_time_id].start = Date.now()-item.hours*3600*1000;
-			}
+			if(project.taskTime[item.task_time_id]){ project.taskTime[item.task_time_id].start = Date.now()-item.hours*3600*1000; }
 			saveTime('taskTimeId', project.taskTimeId);
 			saveTime('taskTime', project.taskTime);
 			$location.path('/timesheet/'+time);
