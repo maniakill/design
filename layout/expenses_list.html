@@ -1,6 +1,7 @@
 <div id="loading"></div>
 <div ng-include="'layout/header.html'" />
 <div class="scroller">
+	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<ul>
 		<li ng-repeat="expens in expense" class="projects">
 			<p class="projectName">{{expens.customer_name +' > '+expens.project_name}}</p>
