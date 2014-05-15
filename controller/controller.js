@@ -30,9 +30,9 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 						$timeout(function(){ $scope.closeAlert(0); },3000);
 					}
 				}).
-				error(function(data,status){
-					$scope.alerts=[{type:'error',msg:'Server error. Please try later'}];
-					$timeout(function(){ $scope.closeAlert(0); },3000);
+				error(function(data,status,statusText){
+					$scope.alerts=[{type:'error',msg:'Status'+status+'\nStatus text:'+statusText}];
+					// $timeout(function(){ $scope.closeAlert(0); },3000);
 				});
 			}else{
 				$scope.alerts=[{type:'error',msg:'Please fill all the fields'}];
