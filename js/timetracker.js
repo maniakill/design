@@ -90,6 +90,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		project.taskTimeId = localStorage.getItem('taskTimeId'+localStorage.username) ? JSON.parse(localStorage.getItem('taskTimeId'+localStorage.username)) : {};
 		project.taskTime = localStorage.getItem('taskTime'+localStorage.username) ? JSON.parse(localStorage.getItem('taskTime'+localStorage.username)) : {};
 		project.toSync = localStorage.getItem('toSync'+localStorage.username) ? JSON.parse(localStorage.getItem('toSync'+localStorage.username)) : {};
+		project.alerts={};
 		}
 		init();
 		var saveTime = function(type, item){
@@ -353,10 +354,10 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		project.getCustomer = function(id){ if (project.customers[id] && id) { return project.customers[id]; } return ''; }
 		project.getAdhocTask = function(id){ if (project.adhocTask[id] && id) { return project.adhocTask[id]; } return ''; }
 		project.getExpense = function(id){ if (project.expenseList[id] && id) { return project.expenseList[id]; } return ''; }
-		project.setDate = function(time){ project.selectedDate = time; }
+		project.setDate = function(time,d){ project.selectedDate = time; project.Date = d; }
 		/* end geters and seters */
 		/* send data to server */
-		project.save = function(type, pId, tId,notes,noStart){
+		project.save = function(type, pId, tId,notes,noStart,expamount){
 			var start = '',
 				start2 = '',
 				noStart = noStart ? true : false,
@@ -366,6 +367,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 				start = '&start='+project.selectedDate;
 				start2 = project.selectedDate;
 			}
+			project.loading();
 			switch (type){
 				case "add_a":
 					var h = project.getHours(), id = Date.now(), npId = Date.now(), p = Date.now(), ta = project.getAdhocTask(tId), t = start2, add = true;
@@ -423,15 +425,18 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 									saveTime('taskTime', project.taskTime);
 								}
 								if(add === true && noStart===false){ project.addToSync('time',t,npId,pId,tId,id); }
+								project.alert('success','Time entry synced.');
+								project.stopLoading();
 								if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
 								else{ $location.path('/timesheet'); }
 							}else{
 								delete project.taskTimeId[t][npId];
 								delete project.taskTime[id];
+								project.stopLoading();
 								if(response.data){ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
 								else{ $rootScope.$broadcast('addError',response.error_code); }
 							}
-						});
+						},function(){project.stopLoading();});
 					}else{
 						if(add === true){
 							var temp_p = new Proj('','','','');
@@ -449,12 +454,13 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 							if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
 							else{ $location.path('/timesheet'); }
 						}
+						project.stopLoading();
 					}
 					break;
 				case "expenses":
-					var item = {}, amount = project.getAmount(), t = start2, smallImage = document.getElementById('smallImage');
+					var item = {}, amount = expamount, t = start2, smallImage = document.getElementById('smallImage');
 					item.id = Date.now();
-					item.amount = project.getAmount();
+					item.amount = expamount;
 					item.expense_id = tId;
 					item.expense_name = project.getExpense(tId).name;
 					item.note = notes;
@@ -486,20 +492,23 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 								item.sync = 0;
 								project.expense[t][item.id] = new Expense(item);
 								saveTime('expenses', project.expense);
+								project.alert('success','Expense synced.');
+								project.stopLoading();
 								if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
 								else{ $location.path('/expenses_list'); }
-							}else{ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
-						});
+							}else{ project.stopLoading(); $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
+						},function(){ project.stopLoading(); });
 					}else{
 						project.addToSync('expense',t,pId,'',tId,item.id);
+						project.stopLoading();
 						if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
 						else{ $location.path('/expenses_list'); }
 					}
 					break;
 				case "expenses_a":
-					var item = {}, amount = project.getAmount(), t = start2, smallImage = document.getElementById('smallImage');
+					var item = {}, amount = expamount, t = start2, smallImage = document.getElementById('smallImage');
 					item.id = Date.now();
-					item.amount = project.getAmount();
+					item.amount = expamount;
 					item.expense_id = tId;
 					item.expense_name = project.getExpense(tId).name;
 					item.note = notes;
@@ -532,12 +541,15 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 								item.sync = 0;
 								project.expense[t][item.id] = new Expense(item);
 								saveTime('expenses', project.expense);
+								project.alert('success','Expense synced.');
+								project.stopLoading();
 								if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
 								else{ $location.path('/expenses_list'); }
-							}else{ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
-						});
+							}else{ project.stopLoading(); $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
+						},function(){project.stopLoading();});
 					}else{
 						project.addToSync('expense',t,item.project_id,pId,tId,item.id);
+						project.stopLoading();
 						if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
 						else{ $location.path('/expenses_list'); }
 					}
@@ -588,6 +600,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 									saveTime('taskTime', project.taskTime);
 								}
 								if(add === true && noStart === false){ project.addToSync('time',t,pId,'',tId,id); }
+								project.alert('success','Time entry synced.');
+								project.stopLoading();
 								if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
 								else{ $location.path('/timesheet'); }
 							}else{
@@ -595,14 +609,16 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 								for(x in project.taskTimeId[t]){ if(x == pId){ for(y in project.taskTimeId[t][x].tasks){ if(project.taskTimeId[t][x].tasks[y].task_id == tId){ delete project.taskTimeId[t][x].tasks[y]; } } } }
 								if(response.data){ $rootScope.$broadcast('addError',response.data.error_code); project.logout(response.data); }
 								else{ $rootScope.$broadcast('addError',response.error_code); }
+								project.stopLoading();
 							}
-						});
+						},function(){project.stopLoading();});
 					}else{
 						if(add === true){
 							if(noStart === false){ project.addToSync('time',t,pId,'',tId,id); }
 							if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
 							else{ $location.path('/timesheet'); }
 						}
+						project.stopLoading();
 					}
 
 				break;
@@ -673,7 +689,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			}
 			saveTime('taskTime', project.taskTime);
 		}
-		project.addNewTask = function() { $rootScope.$broadcast('clickAdd'); };
+		// project.addNewTask = function() { $rootScope.$broadcast('clickAdd'); };
 		project.isLoged = function(){ if(!localStorage.token || !localStorage.username){ return false; } return true; } // still a isue if not loged
 		// syncronization function zhe shiit!
 		project.sync = function(){
@@ -812,7 +828,9 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 				$location.path('/login/'+code.error_code);
 			}// else unknown error!!! and we don't need to relog the user
 		}
-		project.savescope = function(s){ project.Scopes = s; console.log(s); };
+		project.alert = function(t,s){ project.alerts={}; project.alerts[t] = s; }
+		project.closeAlert = function(){ project.alerts={}; }
+		project.savescope = function(s){ project.Scopes = s; };
 		project.loading = function(){ angular.element('#loading').show(); }
     project.stopLoading = function(){ angular.element('#loading').hide(); }
 		project.saveStuff = function(type,item){ saveTime(type,item); }
