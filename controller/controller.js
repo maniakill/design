@@ -11,7 +11,7 @@ ctrl.controller('start',['$scope','$timeout','$location',
 ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout','project',
 	function ($scope,$http,$templateCache,$location,$timeout,project) {
 		$scope.method = 'POST';
-		$scope.url = 'https://app.salesassist.eu/pim/mobile/';
+		$scope.url = 'https://app.salesassist.eu/pim/mobile/index.php';
 		$scope.loged = '';
 		$scope.params = [];
 		$scope.fetch = function() {
@@ -30,8 +30,8 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 						$timeout(function(){ $scope.closeAlert(0); },3000);
 					}
 				}).
-				error(function(data,status,statusText){
-					$scope.alerts=[{type:'error',msg:'Status'+status+'\nStatus text:'+statusText}];
+				error(function(data,status){
+					$scope.alerts=[{type:'error',msg:'Status'+status+'\nData:'+data}];
 					// $timeout(function(){ $scope.closeAlert(0); },3000);
 				});
 			}else{
