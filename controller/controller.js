@@ -54,11 +54,7 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 		if(!project.taskTimeId[time]){ project.taskTimeId[time]={}; }
 		$scope.projects = project.taskTimeId[time];
 		if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project=false; }
-		project.getTime(time).then(function(){
-			$scope.no_project=true;
-			if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project=false; }
-			project.stopLoading();
-		},function(){ project.stopLoading(); });
+		project.loading();
 		$scope.getP=function(item){
 			var p=project.getProject(item);
 			return p.customer_name+' > '+p.project_name;
@@ -102,6 +98,13 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 			$timeout(function(){ $scope.closeAlert(0); },3000);
 		}
 		project.closeAlert();
+		$timeout( function(){
+			project.getTime(time).then(function(){
+				$scope.no_project=true;
+				if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project=false; }
+				project.stopLoading();
+			},function(){ project.stopLoading(); });
+		});
 	}
 ]);
 // footer
@@ -214,9 +217,7 @@ ctrl.controller('header',['$scope','$timeout','$routeParams','$location','$route
 			else{ $scope.dt = new Date(); }
 		};
 		$scope.today();
-		$scope.open = function() {
-			$timeout(function() { $scope.opened = true; });
-		};
+		$scope.open = function() { $timeout(function() { $scope.opened = true; }); };
 		$scope.dateOptions = { 'year-format': "'yy'", 'starting-day': 1 };
 		$scope.times = function(){
 			var url = link2;
@@ -251,9 +252,8 @@ ctrl.controller('header',['$scope','$timeout','$routeParams','$location','$route
 			if($routeParams.taskTimeId){
 				$rootScope.$broadcast('changed');
 				var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y, item=project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId];
-				project.update(item,time);
-			}
-			else{ project.save(type,$routeParams.item,$routeParams.taskId,notes,true); }
+				project.update(item,time,$scope);
+			}else{ project.save(type,$routeParams.item,$routeParams.taskId,$scope.notes,true); }
 		}
 		/*modal*/
 		$scope.add = function () {
@@ -308,6 +308,8 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
 					if($routeParams.taskTimeId){
 						time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
 						var h = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId].hours;
+						if(project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId].notes){$scope.notes = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId].notes;}
+						if(isNaN(h)){ h = 0; }
 						var d = new Date();
 						d.setHours( Math.floor(h) );
 						var minutes = h;
@@ -317,6 +319,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
 							var n = Math.floor(minutes/60);
 							minutes = minutes - (60*n);
 						}
+						if(minutes==undefined && isNaN(minutes)){ minutes=0; }
 						d.setMinutes( minutes );
 						$scope.mytime = d;
 					}
@@ -325,7 +328,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
 				$location.path('/timesheet');
 			}
 		}
-		$scope.today = function() { if(!$scope.dta) $scope.dta = new Date(); };
+		$scope.today = function() { if(!$scope.dta){$scope.dta = new Date();} };
 		$scope.today();
 		$scope.open = function() {
 			if(!$routeParams.taskTimeId){
@@ -367,10 +370,9 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
 				$timeout(function(){ $scope.closeAlert(0); },3000);
 				return false;
 			}
-			var notes = project.getNote();
 			$scope.changed();
 			if($routeParams.taskTimeId){ project.start(item,$scope.time2); }
-			else{ project.save('',$routeParams.item,$routeParams.taskId,notes); }
+			else{ project.save('',$routeParams.item,$routeParams.taskId,$scope.notes); }
 		}
 		$scope.stop = function(){ project.stop(item,$scope.time2); }
 		$scope.changed = function () {
@@ -425,8 +427,8 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
 	}
 ]);
 // lists
-ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
-	function ($scope, $http, $location, project, $routeParams, $route){
+ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route','$timeout',
+	function ($scope,$http,$location,project,$routeParams,$route,$timeout){
 		var link = $route.current.originalPath == '/lists/expense/' ? '/expenses/' : '/add/';
 		$scope.projs = project.time;
 		$scope.items = [];
@@ -437,14 +439,16 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
 			$scope.taskList = false;
 			$scope.projectId = $routeParams.projectId;
 			$scope.tasks = project.time[$scope.projectId].task;
-			project.getProjectTaskList($scope.projectId);
+			$timeout(function(){project.getProjectTaskList($scope.projectId);});
 		}else{
 			$scope.projectList = false;
 			$scope.items = noAdHocP($scope.projs);
-			project.getProjectList().then(function(results){
-				if(typeof(results.response[0].projects) == 'object'){ $scope.items = noAdHocP($scope.projs); }
-				project.stopLoading();
-			},function(){ project.stopLoading(); });
+			$timeout(function(){
+				project.getProjectList().then(function(results){
+					if(typeof(results.response[0].projects) == 'object'){ $scope.items = noAdHocP($scope.projs); }
+					project.stopLoading();
+				},function(){ project.stopLoading(); });
+			})
 		}
 		$scope.open = function (pId,tId){
 			if(tId){ $location.path(link+pId+'/'+tId); }
@@ -458,8 +462,8 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
 	}
 ]);
 // lists_a
-ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
-	function ($scope, $http, $location, project, $routeParams, $route){
+ctrl.controller('lists_a',['$scope','$http','$location','project','$routeParams','$route','$timeout',
+	function ($scope,$http,$location,project,$routeParams,$route,$timeout){
 		var link = $route.current.originalPath == '/lists_a/expense/' ? '/expenses_a/' : '/add_a/';
 		$scope.items = [];
 		$scope.tasks = [];
@@ -469,11 +473,11 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
 			$scope.taskList = false;
 			$scope.customerId = $routeParams.customerId;
 			$scope.tasks = project.adhocTask;
-			project.getCustomerTaskList($routeParams.customerId);
+			$timeout(function(){project.getCustomerTaskList($routeParams.customerId);});
 		}else{
 			$scope.projectList = false;
 			$scope.items = project.customers;
-			project.getCustomerList();
+			$timeout(function(){project.getCustomerList();});
 		}
 		$scope.open = function (pId,tId){
 			if(tId){ $location.path(link+pId+'/'+tId); }
@@ -482,19 +486,17 @@ ctrl.controller('lists_a',['$scope', '$http', '$location', 'project', '$routePar
 	}
 ]);
 // lists
-ctrl.controller('lists_e',['$scope', '$http', '$location', 'project', '$routeParams', '$route',
-	function ($scope, $http, $location, project, $routeParams, $route){
+ctrl.controller('lists_e',['$scope','$http','$location','project','$routeParams','$route','$timeout',
+	function ($scope,$http,$location,project,$routeParams,$route,$timeout){
 		var prj = $route.current.originalPath.search('_ea') > 0 ? false : true;
 		var link = prj ? '/expenses/' : '/expenses_a/' ;
 		$scope.expense = project.expenseList;
 		$scope.projectId = $routeParams.projectId;
-		project.getExpensesList();
-
+		$timeout(function(){project.getExpensesList();});
 		$scope.open = function (pId,tId){
 			if(tId){ $location.path(link+pId+'/'+tId); }
 			else{ $location.path(link+pId); }
 		}
-
 	}
 ]);
 // addNote
@@ -543,7 +545,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 							if($routeParams.expId){
 								var idx = $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
 								$scope.amount = project.expense[idx][$routeParams.expId]['amount'] ? project.expense[idx][$routeParams.expId]['amount'] : 'Select Amount';
-								$scope.notes = project.expense[idx][$routeParams.expId]['note'] ? project.expense[idx][$routeParams.expId]['note'] : 'Add note';
+								$scope.notes = project.expense[idx][$routeParams.expId]['notes'] ? project.expense[idx][$routeParams.expId]['notes'] : 'Add note';
 								$scope.img = project.expense[idx][$routeParams.expId]['picture'];
 								if($scope.img){
 									$scope.task="";
@@ -567,7 +569,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 							if($routeParams.expId){
 								var idx = $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
 								$scope.amount = project.expense[idx][$routeParams.expId]['amount'] ? project.expense[idx][$routeParams.expId]['amount'] : 'Select Amount';
-								$scope.notes = project.expense[idx][$routeParams.expId]['note'] ? project.expense[idx][$routeParams.expId]['note'] : 'Add note';
+								$scope.notes = project.expense[idx][$routeParams.expId]['notes'] ? project.expense[idx][$routeParams.expId]['notes'] : 'Add note';
 								$scope.img = project.expense[idx][$routeParams.expId]['picture'];
 								if($scope.img){
 									$scope.task="";
@@ -672,17 +674,7 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
 	function ($scope, $location, project,$interval){
 		$scope.username = localStorage.username;
 		//deleting the database
-		var removeStuff = function (){
-			localStorage.setItem('timesheet', '');
-			localStorage.setItem('taskTime', '');
-			localStorage.setItem('taskTimeId', '');
-			localStorage.setItem('expenses', '');
-			localStorage.setItem('toSync', '');
-			localStorage.setItem('customers', '');
-			project.time = {};
-			project.taskTimeId = {};
-			project.taskTime = {};
-		}
+		var removeStuff = function (){ localStorage.clear(); }
 		// removeStuff();
 		$scope.logout = function (){
 			// $interval.cancel(project.interval);
@@ -779,6 +771,8 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 						}
 						time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
 						var h = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId].hours;
+						if(project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId].notes){ $scope.notes = project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId].notes;}
+						if(isNaN(h)){h=0;}
 						var d = new Date();
 						d.setHours( Math.floor(h) );
 						var minutes = h;
@@ -788,6 +782,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 							var n = Math.floor(minutes/60);
 							minutes = minutes - (60*n);
 						}
+						if(isNaN(minutes)){minutes=0;}
 						d.setMinutes( minutes );
 						$scope.mytime = d;
 					}
@@ -828,10 +823,9 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 		$scope.save = function(){
 			if(!$routeParams.item){ alert("Please select a "+alertText[0]); return false; }
 			if(!$routeParams.taskId){ alert("Please select a "+alertText[1]); return false; }
-			var notes = project.getNote();
 			$scope.changed();
 			if($routeParams.taskTimeId){ project.start(item,$scope.time2); }
-			else{ project.save('add_a',$routeParams.item,$routeParams.taskId,notes); }
+			else{ project.save('add_a',$routeParams.item,$routeParams.taskId,$scope.notes); }
 		}
 		$scope.stop = function(){ project.stop(item,$scope.time2); }
 		$scope.changed = function () {
@@ -861,13 +855,8 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
 		$scope.no_project = true;
 		$scope.expense = project.expense[time];
 		if(JSON.stringify(project.expense[time]) == '{}'){ $scope.no_project = false; }
-		project.getExpenses(time).then(function(){
-			$scope.no_project = true;
-			if(JSON.stringify(project.expense[time]) == '{}'){ $scope.no_project = false; }
-		});
-		$scope.editTask = function(pId, tId, notes, amount, adhoc, cId, expId){
-			project.setNote(notes);
-			project.setAmount(amount);
+		project.loading();
+		$scope.editTask = function(pId,tId,adhoc,cId,expId){
 			if(adhoc == "ad hoc"){ $location.path('/expenses_a/'+cId+'/'+tId+'/'+expId+'/'+time); }
 			else{ $location.path('/expenses/'+pId+'/'+tId+'/'+expId+'/'+time); }
 		}
@@ -879,5 +868,11 @@ ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams',
 			$timeout(function(){ $scope.closeAlert(0); },3000);
 		}
 		project.closeAlert();
+		$timeout(function(){
+			project.getExpenses(time).then(function(){
+				$scope.no_project = true;
+				if(JSON.stringify(project.expense[time]) == '{}'){ $scope.no_project = false; }
+			});
+		});
 	}
 ]);
