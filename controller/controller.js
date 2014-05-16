@@ -11,7 +11,7 @@ ctrl.controller('start',['$scope','$timeout','$location',
 ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout','project',
 	function ($scope,$http,$templateCache,$location,$timeout,project) {
 		$scope.method = 'POST';
-		$scope.url = 'https://app.salesassist.eu/pim/mobile/index.php';
+		$scope.url = 'https://app.salesassist.eu/pim/mobile/';
 		$scope.loged = '';
 		$scope.params = [];
 		$scope.fetch = function() {
@@ -29,10 +29,9 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 						$scope.alerts=[{type:'error',msg:data.error_code}];
 						$timeout(function(){ $scope.closeAlert(0); },3000);
 					}
-				}).
-				error(function(data,status){
-					$scope.alerts=[{type:'error',msg:'Status'+status+'\nData:'+data}];
-					// $timeout(function(){ $scope.closeAlert(0); },3000);
+				}).error(function(data,status){
+					$scope.alerts=[{type:'error',msg:'Server error. Please try later'}];
+					$timeout(function(){ $scope.closeAlert(0); },3000);
 				});
 			}else{
 				$scope.alerts=[{type:'error',msg:'Please fill all the fields'}];
@@ -845,8 +844,8 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 	}
 ]);
 // expenses_list
-ctrl.controller('expenses_list',['$scope', '$timeout','project', '$routeParams', '$location',
-	function ($scope, $timeout ,project, $routeParams, $location){
+ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$location','$rootScope',
+	function ($scope,$timeout,project,$routeParams,$location,$rootScope){
 		$scope.expense = [];
 		if($routeParams.y && $routeParams.m && $routeParams.d){ var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
 		else if(project.selectedDate){var time = project.selectedDate; }
