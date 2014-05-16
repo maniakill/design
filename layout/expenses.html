@@ -23,7 +23,9 @@
 			<input type="submit" class="submit" value="Save" ng-click="saveAmount()">
 		</form>
 	</div>
-	<input type="number" value="{{amount}}" ng-model="amount" class="form-control" number />
+	<form id="form1">
+	<input type="number" value="{{amount}}" ng-model="amount" class="form-control" id="addamount" />
+</form>
 </div>
 <div class="textWrap scroller" ng-show="show_note">
 	<div class="loginForm">
@@ -31,6 +33,6 @@
 			<input type="submit" class="submit" value="Save" ng-click="saveNote()">
 		</form>
 	</div>
-	<textarea class="noteText form-control" ng-model="notes" rows="8">{{notes}}</textarea>
+	<textarea class="noteText form-control" ng-model="notes" id="ddd" rows="8">{{notes}}</textarea>
 </div>
 <div data-ng-include="'layout/footer.html'" />
