@@ -276,8 +276,8 @@ ctrl.controller('header',['$scope','$timeout','$routeParams','$location','$route
 	}
 ]);
 // add
-ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeout',
-	function ($scope, $routeParams, project, $location, $timeout){
+ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
+	function ($scope,$routeParams,project,$location,$timeout){
 		var alertText = ['project','task'], time = '';
 		$scope.date = 'today';
 		$scope.customer = 'Customer Name';
@@ -380,10 +380,7 @@ ctrl.controller('add',['$scope','$routeParams', 'project', '$location', '$timeou
 		};
 		/*timepicker end*/
 		$scope.addNote = function(pId,tId){
-			// var url = '/addNote/'+pId;
-			// if(tId){ url += '/'+tId; }
-			// if($routeParams.taskTimeId){ url += '/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
-			// $location.path(url);
+			$timeout(function(){ document.getElementById('ddd').focus(); });
 			$scope.show_amount = true;
 		}
 		$scope.saveNote = function(){
@@ -544,8 +541,9 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 							if($routeParams.expId){
 								var idx = $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
 								$scope.amount = project.expense[idx][$routeParams.expId]['amount'] ? project.expense[idx][$routeParams.expId]['amount'] : 'Select Amount';
-								$scope.notes = project.expense[idx][$routeParams.expId]['notes'] ? project.expense[idx][$routeParams.expId]['notes'] : 'Add note';
+								$scope.notes = project.expense[idx][$routeParams.expId]['note'] ? project.expense[idx][$routeParams.expId]['note'] : 'Add note';
 								$scope.img = project.expense[idx][$routeParams.expId]['picture'];
+								console.log(project.expense[idx][$routeParams.expId]);
 								if($scope.img){
 									$scope.task="";
 									$scope.displayIt='';
@@ -568,8 +566,9 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 							if($routeParams.expId){
 								var idx = $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
 								$scope.amount = project.expense[idx][$routeParams.expId]['amount'] ? project.expense[idx][$routeParams.expId]['amount'] : 'Select Amount';
-								$scope.notes = project.expense[idx][$routeParams.expId]['notes'] ? project.expense[idx][$routeParams.expId]['notes'] : 'Add note';
+								$scope.notes = project.expense[idx][$routeParams.expId]['note'] ? project.expense[idx][$routeParams.expId]['note'] : 'Add note';
 								$scope.img = project.expense[idx][$routeParams.expId]['picture'];
+console.log(project.expense[idx][$routeParams.expId]);
 								if($scope.img){
 									$scope.task="";
 									$scope.displayIt='';
@@ -634,16 +633,22 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 		$scope.addNote = function(pId,tId){
 			$scope.hideE = true;
 			$scope.show_note = true;
+			$timeout(function(){ document.getElementById('ddd').focus(); });
 		}
 		$scope.saveNote = function(){
 			if(!$scope.notes){ $scope.notes = 'Add note'; }
 			$scope.hideE = false;
 			$scope.show_note = false;
 		}
+		var setf = function(){
+			document.getElementById("addamount").focus();
+		}
 		$scope.addAmount = function(pId,tId){
 			$scope.hideE = true;
 			$scope.show_amount=true;
+			$timeout(function(){ document.getElementById('addamount').focus(); });
 		}
+
 		$scope.saveAmount = function(){
 			if(!$scope.amount){ $scope.amount = 'Select Amount'; }
 			$scope.hideE = false;
@@ -833,6 +838,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 		};
 		/*timepicker end*/
 		$scope.addNote = function(pId,tId){
+			$timeout(function(){ document.getElementById('ddd').focus(); });
 			$scope.show_amount = true;
 		}
 		$scope.saveNote =function(){  if(!$scope.notes){ $scope.notes = 'Add note'; } $scope.show_amount= false; }
