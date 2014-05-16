@@ -625,7 +625,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		/* end send data to server */
 		project.updateExpense = function(time,item,amount,note,picture){
 			project.expense[time][item]['amount'] = amount;
-			project.expense[time][item]['notes'] = note;
+			project.expense[time][item]['note'] = note;
 			project.expense[time][item]['picture'] = picture;
 			saveTime('expenses', project.expense);
 			project.addToSync('expense',time,project.expense[time][item]['project_id'],project.expense[time][item]['customer_id'],project.expense[time][item]['expense_id'],item);
