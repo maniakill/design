@@ -19,7 +19,7 @@
 		<li class="last_li" ng-click="selectTask(projectId)">{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
 	</ul>
 	<ul class="add_ul add_note">
-		<li class="last_li notes" ng-click="addNote(projectId,taskId)">{{notes}}<span class="arrow abs" ></span></li>
+		<li class="last_li notes" ng-click="addNote(projectId,taskId)">{{notes2}}<span class="arrow abs" ></span></li>
 	</ul>
 </div>
 <div class="textWrap scroller" ng-show="show_amount">
@@ -28,6 +28,6 @@
 			<input type="submit" class="submit" value="Save" ng-click="saveNote()">
 		</form>
 	</div>
-	<textarea class="noteText form-control" ng-model="notes" rows="8" id="ddd">{{notes}}</textarea>
+	<textarea class="noteText form-control" ng-model="notes" rows="8" id="ddd" placeholder="Add note">{{notes}}</textarea>
 </div>
 <div data-ng-include="'layout/footer.html'" />

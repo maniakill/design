@@ -12,7 +12,7 @@
 		<input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/></li>
 		<li>{{project}}</li>
 		<li ng-click="selectExpense(projectId)">{{customer}}<span class="arrow abs" ></span></li>
-		<li class="notes" ng-click="addNote(projectId,taskId)">{{notes}}<span class="arrow abs" ></span></li>
+		<li class="notes" ng-click="addNote(projectId,taskId)">{{notes2}}<span class="arrow abs" ></span></li>
 		<li class="notes" ng-click="addAmount(projectId,taskId)">{{amount}}<span class="arrow abs" ></span></li>
 		<li class="last_li" ng-click="selectTask(projectId)"><img id="smallImage" style="{{displayIt}}" src="{{img}}" />{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
 	</ul>
@@ -33,6 +33,6 @@
 			<input type="submit" class="submit" value="Save" ng-click="saveNote()">
 		</form>
 	</div>
-	<textarea class="noteText form-control" ng-model="notes" id="ddd" rows="8">{{notes}}</textarea>
+	<textarea class="noteText form-control" ng-model="notes" id="ddd" rows="8" placeholder="Add note">{{notes}}</textarea>
 </div>
 <div data-ng-include="'layout/footer.html'" />
