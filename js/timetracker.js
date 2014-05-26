@@ -256,7 +256,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			return this.data;
 		}
 		project.getProjectList = function(){
-			project.loading();
+			//project.loading();
 			this.data = $http.get(url+'index.php?do=mobile-project_list&'+key+'&all=1').then(function(response){
 				if(response.data.code=='ok'){
 					if(typeof(response.data.response[0].projects) == 'object'){
@@ -270,7 +270,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			return this.data;
 		}
 		project.getProjectTaskList = function(item){
-			project.loading();
+			//project.loading();
 			this.data =  $http.get(url+'index.php?do=mobile-task_list&'+key+'&project_id='+item+'&all=1').then(function(response){
 				if(response.data.code == 'ok'){
 					if(typeof(response.data.response.tasks) == 'object'){
@@ -284,7 +284,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			return this.data;
 		}
 		project.getCustomerList = function(){
-			project.loading();
+			//project.loading();
 			this.data = $http.get(url+'index.php?do=mobile-customer_list&'+key+'&all=1').then(function(response){
 				if(response.data.code=='ok'){
 					if(typeof(response.data.response[0].customers) == 'object'){
@@ -299,7 +299,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			return this.data;
 		}
 		project.getCustomerTaskList = function(item){
-			project.loading();
+			//project.loading();
 			this.data =  $http.get(url+'index.php?do=mobile-task_list&'+key+'&customer_id='+item+'&all=1').then(function(response){
 				if(response.data.code == 'ok'){
 					if(typeof(response.data.response.tasks) == 'object'){
@@ -313,7 +313,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			return this.data;
 		}
 		project.getExpensesList = function(item){
-			project.loading();
+			//project.loading();
 			this.data = $http.get(url+'index.php?do=mobile-expenses_list&'+key+'&all=1').then(function(response){
 				if(response.data.code == 'ok'){
 					if(typeof(response.data.response[0].expense) == 'object'){
@@ -618,7 +618,6 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 						}
 						project.stopLoading();
 					}
-
 				break;
 			}
 		}
