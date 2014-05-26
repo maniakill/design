@@ -702,6 +702,7 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
 		$scope.expenses = 0;
 		$scope.running = 0;
 		for(x in project.toSync){
+			project.toSync[x].synced = false;
 			var item = project.toSync[x];
 			if(item.type == 'time'){
 				if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){ $scope.running++; $scope.run = 'square_active'; }
