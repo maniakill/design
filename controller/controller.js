@@ -53,7 +53,7 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 		if(!project.taskTimeId[time]){ project.taskTimeId[time]={}; }
 		$scope.projects = project.taskTimeId[time];
 		if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project=false; }
-		project.loading();
+		if(!$scope.no_project){project.loading();}
 		$scope.getP=function(item){
 			var p=project.getProject(item);
 			return p.customer_name+' > '+p.project_name;
@@ -543,7 +543,6 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 								$scope.amount = project.expense[idx][$routeParams.expId]['amount'] ? project.expense[idx][$routeParams.expId]['amount'] : 'Select Amount';
 								$scope.notes = project.expense[idx][$routeParams.expId]['note'] ? project.expense[idx][$routeParams.expId]['note'] : 'Add note';
 								$scope.img = project.expense[idx][$routeParams.expId]['picture'];
-								console.log(project.expense[idx][$routeParams.expId]);
 								if($scope.img){
 									$scope.task="";
 									$scope.displayIt='';
@@ -568,7 +567,6 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 								$scope.amount = project.expense[idx][$routeParams.expId]['amount'] ? project.expense[idx][$routeParams.expId]['amount'] : 'Select Amount';
 								$scope.notes = project.expense[idx][$routeParams.expId]['note'] ? project.expense[idx][$routeParams.expId]['note'] : 'Add note';
 								$scope.img = project.expense[idx][$routeParams.expId]['picture'];
-console.log(project.expense[idx][$routeParams.expId]);
 								if($scope.img){
 									$scope.task="";
 									$scope.displayIt='';
@@ -692,6 +690,7 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval',
 // pending
 ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
 	function ($scope,$location,project,$timeout,$route){
+		var clicked = false;
 		$scope.times = 0;
 		$scope.progress = true;
 		$scope.max = 0;
@@ -714,7 +713,8 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
 			var connect = checkConnection();
 			if(connect != 'none' && connect !='unknown'){
 				$scope.max = Object.keys(project.toSync).length;
-				if($scope.max > 0){
+				if($scope.max > 0 && clicked === false){
+					clicked = true;
 					$scope.open();
 					$scope.dynamic = 0;
 					$scope.times = 0;
@@ -734,12 +734,14 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
 		$scope.$on('finish', function(arg) {
 			$scope.times++;
 			if($scope.times > $scope.max){
+				clicked = false;
 				for(x in project.toSync){ project.toSync[x].synced = false; }
 				project.saveStuff('toSync',project.toSync);
 				$timeout(function() { $scope.progress = true; $route.reload(); },1000);
 			}
 		});
 		$scope.open = function(){ $timeout(function(){ $scope.progress = false; }); }
+		$scope.$on('$destroy',function(){ for(x in project.toSync){ project.toSync[x].synced = false; } project.saveStuff('toSync',project.toSync); });
 	}
 ]);
 // add adhoc
@@ -861,7 +863,7 @@ ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$
 		$scope.no_project = true;
 		$scope.expense = project.expense[time];
 		if(JSON.stringify(project.expense[time]) == '{}'){ $scope.no_project = false; }
-		project.loading();
+		if(!$scope.no_project){ project.loading(); }
 		$scope.editTask = function(pId,tId,adhoc,cId,expId){
 			if(adhoc == "ad hoc"){ $location.path('/expenses_a/'+cId+'/'+tId+'/'+expId+'/'+time); }
 			else{ $location.path('/expenses/'+pId+'/'+tId+'/'+expId+'/'+time); }
