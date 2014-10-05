@@ -960,7 +960,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.position'])
   };
 }])
 
-.directive( 'datepicker', ['dateFilter', '$parse', 'datepickerConfig', '$log','$location','project','$route', function (dateFilter, $parse, datepickerConfig, $log,$location,project,$route) {
+.directive( 'datepicker', ['dateFilter', '$parse', 'datepickerConfig', '$log','$location','project','$route','$rootScope', function (dateFilter, $parse, datepickerConfig, $log,$location,project,$route,$rootScope) {
   return {
     restrict: 'EA',
     replace: true,
@@ -1052,8 +1052,9 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.position'])
         refill( true );
       };
 
-      scope.select = function( date ) {
+      scope.select = function( date ) {console.log(mode);
         if ( mode === 0 ) {
+
           var dt = ngModel.$modelValue ? new Date( ngModel.$modelValue ) : new Date(0, 0, 0, 0, 0, 0, 0);
           var timed = date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
           dt.setFullYear( date.getFullYear(), date.getMonth(), date.getDate() );
@@ -1061,6 +1062,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.position'])
           refill( true );
           project.setDate(timed,dt);
           if($route.current.controller == 'timesheet'){
+            $rootScope.$broadcast('closeDatepicker');
             $location.path('/timesheet/'+timed);
           }else if($route.current.controller == 'expenses_list'){
             $location.path('/expenses_list/'+timed);
@@ -3641,12 +3643,6 @@ angular.module("template/timepicker/timepicker.html", []).run(["$templateCache",
   $templateCache.put("template/timepicker/timepicker.html",
     "<table>\n" +
     "	<tbody>\n" +
-    "		<tr class=\"text-center\">\n" +
-    "			<td><a ng-click=\"incrementHours()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
-    "			<td>&nbsp;</td>\n" +
-    "			<td><a ng-click=\"incrementMinutes()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
-    "			<td ng-show=\"showMeridian\"></td>\n" +
-    "		</tr>\n" +
     "		<tr>\n" +
     "			<td style=\"font-size: 110px; color: #898989;\" class=\"form-group\" ng-class=\"{'has-error': invalidHours}\">\n" +
     "				<input type=\"text\" ng-model=\"hours\" ng-change=\"updateHours()\" class=\"form-control text-center\" ng-mousewheel=\"incrementHours()\" ng-readonly=\"readonlyInput\" maxlength=\"2\">\n" +
@@ -3656,12 +3652,6 @@ angular.module("template/timepicker/timepicker.html", []).run(["$templateCache",
     "				<input type=\"text\" ng-model=\"minutes\" ng-change=\"updateMinutes()\" class=\"form-control text-center\" ng-readonly=\"readonlyInput\" maxlength=\"2\">\n" +
     "			</td>\n" +
     "			<td ng-show=\"showMeridian\"><button type=\"button\" class=\"btn btn-default text-center\" ng-click=\"toggleMeridian()\">{{meridian}}</button></td>\n" +
-    "		</tr>\n" +
-    "		<tr class=\"text-center\">\n" +
-    "			<td><a ng-click=\"decrementHours()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
-    "			<td>&nbsp;</td>\n" +
-    "			<td><a ng-click=\"decrementMinutes()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
-    "			<td ng-show=\"showMeridian\"></td>\n" +
     "		</tr>\n" +
     "	</tbody>\n" +
     "</table>\n" +

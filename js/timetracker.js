@@ -23,7 +23,7 @@ function onPhotoURISuccess(imageURI) {
   largeImage.style.display = 'block';
   smallImage.src = "data:image/jpeg;base64," + imageURI;
 }
-var app = angular.module('timeT', ['ngRoute','ctrl','ui.bootstrap']);
+var app = angular.module('timeT', ['ngRoute','angular-gestures','ctrl','ui.bootstrap']);
 app.config(function ($routeProvider) {
 	$routeProvider
 		.when('/',{controller: 'start',templateUrl: 'layout/start.html'})
@@ -82,6 +82,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		var project = {}, url = 'https://app.salesassist.eu/pim/mobile/', key = 'api_key='+localStorage.token+'&username='+localStorage.username, obj = {};
 		/* store data */
 		var init = function(){
+		project.lang = localStorage.getItem("TLang") ? JSON.parse(localStorage.getItem("TLang")) : 2;
 		project.time = localStorage.getItem('timesheet'+localStorage.username) ? JSON.parse(localStorage.getItem('timesheet'+localStorage.username)) : {};
 		project.customers = localStorage.getItem('customers'+localStorage.username) ? JSON.parse(localStorage.getItem('customers'+localStorage.username)) : {};
 		project.adhocTask = localStorage.getItem('adhocTasksList'+localStorage.username) ? JSON.parse(localStorage.getItem('adhocTasksList'+localStorage.username)) : {};
@@ -832,4 +833,267 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		project.setKey = function(){ key = 'api_key='+localStorage.token+'&username='+localStorage.username; init(); }
 		return project;
 	}
-]);
+]).directive('lng',['project',function(project){
+  return {
+    restrict: 'A',
+    link: function (scope,element,attrs){
+      /*
+      works for input type text,password and submit, div,span,p,h[1-6] basicly any kind of element that can contain text
+      element should have the lng attr and it's value should be the text to be translated
+      element can have text inside of it that can be appended or prepended to the text in the lng attr (if you set the befor attr as true it will be appended)
+      element should not contain other html in it because it will stop working
+      element should not have angular bindings in it
+      */
+      if(element[0].tagName == 'INPUT'){
+        if(element[0].type == 'submit'){
+          element.val(attrs.lng);
+          if(LANG[project.lang][attrs.lng]){ element.val( LANG[project.lang][attrs.lng] ); }
+        }
+        if(element[0].type == 'text' || element[0].type == 'password'){
+          element[0].placeholder = attrs.lng;
+          if(LANG[project.lang][attrs.lng]){ element[0].placeholder = LANG[project.lang][attrs.lng]; }
+        }
+      }else{
+        var extra = element[0].innerHTML, text = LANG[project.lang][attrs.lng] ? LANG[project.lang][attrs.lng] : attrs.lng, val = attrs.befor ? text + extra : extra + text;
+        element.html(val);
+      }
+    }
+  }
+}]).directive('header',['project','$timeout','$routeParams','$location','$route','$modal','$rootScope',function (project,$timeout,$routeParams,$location,$route,$modal,$rootScope){
+	return {
+		restrict: 'A',
+		link: function($scope, iElm, iAttrs, controller) {
+			$scope.title = iAttrs.title;
+			var link = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('expensea') > 0 ? '/expenses_a/' : '/expenses/') : ( $route.current.originalPath.search('Notea') > 0 ? '/add_a/' : '/add/'),
+					link2 = $route.current.originalPath.search('expense') > 0 ? '/expenses_list' : '/timesheet',
+					note = $route.current.originalPath.search('Amount') > 0 ? false : true,
+					type = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('_a') > 0 ? 'expenses_a' : 'expenses') : ( $route.current.originalPath.search('_a') > 0 ? 'add_a' : ''),
+					alertText = ['project','task'];
+			$scope.timesheet = true;
+			$scope.add_page = true;
+			$scope.add_note = true;
+			$scope.save_time = true;
+			switch($route.current.controller){
+				case 'timesheet':
+					$scope.timesheet = false;
+					$scope.task_type = [ { title: 'Add Task for Project', url: '/lists' }, { title: 'Add Ad Hoc Task', url: '/lists_a'} ];
+					$scope.types = 'Task';
+					break;
+				case 'expenses_list':
+					$scope.timesheet = false;
+					$scope.task_type = [ { title: 'Add Expense for Project', url: '/lists/expense' }, {title: 'Add Ad Hoc Expense', url: '/lists_a/expense'} ];
+					$scope.types = 'Expense';
+					break;
+				case 'add':
+				case 'add_a':
+					$scope.add_page = false;
+					$scope.save_time = false;
+					break;
+				case 'lists':
+				case 'lists_a':
+				case 'lists_e':
+					$scope.add_page = false;
+					break;
+				case 'expenses':
+					$scope.add_page = false;
+					alertText = ['project','expense'];
+					break;
+				case 'addNote':
+				case 'addAmount':
+					$scope.add_note = false;
+					break;
+				case 'account':
+				case 'pending':
+					$scope.timesheet = true;
+					$scope.add_page = true;
+					$scope.add_note = true;
+					break;
+				default:
+					$scope.timesheet = false;
+					break;
+			}
+			$scope.today = function() {
+				if($routeParams.y && $routeParams.m && $routeParams.d){ $scope.dt = new Date($routeParams.y, $routeParams.m-1, $routeParams.d); }
+				else if(project.Date){ $scope.dt = project.Date; }
+				else{ $scope.dt = new Date(); }
+			};
+			$scope.today();
+			// $scope.open = function() { $timeout(function() { $scope.opened = true; }); };
+			// $scope.dateOptions = { 'year-format': "'yy'", 'starting-day': 1 };
+			$scope.times = function(){
+				var url = link2;
+				if($route.current.controller=='lists_e'){ url='expenses_list'; }
+				if($routeParams.y && $routeParams.m && $routeParams.d){ url += '/'+ $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y; }
+				$location.path(url);
+			}
+			$scope.addpage = function(write){
+				if(write){
+					if($scope.notes){ project.setNote($scope.notes); }
+					if($scope.amount){ project.setAmount($scope.amount); }
+				}
+				var url = link+$routeParams.pId;
+				if($routeParams.tId){ url += '/'+$routeParams.tId; }
+				if($routeParams.taskTimeId){
+					if($routeParams.projectId){ url += '/'+$routeParams.projectId; }
+					url += '/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
+				}
+				if($routeParams.expId){ url += '/'+$routeParams.expId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
+				$location.path(url);
+			}
+			$scope.saveT=function(){
+				if(!$routeParams.item){
+					$rootScope.$broadcast('addError',"Please select a "+alertText[0]);
+					return false;
+				}
+				if(!$routeParams.taskId){
+					$rootScope.$broadcast('addError',"Please select a "+alertText[1]);
+					return false;
+				}
+				var notes = project.getNote();
+				if($routeParams.taskTimeId){
+					$rootScope.$broadcast('changed');
+					var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y, item=project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId];
+					project.update(item,time,$scope);
+				}else{ project.save(type,$routeParams.item,$routeParams.taskId,$scope.notes,true); }
+			}
+			/*modal*/
+			$scope.add = function () {
+				var modalInstance = $modal.open({
+				  templateUrl: 'layout/task_type.html',
+				  controller: 'task_type',
+				  resolve: {
+					items: function () {
+						project.setNote();
+						project.setAmount();
+						project.setHours();
+						// project.setDate();
+						return $scope.task_type;
+					},
+					types: function(){ return $scope.types; }
+				  }
+				});
+			};
+			/*modalend*/
+			$scope.$on('clickAdd', function() { $scope.add(); });
+			$scope.snap = function(){
+				// vibrate.vib(100);
+				angular.element('.main_menu').show(0,function(){
+					var _this = angular.element('.cmain_menu'), width = _this.outerWidth();
+					_this.removeClass('slide_right slide_left').css({'left':'-'+width+'px'});
+					$timeout(function(){ _this.addClass('slide_left'); });
+				});
+			}
+		},
+		templateUrl:'layout/header.html',
+
+	}
+}]).directive('menu',function(){
+	return {
+		restrict: 'A',
+		controller:function($scope,$timeout,$location,$document){
+			$scope.monthDays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+			var canceler;
+			$scope.snap_back = function(){
+				// vibrate.vib(100);
+				$timeout(function(){ angular.element('.cmain_menu').addClass('slide_right'); });
+				$timeout(function(){ angular.element('.main_menu').hide(); },400);
+			}
+			$scope.go = function(h){ /*vibrate.vib(100);*/ $location.path(h); }
+			$scope.handleGesture = function($event){ $scope.snap_back(); }
+			$scope.name = localStorage.Tlast_name && localStorage.Tfirst_name ? localStorage.Tlast_name + ' ' + localStorage.Tfirst_name : localStorage.Tusername;
+			$scope.email = localStorage.Temail ? localStorage.Temail : '';
+			//$scope.logout = function(){ vibrate.vib(100); var code ={}; code.logout = true; project.logout(code); }
+			$scope.closeDatePicker = function(){
+					// vibrate.vib(100);
+					// $timeout(function(){ angular.element('.cmain_menu').addClass('slide_right'); });
+				$timeout(function(){ angular.element('.main_menu').hide();
+					var _this = angular.element('.cmain_menu');
+					 _this.css({'left':'-35%'});
+				},100);
+			}
+			/*var element = angular.element('.daypicker_inner'), startY = 0, y = 0;
+			var helpscroller = function(){
+      	if(!y){ y = 0;}
+      	var m = y%34,d = Math.floor(y/34);
+      	if(y>0){ y = 0;}
+				else{
+					if(m>-17){d++;}
+					y=d*34;
+					if(y>0){ y = 0;}
+				}
+				if(y<(element.height()*(-1) ) ){ y = -element.height()+34; }
+				console.log(d);
+				startY = y;
+        element.finish().animate({ top: y + 'px' },200);
+        // element.find()
+			}
+			$scope.handleGesture = function($event){
+				console.log($event);
+				if($event.type == 'drag'){
+					y = $event.gesture.deltaY+startY;
+					element.css({ top: y + 'px' });
+        	if(canceler){ $timeout.cancel(canceler);}
+        	// canceler = $timeout(function(){helpscroller()},200)
+				}
+				if($event.type == 'dragend'){
+					$timeout(function(){helpscroller()})
+				}
+				if($event.type == 'swipedown' || $event.type == 'swipeup'){
+					y = $event.gesture.deltaY+startY;
+					element.css({ top: y + 'px' });
+					$timeout(function(){helpscroller()})
+				}
+			}*/
+		},
+		templateUrl:'layout/menu.html',
+	}
+}).directive('datepic', ['project','$route','$location','$timeout', function (project,$route,$location,$timeout){
+	return {
+		restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+		templateUrl: 'layout/daypic.html',
+		link: function($scope, iElm, iAttrs, controller) {
+			var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+			$scope.getDate = function(){
+				if(!$scope.dt){ $scope.dt = new Date(); }
+				if($scope.dt instanceof Date === false){
+					$scope.dt = new Date();
+				}
+				var d = $scope.dt.getDate();
+				var m = months[$scope.dt.getMonth()];
+				var y = $scope.dt.getFullYear();
+				return d + ' ' + m + ', ' + y;
+			}
+
+			$scope.goToDay = function(p){
+				var d = $scope.dt.getDate();
+				if(p === false){ $scope.dt.setDate(--d); }
+				else{ $scope.dt.setDate(++d); }
+				var timed = $scope.dt.getDate()+'/'+($scope.dt.getMonth()+1)+'/'+$scope.dt.getFullYear();
+				project.setDate(timed,$scope.dt);
+        if($route.current.controller == 'timesheet'){
+          $location.path('/timesheet/'+timed);
+        }else if($route.current.controller == 'expenses_list'){
+          $location.path('/expenses_list/'+timed);
+        }
+			}
+			$scope.selectDate = function(){
+				$scope.opened = !$scope.opened;
+				return false;
+				// vibrate.vib(100);
+				angular.element('.main_menu').show(0,function(){
+					var _this = angular.element('.cmain_menu');
+					 _this.css({'left':'-100%'});
+					// var _this = angular.element('.cmain_menu'), width = _this.outerWidth();
+					// _this.removeClass('slide_right slide_left').css({'left':'-'+width+'px'});
+					// $timeout(function(){ _this.addClass('slide_left'); });
+				});
+			}
+
+		}
+	};
+}]).directive('search', function (){
+	return {
+		restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+		templateUrl: 'layout/search.html'		
+	};
+});

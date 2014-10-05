@@ -1,8 +1,10 @@
 <div id="loading"></div>
-<div ng-include="'layout/header.html'" />
+<div menu=""></div>
+<div header="" title="List"></div>
+<div search=""></div>
 <div class="scroller">
 	<ul class="lists" ng-hide="projectList" >
-	    <li ng-repeat="item in items" ng-click="open(item.project_id)">
+	    <li ng-repeat="item in items | filter:search" ng-click="open(item.project_id)">
 	        <p>{{ item.project_name }}</p>
 	    	<span>{{ item.customer_name }}</span>
 	    </li>
@@ -13,4 +15,3 @@
 	    </li>
 	</ul>
 </div>
-<div data-ng-include="'layout/footer.html'" />

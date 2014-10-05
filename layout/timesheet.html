@@ -1,7 +1,12 @@
 <div id="loading"></div>
-<div ng-include="'layout/header.html'" />
+<div menu=""></div>
+<div header="" title="Timesheet" ></div>
+<div datepic=""></div>
 <div id="page" class="scroller">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+	<div class="jump" ng-show="notToday">
+		<input type="submit" class="jumpy" value="Jump to Today" ng-click="jumpToToday()">
+	</div>
 	<ul>
 		<li ng-repeat="project in projects" class="projects" ng-hide="project.date">
 			<p class="projectName">{{getP(project.id)}}</p>
@@ -25,4 +30,3 @@
 		</div>
 	</div>
 </div>
-<div data-ng-include="'layout/footer.html'" />

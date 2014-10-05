@@ -23,6 +23,11 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 					if(data.code == 'ok'){
 						localStorage.setItem('token',data.response);
 						localStorage.setItem('username',$scope.params['username']);
+						localStorage.setItem('TLang',data.lang_id);
+						localStorage.setItem('Tfirst_name',data.first_name);
+						localStorage.setItem('Tlast_name',data.last_name);
+						localStorage.setItem('Temail',data.email);
+
 						project.setKey();
 						$location.path('/timesheet');
 					}else{
@@ -46,14 +51,21 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$location','$rootScope',
 	function ($scope,$timeout,project,$routeParams,$location,$rootScope){
 		$scope.projects=[];
+		$scope.notToday = true;
 		if($routeParams.y && $routeParams.m && $routeParams.d){ var time=$routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
 		else if(project.selectedDate){ var time = project.selectedDate; }
 		else{ var d=new Date(), time=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear(); }
+		var Today = new Date(), TimeT = Today.getDate()+'/'+(Today.getMonth()+1)+'/'+Today.getFullYear();			
+		if(time==TimeT){ $scope.notToday = false; }
 		$scope.no_project=true;
 		if(!project.taskTimeId[time]){ project.taskTimeId[time]={}; }
 		$scope.projects = project.taskTimeId[time];
 		if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project=false; }
 		if(!$scope.no_project){project.loading();}
+		$scope.jumpToToday = function(){ 
+			project.setDate(TimeT,Today);
+			$location.path('/timesheet/'+TimeT); 
+		}
 		$scope.getP=function(item){
 			var p=project.getProject(item);
 			return p.customer_name+' > '+p.project_name;
@@ -96,6 +108,7 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 			$scope.alerts = [{ type: p, msg: project.alerts[p] }];
 			$timeout(function(){ $scope.closeAlert(0); },3000);
 		}
+		$scope.$on('closeDatepicker', function(arg) { $scope.opened = false; });
 		project.closeAlert();
 		$timeout( function(){
 			project.getTime(time).then(function(){
@@ -273,6 +286,14 @@ ctrl.controller('header',['$scope','$timeout','$routeParams','$location','$route
 		};
 		/*modalend*/
 		$scope.$on('clickAdd', function() { $scope.add(); });
+		$scope.snap = function(){
+			// vibrate.vib(100);
+			angular.element('.main_menu').show(0,function(){
+				var _this = angular.element('.cmain_menu'), width = _this.outerWidth();
+				_this.removeClass('slide_right slide_left').css({'left':'-'+width+'px'});
+				$timeout(function(){ _this.addClass('slide_left'); });
+			});
+		}
 	}
 ]);
 // add
@@ -425,7 +446,15 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
 ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route','$timeout',
 	function ($scope,$http,$location,project,$routeParams,$route,$timeout){
 		var link = $route.current.originalPath == '/lists/expense/' ? '/expenses/' : '/add/';
-		$scope.projs = project.time;
+		console.log('lists');
+		var fixList = function(p){
+			var array = [];
+			angular.forEach(p,function(value,key){
+				this.push(value);
+			},array);
+			return array;
+		}
+		$scope.projs = project.time;		
 		$scope.items = [];
 		$scope.tasks = [];
 		$scope.projectList = true;
@@ -437,11 +466,12 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
 			$timeout(function(){project.getProjectTaskList($scope.projectId);});
 		}else{
 			$scope.projectList = false;
-			$scope.items = noAdHocP($scope.projs);
+			$scope.items = fixList(noAdHocP($scope.projs));
 			$timeout(function(){
 				project.getProjectList().then(function(results){
-					if(typeof(results.response[0].projects) == 'object'){ $scope.items = noAdHocP($scope.projs); }
+					if(typeof(results.response[0].projects) == 'object'){ $scope.items = fixList(noAdHocP($scope.projs)); }
 					project.stopLoading();
+					console.log($scope.items);
 				},function(){ project.stopLoading(); });
 			})
 		}
@@ -453,7 +483,7 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
 			var ps = {};
 			if(p){ for(x in p){ if(p[x].project_name != 'ad hoc'){ ps[x] = p[x]; } } }
 			return ps;
-		}
+		}		
 	}
 ]);
 // lists_a

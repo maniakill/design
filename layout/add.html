@@ -1,7 +1,13 @@
 <div id="loading"></div>
-<div ng-include="'layout/header.html'" />
+<div menu=""></div>
+<div header=""></div>
 <div class="add_wrap scroller" ng-hide="show_amount">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+	<div class="loginForm">
+		<form>
+			<input type="submit" class="submit" value="Save" ng-click="save1()">			
+		</form>
+	</div>
 	<div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:300px">
 		<timepicker hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
 	</div>
@@ -30,4 +36,3 @@
 	</div>
 	<textarea class="noteText form-control" ng-model="notes" rows="8" id="ddd" placeholder="Add note">{{notes}}</textarea>
 </div>
-<div data-ng-include="'layout/footer.html'" />

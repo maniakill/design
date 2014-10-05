@@ -1,5 +1,6 @@
 <div id="loading"></div>
-<div ng-include="'layout/header.html'" />
+<div menu=""></div>
+<div header=""></div>
 <div class="scroller">
 	<ul class="lists">
 	    <li ng-repeat="task in expense" ng-click="open(projectId,task.expense_id)" class="tasks_list">
@@ -7,4 +8,3 @@
 	    </li>
 	</ul>
 </div>
-<div data-ng-include="'layout/footer.html'" />
