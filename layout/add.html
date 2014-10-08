@@ -5,7 +5,6 @@
 	<datepicker ng-model="dta" min-date="minDate" show-weeks="false" class="well well-sm " ></datepicker>
 </div>
 <div class="add_wrap scroller scrollerUp" ng-hide="show_amount">
-	{{coords}}
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div class="loginForm">
 		<form>

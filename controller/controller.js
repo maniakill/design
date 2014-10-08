@@ -136,9 +136,9 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 // add
 ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout','geolocation',
 	function ($scope,$routeParams,project,$location,$timeout,geolocation){
-		geolocation.getLocation().then(function(data){
+		/*geolocation.getLocation().then(function(data){
       $scope.coords = {lat:data.coords.latitude, long:data.coords.longitude};
-    });
+    });*/
 		var alertText = ['project','task'], time = '';
 		var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 		$scope.date = 'today';
