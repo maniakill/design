@@ -1,14 +1,15 @@
 <div id="loading"></div>
 <div menu=""></div>
-<div header=""></div>
+<div header="" title="List"></div>
+<div search=""></div>
 <div class="scroller">
 	<ul class="lists" ng-hide="projectList" >
-	    <li ng-repeat="item in items" ng-click="open(item.customer_id)" class="tasks_list">
+	    <li ng-repeat="item in items | filter:search" ng-click="open(item.customer_id)" class="tasks_list">
 	        <p>{{ item.customer_name }}</p>
 	    </li>
 	</ul>
 	<ul class="lists" ng-hide="taskList">
-	    <li ng-repeat="task in tasks" ng-click="open(customerId,task.id)" class="tasks_list">
+	    <li ng-repeat="task in tasks | filter:search" ng-click="open(customerId,task.id)" class="tasks_list">
 	        <p>{{ task.name }}</p>
 	    </li>
 	</ul>

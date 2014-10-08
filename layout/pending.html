@@ -1,18 +1,18 @@
 <div menu=""></div>
-<div header=""></div>
-<div class="scroller">
+<div header="" title="Pending Items"></div>
+<div class="scroller scrollerUp">
 <div class="add_wrap">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<ul class="add_ul">
-		<li><span class="square {{exp}}">{{expenses}}</span>Expenses</li>
-		<li><span class="square {{run}}">{{running}}</span>Tasks Running</li>
-		<li class="last_li" ><span class="square {{ent}}">{{entries}}</span>Unsaved Time Entries</li>
+		<li><span class="square {{exp}}">{{expenses}}</span><span lng="Expenses"></span></li>
+		<li><span class="square {{run}}">{{running}}</span><span lng="Tasks Running"></span></li>
+		<li class="last_li" ><span class="square {{ent}}">{{entries}}</span><span lng="Unsaved Time Entries"></span></li>
 	</ul>
     <progressbar max="max" value="dynamic" ng-hide="progress"><span style="color:black; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>
 </div>
 <div class="loginForm">
 	<form>
-		<input type="submit" class="submit" value="Sync All" ng-click="sync()">
+		<input type="submit" class="submit" value="Sync All" lng="Sync All" ng-click="sync()">
 	</form>
 </div>
 </div>

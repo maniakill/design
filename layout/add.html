@@ -1,11 +1,15 @@
 <div id="loading"></div>
 <div menu=""></div>
-<div header=""></div>
-<div class="add_wrap scroller" ng-hide="show_amount">
+<div header="" title="Time entry"></div>
+<div class="allTheWay" ng-show="opened">
+	<datepicker ng-model="dta" min-date="minDate" show-weeks="false" class="well well-sm " ></datepicker>
+</div>
+<div class="add_wrap scroller scrollerUp" ng-hide="show_amount">
+	{{coords}}
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div class="loginForm">
 		<form>
-			<input type="submit" class="submit" value="Save" ng-click="save1()">			
+			<input type="submit" class="submit saveBtn" value="Save" lng="Save" ng-click="save(true)">
 		</form>
 	</div>
 	<div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:300px">
@@ -13,13 +17,16 @@
 	</div>
 	<div class="loginForm">
 		<form>
-			<input ng-hide="mode" type="submit" class="submit" value="Start" ng-click="save()">
-			<input ng-show="mode" type="submit" class="submit" value="Stop" ng-click="stop()">
+			<input ng-hide="mode" type="submit" class="submit startBtns" value="Start" lng="Start" ng-click="save()">
+			<input ng-show="mode" type="submit" class="submit startBtns" value="Stop" lng="Stop" ng-click="stop()">
 		</form>
 	</div>
 	<ul class="add_ul">
 		<li class="datePicker"><a herf="#" ng-click="open()" id="add_calendar" class="left"></a>
-		<input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/></li>
+			<span>{{getDates()}}</span>
+		<!-- <input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/> -->
+
+	</li>
 		<li>{{customer}}</li>
 		<li>{{project}}</li>
 		<li class="last_li" ng-click="selectTask(projectId)">{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
@@ -28,11 +35,11 @@
 		<li class="last_li notes" ng-click="addNote(projectId,taskId)">{{notes2}}<span class="arrow abs" ></span></li>
 	</ul>
 </div>
-<div class="textWrap scroller" ng-show="show_amount">
+<div class="textWrap scroller scrollerUp" ng-show="show_amount">
 	<div class="loginForm">
 		<form>
-			<input type="submit" class="submit" value="Save" ng-click="saveNote()">
+			<input type="submit" class="submit startBtns" value="Save" lng="Save" ng-click="saveNote()">
 		</form>
 	</div>
-	<textarea class="noteText form-control" ng-model="notes" rows="8" id="ddd" placeholder="Add note">{{notes}}</textarea>
+	<textarea class="noteText form-control" ng-model="notes" rows="8" id="ddd" lng="Add note">{{notes}}</textarea>
 </div>

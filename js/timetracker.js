@@ -23,7 +23,9 @@ function onPhotoURISuccess(imageURI) {
   largeImage.style.display = 'block';
   smallImage.src = "data:image/jpeg;base64," + imageURI;
 }
-var app = angular.module('timeT', ['ngRoute','angular-gestures','ctrl','ui.bootstrap']);
+/*! angularjs-geolocation 11-09-2013 */
+angular.module("geolocation",[]).constant("geolocation_msgs",{"errors.location.unsupportedBrowser":"Browser does not support location services","errors.location.notFound":"Unable to determine your location"}),angular.module("geolocation").factory("geolocation",["$q","$rootScope","$window","geolocation_msgs",function(a,b,c,d){return{getLocation:function(){var e=a.defer();return c.navigator&&c.navigator.geolocation?c.navigator.geolocation.getCurrentPosition(function(a){b.$apply(function(){e.resolve(a)})},function(){b.$broadcast("error",d["errors.location.notFound"]),b.$apply(function(){e.reject(d["errors.location.notFound"])})}):(b.$broadcast("error",d["errors.location.unsupportedBrowser"]),b.$apply(function(){e.reject(d["errors.location.unsupportedBrowser"])})),e.promise}}}]);
+var app = angular.module('timeT', ['ngRoute','angular-gestures','ctrl','ui.bootstrap','geolocation']);
 app.config(function ($routeProvider) {
 	$routeProvider
 		.when('/',{controller: 'start',templateUrl: 'layout/start.html'})
@@ -189,7 +191,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 							project.taskTimeId[t][id].id = id;
 							project.taskTimeId[t][id].tasks = {};
 						}
-						if(!project.taskTimeId[t][id].tasks[idt]){ project.taskTimeId[t][id].tasks[idt] = new TaskTimeId(item.task[x], item, item.task[x].hours, item.task[x].notes, idt); }
+						if(!project.taskTimeId[t][id].tasks[idt]){ project.taskTimeId[t][id].tasks[idt] = new TaskTimeId(item.task[x], item, item.task[x].hours, item.task[x].notes, idt);
+						}else{ project.taskTimeId[t][id].tasks[idt].notes = item.task[x].notes /*when we get notes from upstairs*/ }
 						saveTime('taskTimeId', project.taskTimeId);
 					}
 				}
@@ -383,7 +386,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 					for(x in project.taskTimeId[t][npId].tasks){
 						if(project.taskTimeId[t][npId].tasks[x].task_id == ta.task_id){
 							add = false;
-							$rootScope.$broadcast('addError','Task already added');
+							$rootScope.$broadcast('addError',LANG[project.lang]['Task already added']);
 						}
 					}
 					if(add === true){
@@ -424,7 +427,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 									saveTime('taskTime', project.taskTime);
 								}
 								if(add === true && noStart===false){ project.addToSync('time',t,npId,pId,tId,id); }
-								project.alert('success','Time entry synced.');
+								project.alert('success',LANG[project.lang]['Time entry synced.']);
 								project.stopLoading();
 								if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
 								else{ $location.path('/timesheet'); }
@@ -491,7 +494,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 								item.sync = 0;
 								project.expense[t][item.id] = new Expense(item);
 								saveTime('expenses', project.expense);
-								project.alert('success','Expense synced.');
+								project.alert('success',LANG[project.lang]['Expense synced.']);
 								project.stopLoading();
 								if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
 								else{ $location.path('/expenses_list'); }
@@ -540,7 +543,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 								item.sync = 0;
 								project.expense[t][item.id] = new Expense(item);
 								saveTime('expenses', project.expense);
-								project.alert('success','Expense synced.');
+								project.alert('success',LANG[project.lang]['Expense synced.']);
 								project.stopLoading();
 								if(project.selectedDate){ $location.path('/expenses_list/'+project.selectedDate); }
 								else{ $location.path('/expenses_list'); }
@@ -568,7 +571,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 					for(x in project.taskTimeId[t][pId].tasks){
 						if(project.taskTimeId[t][pId].tasks[x].task_id == ta.task_id){
 							add = false;
-							$rootScope.$broadcast('addError','Task already added');
+							$rootScope.$broadcast('addError',LANG[project.lang]['Task already added']);
 						}
 					}
 					if(add === true){
@@ -599,7 +602,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 									saveTime('taskTime', project.taskTime);
 								}
 								if(add === true && noStart === false){ project.addToSync('time',t,pId,'',tId,id); }
-								project.alert('success','Time entry synced.');
+								project.alert('success',LANG[project.lang]['Time entry synced.']);
 								project.stopLoading();
 								if(project.selectedDate){ $location.path('/timesheet/'+project.selectedDate); }
 								else{ $location.path('/timesheet'); }
@@ -666,7 +669,9 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		project.interval = $interval(rune,1000);
 		function rune(){
 			var d = Date.now();
+			var save = false;
 			for( x in project.taskTime ){
+				save = true;
 				if(JSON.stringify(project.taskTime[x]) != '{}' ){
 					var newTime = Math.floor((d-project.taskTime[x].start)/1000);
 						newTime = newTime/3600;
@@ -683,7 +688,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 					}
 				}
 			}
-			saveTime('taskTime', project.taskTime);
+			if(save == true){ saveTime('taskTime', project.taskTime);}
 		}
 		// project.addNewTask = function() { $rootScope.$broadcast('clickAdd'); };
 		project.isLoged = function(){ if(!localStorage.token || !localStorage.username){ return false; } return true; } // still a isue if not loged
@@ -756,7 +761,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 						break;
 					}
 				}else if(item.type=='expense' && !item.synced){
-					if(typeof(project.expense[item.time][item.id]['id']) == 'string'){
+					if(project.expense[item.time] && typeof(project.expense[item.time][item.id]['id']) == 'string'){
 						var prId = item.id, notes = project.expense[item.time][item.id]['note'], amount = project.expense[item.time][item.id]['amount'], picture = project.expense[item.time][item.id]['picture'], pic = '';
 						if(picture){ pic = '&picture='+picture; }
 						$http({ method: 'POST', url: url+'index.php?do=mobile--mobile-update_expense&'+key, data: '&id='+prId+'&note='+notes+'&amount='+amount+pic+'&start='+item.time, headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
@@ -770,33 +775,38 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 						});
 						break;
 					}else{
-						var prId = item.pId, notes = project.expense[item.time][item.id]['note'], amount = project.expense[item.time][item.id]['amount'], picture = project.expense[item.time][item.id]['picture'], pic = '';
-						if(picture){ pic = '&picture='+picture; }
-						if(typeof(item.pId)!='string'){ prId = ''; }
-						$http({ method: 'POST', url: url+'index.php?do=mobile--mobile-add_expense&'+key, data: '&project_id='+prId+'&customer_id='+item.cId+'&expense_id='+item.tId+'&note='+notes+'&amount='+amount+pic+'&start='+item.time, headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
-						.then(function(res){
-							if(res.data.code == 'ok'){
-								project.expense[item.time][res.data.response[0].id] = {};
-								project.expense[item.time][res.data.response[0].id].amount = amount;
-								project.expense[item.time][res.data.response[0].id].customer_id = item.cId;
-								project.expense[item.time][res.data.response[0].id].customer_name = project.expense[item.time][item.id]['customer_name'];
-								project.expense[item.time][res.data.response[0].id].expense_id = item.tId;
-								project.expense[item.time][res.data.response[0].id].expense_name = project.expense[item.time][item.id]['expense_name'];
-								project.expense[item.time][res.data.response[0].id].note = notes;
-								project.expense[item.time][res.data.response[0].id].project_id = res.data.response[0].project_id;
-								project.expense[item.time][res.data.response[0].id].project_name = project.expense[item.time][item.id]['project_name'];
-								project.expense[item.time][res.data.response[0].id].unit = project.expense[item.time][item.id]['unit'];
-								project.expense[item.time][res.data.response[0].id].unit_price = project.expense[item.time][item.id]['unit_price'];
-								project.expense[item.time][res.data.response[0].id].picture = project.expense[item.time][item.id]['picture'];
-								delete project.expense[item.time][item.id];
-								delete project.toSync[itemNr];
-								$rootScope.$broadcast('syned','expense');
-								saveTime('toSync', project.toSync);
-								saveTime('expenses', project.toSync);
-								return project.sync();
-							}else{ project.toSync[itemNr].synced = true; if(res.data.code=='error'){ project.logout(res.data); } }
-						});
-					break;
+						if(project.expense[item.time]){
+							var prId = item.pId, notes = project.expense[item.time][item.id]['note'], amount = project.expense[item.time][item.id]['amount'], picture = project.expense[item.time][item.id]['picture'], pic = '';
+							if(picture){ pic = '&picture='+picture; }
+							if(typeof(item.pId)!='string'){ prId = ''; }
+							$http({ method: 'POST', url: url+'index.php?do=mobile--mobile-add_expense&'+key, data: '&project_id='+prId+'&customer_id='+item.cId+'&expense_id='+item.tId+'&note='+notes+'&amount='+amount+pic+'&start='+item.time, headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
+							.then(function(res){
+								if(res.data.code == 'ok'){
+									project.expense[item.time][res.data.response[0].id] = {};
+									project.expense[item.time][res.data.response[0].id].amount = amount;
+									project.expense[item.time][res.data.response[0].id].customer_id = item.cId;
+									project.expense[item.time][res.data.response[0].id].customer_name = project.expense[item.time][item.id]['customer_name'];
+									project.expense[item.time][res.data.response[0].id].expense_id = item.tId;
+									project.expense[item.time][res.data.response[0].id].expense_name = project.expense[item.time][item.id]['expense_name'];
+									project.expense[item.time][res.data.response[0].id].note = notes;
+									project.expense[item.time][res.data.response[0].id].project_id = res.data.response[0].project_id;
+									project.expense[item.time][res.data.response[0].id].project_name = project.expense[item.time][item.id]['project_name'];
+									project.expense[item.time][res.data.response[0].id].unit = project.expense[item.time][item.id]['unit'];
+									project.expense[item.time][res.data.response[0].id].unit_price = project.expense[item.time][item.id]['unit_price'];
+									project.expense[item.time][res.data.response[0].id].picture = project.expense[item.time][item.id]['picture'];
+									delete project.expense[item.time][item.id];
+									delete project.toSync[itemNr];
+									$rootScope.$broadcast('syned','expense');
+									saveTime('toSync', project.toSync);
+									saveTime('expenses', project.toSync);
+									return project.sync();
+								}else{ project.toSync[itemNr].synced = true; if(res.data.code=='error'){ project.logout(res.data); } }
+							});
+						}else{
+							delete project.toSync[itemNr];
+							return project.sync();
+						}
+						break;
 					}
 				}else{ project.toSync[itemNr].synced = true; }
 			}
@@ -836,6 +846,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 ]).directive('lng',['project',function(project){
   return {
     restrict: 'A',
+    // transclude: true,
     link: function (scope,element,attrs){
       /*
       works for input type text,password and submit, div,span,p,h[1-6] basicly any kind of element that can contain text
@@ -853,6 +864,9 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
           element[0].placeholder = attrs.lng;
           if(LANG[project.lang][attrs.lng]){ element[0].placeholder = LANG[project.lang][attrs.lng]; }
         }
+      }else if(element[0].tagName == 'TEXTAREA'){
+      	element[0].placeholder = attrs.lng;
+         if(LANG[project.lang][attrs.lng]){ element[0].placeholder = LANG[project.lang][attrs.lng]; }
       }else{
         var extra = element[0].innerHTML, text = LANG[project.lang][attrs.lng] ? LANG[project.lang][attrs.lng] : attrs.lng, val = attrs.befor ? text + extra : extra + text;
         element.html(val);
@@ -876,12 +890,12 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			switch($route.current.controller){
 				case 'timesheet':
 					$scope.timesheet = false;
-					$scope.task_type = [ { title: 'Add Task for Project', url: '/lists' }, { title: 'Add Ad Hoc Task', url: '/lists_a'} ];
+					$scope.task_type = [ { title: LANG[project.lang]['Add Task for Project'], url: '/lists' }, { title: LANG[project.lang]['Add Ad Hoc Task'], url: '/lists_a'} ];
 					$scope.types = 'Task';
 					break;
 				case 'expenses_list':
 					$scope.timesheet = false;
-					$scope.task_type = [ { title: 'Add Expense for Project', url: '/lists/expense' }, {title: 'Add Ad Hoc Expense', url: '/lists_a/expense'} ];
+					$scope.task_type = [ { title: LANG[project.lang]['Add Expense for Project'], url: '/lists/expense' }, {title: LANG[project.lang]['Add Ad Hoc Expense'], url: '/lists_a/expense'} ];
 					$scope.types = 'Expense';
 					break;
 				case 'add':
@@ -942,11 +956,11 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			}
 			$scope.saveT=function(){
 				if(!$routeParams.item){
-					$rootScope.$broadcast('addError',"Please select a "+alertText[0]);
+					$rootScope.$broadcast('addError',LANG[project.lang]["Please select a "+alertText[0]]);
 					return false;
 				}
 				if(!$routeParams.taskId){
-					$rootScope.$broadcast('addError',"Please select a "+alertText[1]);
+					$rootScope.$broadcast('addError',LANG[project.lang]["Please select a "+alertText[1]]);
 					return false;
 				}
 				var notes = project.getNote();
@@ -969,7 +983,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 						// project.setDate();
 						return $scope.task_type;
 					},
-					types: function(){ return $scope.types; }
+					types: function(){ return LANG[project.lang]['Select '+$scope.types+' type']; }
 				  }
 				});
 			};
@@ -987,18 +1001,21 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		templateUrl:'layout/header.html',
 
 	}
-}]).directive('menu',function(){
+}]).directive('menu',['project',function (project){
 	return {
 		restrict: 'A',
 		controller:function($scope,$timeout,$location,$document){
 			$scope.monthDays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+			$scope.pend = true;
+			$scope.items = Object.keys(project.toSync).length;
+			if($scope.items < 1){ $scope.pend = false; }
 			var canceler;
 			$scope.snap_back = function(){
 				// vibrate.vib(100);
 				$timeout(function(){ angular.element('.cmain_menu').addClass('slide_right'); });
 				$timeout(function(){ angular.element('.main_menu').hide(); },400);
 			}
-			$scope.go = function(h){ /*vibrate.vib(100);*/ $location.path(h); }
+			$scope.go = function(h){ /*vibrate.vib(100);*/ $location.path(h); $scope.snap_back(); }
 			$scope.handleGesture = function($event){ $scope.snap_back(); }
 			$scope.name = localStorage.Tlast_name && localStorage.Tfirst_name ? localStorage.Tlast_name + ' ' + localStorage.Tfirst_name : localStorage.Tusername;
 			$scope.email = localStorage.Temail ? localStorage.Temail : '';
@@ -1011,43 +1028,11 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 					 _this.css({'left':'-35%'});
 				},100);
 			}
-			/*var element = angular.element('.daypicker_inner'), startY = 0, y = 0;
-			var helpscroller = function(){
-      	if(!y){ y = 0;}
-      	var m = y%34,d = Math.floor(y/34);
-      	if(y>0){ y = 0;}
-				else{
-					if(m>-17){d++;}
-					y=d*34;
-					if(y>0){ y = 0;}
-				}
-				if(y<(element.height()*(-1) ) ){ y = -element.height()+34; }
-				console.log(d);
-				startY = y;
-        element.finish().animate({ top: y + 'px' },200);
-        // element.find()
-			}
-			$scope.handleGesture = function($event){
-				console.log($event);
-				if($event.type == 'drag'){
-					y = $event.gesture.deltaY+startY;
-					element.css({ top: y + 'px' });
-        	if(canceler){ $timeout.cancel(canceler);}
-        	// canceler = $timeout(function(){helpscroller()},200)
-				}
-				if($event.type == 'dragend'){
-					$timeout(function(){helpscroller()})
-				}
-				if($event.type == 'swipedown' || $event.type == 'swipeup'){
-					y = $event.gesture.deltaY+startY;
-					element.css({ top: y + 'px' });
-					$timeout(function(){helpscroller()})
-				}
-			}*/
+
 		},
 		templateUrl:'layout/menu.html',
 	}
-}).directive('datepic', ['project','$route','$location','$timeout', function (project,$route,$location,$timeout){
+}]).directive('datepic', ['project','$route','$location','$timeout', function (project,$route,$location,$timeout){
 	return {
 		restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
 		templateUrl: 'layout/daypic.html',
@@ -1094,6 +1079,6 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 }]).directive('search', function (){
 	return {
 		restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
-		templateUrl: 'layout/search.html'		
+		templateUrl: 'layout/search.html'
 	};
 });

@@ -1,32 +1,18 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget
     id="eu.salesassist.timetracker"
-    version="1.4"
-    versionCode = "1030"
+    version="1.5"
+    versionCode = "1050"
     xmlns="http://www.w3.org/ns/widgets"
     xmlns:gap = "http://phonegap.com/ns/1.0"
     xmlns:android   = "http://schemas.android.com/apk/res/android"
     >
     <name>SalesAssist TimeTracker</name>
     <preference name="DisallowOverscroll" value="true" />
-    <!-- <preference name="AllowInlineMediaPlayback" value="false" />
-    <preference name="BackupWebStorage" value="cloud" />
-
-    <preference name="KeyboardDisplayRequiresUserAction" value="true" />
-    <preference name="MediaPlaybackRequiresUserAction" value="false" />
-    <preference name="SuppressesIncrementalRendering" value="false" />
-    <preference name="TopActivityIndicator" value="gray" />
-    <preference name="GapBetweenPages" value="0" />
-    <preference name="PageLength" value="0" />
-    <preference name="PaginationBreakingMode" value="page" />
-    <preference name="PaginationMode" value="unpaginated" />
-    <preference name="loglevel" value="DEBUG" />
-    <preference name="SplashScreen" value="splash" />
-    <preference name="SplashScreenDelay" value="10000" /> -->
     <preference name="LogLevel" value="ERROR"/>
     <preference name="android-minSdkVersion" value="5" />
-    <preference name="orientation" value="both" />
-    <preference name="phonegap-version" value="3.3.0" />
+    <preference name="orientation" value="portrait" />
+    <preference name="phonegap-version" value="3.5.0" />
     <preference name="fullscreen" value="true" />
     <preference name="EnableViewportScale" value="false"/>
 
@@ -56,7 +42,7 @@
 
     <gap:platform name="ios" />
     <gap:config-file platform="ios" parent="CFBundleVersion">
-        <string>30</string>
+        <string>50</string>
     </gap:config-file>
     <gap:platform name="android" />
     <description>
@@ -71,6 +57,7 @@
     <gap:plugin name="org.apache.cordova.network-information" />
     <gap:plugin name="org.apache.cordova.splashscreen" />
     <gap:plugin name="org.apache.cordova.inappbrowser" />
+    <gap:plugin name="org.apache.cordova.geolocation" version="0.3.6" />
     <content src="index.html" />
     <access origin="*" />
 </widget>

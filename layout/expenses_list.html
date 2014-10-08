@@ -1,8 +1,12 @@
 <div id="loading"></div>
 <div menu=""></div>
-<div header=""></div>
+<div header="" title="Expenses"></div>
+<div datepic=""></div>
 <div class="scroller">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+	<div class="jump" ng-show="notToday">
+		<input type="submit" class="jumpy" value="Jump to Today" lng="Jump to Today" ng-click="jumpToToday()">
+	</div>
 	<ul>
 		<li ng-repeat="expens in expense" class="projects">
 			<p class="projectName">{{expens.customer_name +' > '+expens.project_name}}</p>
@@ -18,9 +22,9 @@
 	</ul>
 	<div class="no_data" ng-hide="no_project" >
 		<div class="loginForm">
-			<p>No data to display</p>
+			<p lng="No data to display"></p>
 			<form>
-				<input type="submit" class="submit" value="Add new expense" ng-click="addNewTask()">
+				<input type="submit" class="submit" value="Add new expense" lng="Add new expense" ng-click="addNewTask()">
 			</form>
 		</div>
 	</div>

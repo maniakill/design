@@ -5,27 +5,27 @@
 <div id="page" class="scroller">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div class="jump" ng-show="notToday">
-		<input type="submit" class="jumpy" value="Jump to Today" ng-click="jumpToToday()">
+		<input type="submit" class="jumpy" value="Jump to Today" ng-click="jumpToToday()" lng="Jump to Today">
 	</div>
 	<ul>
 		<li ng-repeat="project in projects" class="projects" ng-hide="project.date">
-			<p class="projectName">{{getP(project.id)}}</p>
+			<p class="projectName">{{project.name}}</p>
 			<ul>
-				<li ng-repeat="task in project.tasks" class="taskDetail" ng-click="editTask(project.id, task.task_id, task.notes, getP(project.id), task.customer_id, task.task_time_id )" ng-hide="task.date">
+				<li ng-repeat="task in project.tasks" class="taskDetail" ng-click="editTask(project.id, task.task_id, task.notes, project.name, task.customer_id, task.task_time_id )" ng-hide="task.date">
 					<span class="right arrow"></span>
 					<div class="right hourContainer {{task.active}}">
 						<span class="clock left"></span><span class="hours left">{{showh(task.hours)}}</span>
 					</div>
-					<span class="taskName">{{getTaskName(project.id, task.task_id)}}</span>
+					<span class="taskName">{{task.task_name}}</span>
 				</li>
 			</ul>
 		</li>
 	</ul>
-	<div class="no_data" ng-hide="no_project" >
+	<div class="no_data" ng-if="!no_project" >
 		<div class="loginForm">
-			<p>No data to display</p>
+			<p lng="No data to display"></p>
 			<form>
-				<input type="submit" class="submit" value="Add new task" ng-click="addNewTask()">
+				<input type="submit" class="submit" value="Add new task" ng-click="addNewTask()" lng="Add new task">
 			</form>
 		</div>
 	</div>

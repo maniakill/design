@@ -1,9 +1,10 @@
 <div id="loading"></div>
 <div menu=""></div>
-<div header=""></div>
+<div header="" title="List"></div>
+<div search=""></div>
 <div class="scroller">
 	<ul class="lists">
-	    <li ng-repeat="task in expense" ng-click="open(projectId,task.expense_id)" class="tasks_list">
+	    <li ng-repeat="task in expense | filter:search" ng-click="open(projectId,task.expense_id)" class="tasks_list">
 	        <p>{{ task.name }}</p>
 	    </li>
 	</ul>

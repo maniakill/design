@@ -3,27 +3,10 @@
 	<div class="right cmain_menu">
 		<div class="header clearfix"><span class="left snap" ng-click="snap_back()"></span><span class="title" lng="Menu"></span></div>
 		<ul class="menu_list">
-			<!--<li class="nmenu_list"><span class="left"></span><em>{{name}}</em><em class="emenu_list">{{email}}</em><!-1-<button ng-click="logout()" lng="Logout" class="logoutBtn"></button>-1-></li>-->
 			<li class="dmenu_list" ng-click="go('timesheet')" lng="Timesheet"><span></span></li>
 			<li class="omenu_list" ng-click="go('expenses_list')" lng="Expenses"><span></span></li>
-			<li class="pmenu_list" ng-click="go('pending')" lng="Pending"><span></span></li>
+			<li class="pmenu_list" ng-click="go('pending')" ><span></span><p lng="Pending"></p> <p ng-if="pend">({{items}}</p> <p  ng-if="pend" lng="items" befor="true">)</p></li>
 			<li class="amenu_list" ng-click="go('account')" lng="Account"><span></span></li>
 		</ul>
 	</div>
-	<!--<div class="daypicker_modal">
-		<div class="daypicker_title center"><h3>Select Date</h3></div>
-		<div class="daypicker_content clearfix">
-			<div class="daypicker_holder center left">
-				<div class="daypicker_inner" hm-drag="handleGesture($event)" hm-dragend="handleGesture($event)" hm-swipe-up="handleGesture($event)" hm-swipe-down="handleGesture($event)">
-					<ul>
-						<li ng-repeat="nr in monthDays">{{nr}}</li>
-					</ul>
-				</div>
-			</div>
-			<div class="daypicker_holder center left">Aug</div>
-		</div>
-		<div class="modal-footer ng-scope">
-		  <button class="btn btn-primary" ng-click="closeDatePicker()">Cancel</button>
-		</div>
-	</div>-->
 </div>

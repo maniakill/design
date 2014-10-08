@@ -10,7 +10,7 @@
 	    </li>
 	</ul>
 	<ul class="lists" ng-hide="taskList">
-	    <li ng-repeat="task in tasks" ng-click="open(projectId,task.task_id)" class="tasks_list">
+	    <li ng-repeat="task in tasks | filter:search" ng-click="open(projectId,task.task_id)" class="tasks_list">
 	        <p>{{ task.task_name }}</p>
 	    </li>
 	</ul>

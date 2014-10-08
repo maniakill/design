@@ -25,7 +25,9 @@ a, a:hover{ text-decoration: none; }
 			.loginForm input { border: 1px solid #cccccc; padding: 12px 10px 12px 60px; width: 208px; margin: 0px; color: #000000; font-size: 17px; }
 			.loginForm input.text{ border-bottom: 0px; border-radius: 10px 10px 0 0; height: 20px; background: url("../images/loginIcons.png") no-repeat left -1px #ffffff; }
 			.loginForm input.password{ border-radius: 0 0 10px 10px; background: url("../images/loginIcons.png") no-repeat left -46px #ffffff; height: 20px; }
-			.loginForm input.submit{ border-radius: 10px; border: 1px solid #3a6884; margin: 5% 0px; width: 100%; padding: 12px 10px; font-size: 22px; color: #ffffff; background: url("../images/loginBg.png") repeat-x left top; text-shadow: 0px -1px #013a66; }
+			.loginForm input.submit{ border-radius: 10px; border: 1px solid #3a6884; margin: 5% 0px; width: 100%; padding: 12px 10px; font-size: 22px; color: #ffffff; background: #518caf; }
+			.loginForm input.saveBtn{ margin: 0 auto; }
+			.loginForm input.startBtns { margin: 0 auto 5%; }
 			.loginForm input.account { border-radius: 10px; width: 258px; margin: 5% 0px 0px; padding: 12px 10px; font-size: 17px; }
 			#forgot { text-decoration: none; color: #5d97b9; font-size: 17px; font-weight: bold; text-align: center; display: block; font-family:HelveticaLTSBold; }
 			.loginForm label { color: #666666; font-size: 17px; font-family:HelveticaLTSBold; margin-top: 15%; padding-left: 10px; }
@@ -45,11 +47,11 @@ a, a:hover{ text-decoration: none; }
 		.taskDetail{ padding: 9px 10px 8px; /*border-bottom: 1px solid #e6e6e6;*/ cursor: pointer; /*background: url('../images/line-bg.png') repeat-x left bottom;*/ }
 		/*.taskDetail:active{  background: -webkit-linear-gradient(#E6E6E6, #ffffff);  background: -o-linear-gradient(#E6E6E6, #ffffff);  background: -moz-linear-gradient(#E6E6E6, #ffffff);  background: linear-gradient(#E6E6E6, #ffffff); }*/
 			.taskDetail .taskName{ font-family:HelveticaLTSRoman; font-size: 12px; color: #666666; }
-		.arrow { background: url("../images/arrow.png") no-repeat left top; width: 10px; height: 15px; margin-top: 4px; }
+		.arrow { background: url("../images/icons.png") no-repeat 0px -138px; width: 10px; height: 15px; margin-top: 4px; }
 			.taskDetail .hourContainer{ margin-right: 15px; padding: 0px 5px 0px; height: 22px; }
 			.taskDetail .active { background: #ff9878; border-radius: 5px; }
-				.taskDetail .hourContainer .clock { background: url("../images/clock.png") no-repeat left top; width: 13px; height: 14px; margin-top: 5px; margin-right: 5px; margin-bottom: -4px; }
-				.taskDetail .active .clock { background: url("../images/clock_active.png") no-repeat left top; }
+				.taskDetail .hourContainer .clock { background: url("../images/icons.png") no-repeat -4px -548px; width: 13px; height: 14px; margin-top: 5px; margin-right: 5px; margin-bottom: -4px; }
+				.taskDetail .active .clock { background: url("../images/icons.png") no-repeat -4px -582px; }
 				.taskDetail .hourContainer .hours { font-size: 17px; color: #999999; font-family:HelveticaLTSBold; position: relative; top: 2px; }
 				.taskDetail .active .hours { color: #ffffff; }
 		.footer{ height: 49px; background: url('../images/footer-bg.png') repeat-x left top; position: fixed; bottom: 0px; width: 100%; }
@@ -72,7 +74,7 @@ a, a:hover{ text-decoration: none; }
 				.add_ul .dropdown-menu li { padding: 0; border-bottom: 0px; }
 				.add_ul li.last_li { border-bottom: 0px; padding-right: 35px; }
 				.add_ul li.notes { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-					#add_calendar{ margin-top: -1px; margin-left: -4px; margin-right: 10px; background: url('../images/calendar_add.png') left top; width: 28px; height: 28px; }
+					#add_calendar{ margin-top: -1px; margin-left: -4px; margin-right: 10px; background: url('../images/icons.png') -1px -621px; width: 28px; height: 28px; }
 						.datePicker li { color: #333333; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 10px; line-height: 20px; }
 					.square { display: inline-block; background: #c9dde9; border-radius: 5px; margin: 0px 8px -3px -3px; color: #326488; padding: 6px 10px 0px; }
 					.square_active { background: #ff9878; color: #ffffff; }
@@ -139,6 +141,7 @@ a, a:hover{ text-decoration: none; }
 .menu_list li.omenu_list span { background-position: -2px -370px;}
 .menu_list li.pmenu_list span { background-position: -2px -308px;}
 .menu_list li.amenu_list span { background-position: -2px -238px;}
+.menu_list li.pmenu_list p { display: inline-block; }
 .menu_list .nmenu_list span { background: url('../images/icons.png') no-repeat -2px -486px; padding: 16px; }
 .menu_list em {display: inline-block; width: 110px; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: nowrap; font-size: 12px; vertical-align: top  }
 .emenu_list { font-size: 12px; font-weight: normal; color: #a9a9a9; }
@@ -152,4 +155,5 @@ a, a:hover{ text-decoration: none; }
 .jump { padding: 7px 0px; text-align: center; margin: 0 auto; width: 280px; }
 .jump .jumpy { background-color: #e1e1e1; border-bottom: 1px solid #ccc; border: 1px solid #ccc; border-radius: 10px; color: #5a93b5; font-size: 16px; padding: 10px; text-shadow: 0 1px #fff; width: 100%; font-weight: bold; }
 .search { height: 42px; border-bottom: 1px solid #e6e6e6; text-align: center; }
-.search input {margin: 4px 0 0px; width: 280px; border: 1px solid #eee; padding: 8px 10px; line-height: 16px; border-radius: 7px; font-size: 16px; }
+.search input {margin: 4px 0 0px; width: 280px; border: 1px solid #bbb; padding: 5px 10px 7px; line-height: 20px; border-radius: 7px; font-size: 16px; }
+.scrollerUp { top: 58px; }
