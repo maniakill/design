@@ -95,6 +95,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		project.taskTime = localStorage.getItem('taskTime'+localStorage.username) ? JSON.parse(localStorage.getItem('taskTime'+localStorage.username)) : {};
 		project.toSync = localStorage.getItem('toSync'+localStorage.username) ? JSON.parse(localStorage.getItem('toSync'+localStorage.username)) : {};
 		project.alerts={};
+		project.synceded = true;
+		project.menuUpdate = undefined;
 		}
 		init();
 		var saveTime = function(type, item){
@@ -637,22 +639,35 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		}
 		project.stop = function(item, time, redirect){
 			var connect = checkConnection();
+			item.active = '';
+			saveTime('taskTimeId', project.taskTimeId);
+			delete project.taskTime[item.task_time_id];
+			saveTime('taskTime', project.taskTime);
 			if(connect != 'none' && connect !='unknown'){
+				project.loading();
 				var sendItem = {};
 				sendItem.task_time_id = item.task_time_id;
 				sendItem.hours = item.hours;
 				sendItem.notes = item.notes;
 				$http({ method: 'POST', url: url+'index.php?do=mobile--mobile-save_time&'+key+'&overwrite=1', data: 'task_time=' + JSON.stringify(Array(sendItem)), headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
-				.then(function(res){ if(res.data.code=='error'){ project.logout(res.data); } },
-							function(){ project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id); });
+				.then(function(res){
+								project.stopLoading();
+								if(res.data.code=='error'){ project.logout(res.data); }else{
+									if(project.toSync[item.task_time_id+'time']){
+									  delete project.toSync[item.task_time_id+'time'];
+									}
+									if(!redirect){ $location.path('/timesheet/'+time); }
+								}
+					 		},
+						  function(){
+						  	project.stopLoading();
+						  	project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
+						  	if(!redirect){ $location.path('/timesheet/'+time); }
+						  });
 			}else{
 				project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
+				if(!redirect){ $location.path('/timesheet/'+time); }
 			}
-			item.active = '';
-			saveTime('taskTimeId', project.taskTimeId);
-			delete project.taskTime[item.task_time_id];
-			saveTime('taskTime', project.taskTime);
-			if(!redirect){ $location.path('/timesheet/'+time); }
 		}
 		project.start = function(item, time){
 			// project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
@@ -667,9 +682,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 				$http({ method: 'POST', url: url+'index.php?do=mobile--mobile-save_time&'+key+'&overwrite=1', data: 'task_time=' + JSON.stringify(Array(sendItem)), headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
 				.then(function(res){ if(res.data.code=='error'){ project.logout(res.data); } },
 							function(){ project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id); });
-			}else{
-				project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
 			}
+			project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
 			saveTime('taskTimeId', project.taskTimeId);
 			var d = Date.now();
 			var newd = d-item.hours*3600*1000;
@@ -724,11 +738,18 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 				}
 			}
 			if(save == true){ saveTime('taskTime', project.taskTime);}
+			var connect = checkConnection();
+			if(connect != 'none' && connect !='unknown' && project.synceded){ project.synceded = false; project.sync(true); }
 		}
+		$rootScope.$on('finished', function(arg) {
+			for(x in project.toSync){ project.toSync[x].synced = false; }
+			project.saveStuff('toSync',project.toSync);
+			project.synceded = true;
+		});
 		// project.addNewTask = function() { $rootScope.$broadcast('clickAdd'); };
 		project.isLoged = function(){ if(!localStorage.token || !localStorage.username){ return false; } return true; } // still a isue if not loged
 		// syncronization function zhe shiit!
-		project.sync = function(){
+		project.sync = function(condition){
 			for(x in project.toSync){
 				var item = project.toSync[x], itemNr = x;
 				if(item.type == 'time' && !item.synced){
@@ -845,7 +866,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 					}
 				}else{ project.toSync[itemNr].synced = true; }
 			}
-			$rootScope.$broadcast('finish');
+			if(condition){$rootScope.$broadcast('finished');}else{$rootScope.$broadcast('finish');}
 		}
 		project.addToSync = function(type,time,pId,cId,tId,id){
 			if(!project.toSync[id+type]){
@@ -1039,7 +1060,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 }]).directive('menu',['project',function (project){
 	return {
 		restrict: 'A',
-		controller:function($scope,$timeout,$location,$document){
+		controller:function($scope,$timeout,$location,$document,$rootScope,$interval){
 			$scope.monthDays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
 			$scope.pend = true;
 			$scope.items = Object.keys(project.toSync).length;
@@ -1063,6 +1084,21 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 					 _this.css({'left':'-35%'});
 				},100);
 			}
+			$scope.doThis = function(){
+				if ( angular.isDefined(project.menuUpdate) ) return;
+				project.menuUpdate = $interval(rune,1000);
+			}();
+			function rune(){
+				$scope.pend = true;
+				$scope.items = Object.keys(project.toSync).length;
+				if($scope.items < 1){ $scope.pend = false; }
+			}
+		 	$scope.$on('$destroy', function() {
+	      if (angular.isDefined(project.menuUpdate)) {
+	        $interval.cancel(project.menuUpdate);
+	        project.menuUpdate = undefined;
+	      }
+	    });
 
 		},
 		templateUrl:'layout/menu.html',
