@@ -290,9 +290,11 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
 		$scope.open = function(url){
 			switch(url){
 				case 'capturePhoto()':
+				alert('capturePhoto');
 					capturePhoto();
 					break;
 				case 'getPhoto(pictureSource.PHOTOLIBRARY)':
+				alert('getPhoto');
 					getPhoto(pictureSource.PHOTOLIBRARY);
 					break;
 			}
