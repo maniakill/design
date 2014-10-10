@@ -277,6 +277,7 @@ ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
 // task_type
 ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'types',
 	function ($scope, $modalInstance, items, $location, types) {
+		console.log('task_type');
 		$scope.items = items;
 		$scope.types = types;
 		$scope.open = function(url){ $location.path(url); $scope.cancel(); }
@@ -285,18 +286,16 @@ ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'ty
 ]);
 ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 'types',
 	function ($scope, $modalInstance, items, $location, types) {
+		console.log('task_type1');
 		$scope.items = items;
 		$scope.types = types;
 		$scope.open = function(url){
-			alert(url);
 			switch(url){
 				case 'capturePhoto()':
-				alert('capturePhoto');
-					// capturePhoto();
+					capturePhoto();
 					break;
 				case 'getPhoto(pictureSource.PHOTOLIBRARY)':
-				alert('getPhoto');
-					// getPhoto(pictureSource.PHOTOLIBRARY);
+					getPhoto(pictureSource.PHOTOLIBRARY);
 					break;
 			}
 			$scope.cancel();
@@ -840,6 +839,7 @@ ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$
 			$timeout(function(){ $scope.closeAlert(0); },3000);
 		}
 		project.closeAlert();
+		$scope.$on('closeDatepicker', function(arg) { $scope.opened = false; });
 		$timeout(function(){
 			project.getExpenses(time).then(function(){
 				$scope.no_project = true;

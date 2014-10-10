@@ -1052,9 +1052,8 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.position'])
         refill( true );
       };
 
-      scope.select = function( date ) {console.log(mode);
+      scope.select = function( date ) {
         if ( mode === 0 ) {
-
           var dt = ngModel.$modelValue ? new Date( ngModel.$modelValue ) : new Date(0, 0, 0, 0, 0, 0, 0);
           var timed = date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
           dt.setFullYear( date.getFullYear(), date.getMonth(), date.getDate() );

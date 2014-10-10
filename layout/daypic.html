@@ -2,7 +2,6 @@
 	<span class="right arrow" ng-click="goToDay(true)"></span>
 	<span class="left arrow" ng-click="goToDay(false)"></span>
 	<span class="day" ng-click="selectDate()">{{getDate()}}</span>
-	<!-- <input ng-hide="timesheet" type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dt" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan" disabled="disabled" /> -->
 	<div class="allTheWay" ng-show="opened">
 		<datepicker ng-model="dt" min-date="minDate" show-weeks="false" class="well well-sm " ></datepicker>
 	</div>

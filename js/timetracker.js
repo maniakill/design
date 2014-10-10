@@ -932,17 +932,10 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 }]).directive('header',['project','$timeout','$routeParams','$location','$route','$modal','$rootScope',function (project,$timeout,$routeParams,$location,$route,$modal,$rootScope){
 	return {
 		restrict: 'A',
+		scope: {},
 		link: function($scope, iElm, iAttrs, controller) {
 			$scope.title = iAttrs.title;
-			var link = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('expensea') > 0 ? '/expenses_a/' : '/expenses/') : ( $route.current.originalPath.search('Notea') > 0 ? '/add_a/' : '/add/'),
-					link2 = $route.current.originalPath.search('expense') > 0 ? '/expenses_list' : '/timesheet',
-					note = $route.current.originalPath.search('Amount') > 0 ? false : true,
-					type = $route.current.originalPath.search('expense') > 0 ? ($route.current.originalPath.search('_a') > 0 ? 'expenses_a' : 'expenses') : ( $route.current.originalPath.search('_a') > 0 ? 'add_a' : ''),
-					alertText = ['project','task'];
 			$scope.timesheet = true;
-			$scope.add_page = true;
-			$scope.add_note = true;
-			$scope.save_time = true;
 			switch($route.current.controller){
 				case 'timesheet':
 					$scope.timesheet = false;
@@ -954,77 +947,6 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 					$scope.task_type = [ { title: LANG[project.lang]['Add Expense for Project'], url: '/lists/expense' }, {title: LANG[project.lang]['Add Ad Hoc Expense'], url: '/lists_a/expense'} ];
 					$scope.types = 'Expense';
 					break;
-				case 'add':
-				case 'add_a':
-					$scope.add_page = false;
-					$scope.save_time = false;
-					break;
-				case 'lists':
-				case 'lists_a':
-				case 'lists_e':
-					$scope.add_page = false;
-					break;
-				case 'expenses':
-					$scope.add_page = false;
-					alertText = ['project','expense'];
-					break;
-				case 'addNote':
-				case 'addAmount':
-					$scope.add_note = false;
-					break;
-				case 'account':
-				case 'pending':
-					$scope.timesheet = true;
-					$scope.add_page = true;
-					$scope.add_note = true;
-					break;
-				default:
-					$scope.timesheet = false;
-					break;
-			}
-			$scope.today = function() {
-				if($routeParams.y && $routeParams.m && $routeParams.d){ $scope.dt = new Date($routeParams.y, $routeParams.m-1, $routeParams.d); }
-				else if(project.Date){ $scope.dt = project.Date; }
-				else{ $scope.dt = new Date(); }
-			};
-			$scope.today();
-			// $scope.open = function() { $timeout(function() { $scope.opened = true; }); };
-			// $scope.dateOptions = { 'year-format': "'yy'", 'starting-day': 1 };
-			$scope.times = function(){
-				var url = link2;
-				if($route.current.controller=='lists_e'){ url='expenses_list'; }
-				if($routeParams.y && $routeParams.m && $routeParams.d){ url += '/'+ $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y; }
-				$location.path(url);
-			}
-			$scope.addpage = function(write){
-				if(write){
-					if($scope.notes){ project.setNote($scope.notes); }
-					if($scope.amount){ project.setAmount($scope.amount); }
-				}
-				var url = link+$routeParams.pId;
-				if($routeParams.tId){ url += '/'+$routeParams.tId; }
-				if($routeParams.taskTimeId){
-					if($routeParams.projectId){ url += '/'+$routeParams.projectId; }
-					url += '/'+ $routeParams.taskTimeId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y;
-				}
-				if($routeParams.expId){ url += '/'+$routeParams.expId +'/'+ $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y; }
-				$location.path(url);
-			}
-			$scope.saveT=function(){
-				if(!$routeParams.item){
-					$rootScope.$broadcast('addError',LANG[project.lang]["Please select a "+alertText[0]]);
-					return false;
-				}
-				if(!$routeParams.taskId){
-					$rootScope.$broadcast('addError',LANG[project.lang]["Please select a "+alertText[1]]);
-					return false;
-				}
-				var notes = project.getNote();
-				if($routeParams.taskTimeId){
-					$rootScope.$broadcast('changed');
-					var time = $routeParams.d+'/'+$routeParams.m+'/'+$routeParams.y, item=project.taskTimeId[time][$scope.projectId].tasks[$routeParams.taskTimeId];
-					project.update(item,time,$scope);
-				}else{ project.save(type,$routeParams.item,$routeParams.taskId,$scope.notes,true); }
 			}
 			/*modal*/
 			$scope.add = function () {
@@ -1103,11 +1025,17 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		},
 		templateUrl:'layout/menu.html',
 	}
-}]).directive('datepic', ['project','$route','$location','$timeout', function (project,$route,$location,$timeout){
+}]).directive('datepic', ['project','$route','$location','$timeout','$routeParams', function (project,$route,$location,$timeout,$routeParams){
 	return {
 		restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
 		templateUrl: 'layout/daypic.html',
 		link: function($scope, iElm, iAttrs, controller) {
+			$scope.today = function() {
+				if($routeParams.y && $routeParams.m && $routeParams.d){ $scope.dt = new Date($routeParams.y, $routeParams.m-1, $routeParams.d); }
+				else if(project.Date){ $scope.dt = project.Date; }
+				else{ $scope.dt = new Date(); }
+			};
+			$scope.today();
 			var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 			$scope.getDate = function(){
 				if(!$scope.dt){ $scope.dt = new Date(); }
@@ -1136,13 +1064,6 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 				$scope.opened = !$scope.opened;
 				return false;
 				// vibrate.vib(100);
-				angular.element('.main_menu').show(0,function(){
-					var _this = angular.element('.cmain_menu');
-					 _this.css({'left':'-100%'});
-					// var _this = angular.element('.cmain_menu'), width = _this.outerWidth();
-					// _this.removeClass('slide_right slide_left').css({'left':'-'+width+'px'});
-					// $timeout(function(){ _this.addClass('slide_left'); });
-				});
 			}
 
 		}
