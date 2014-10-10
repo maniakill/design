@@ -1063,8 +1063,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		controller:function($scope,$timeout,$location,$document,$rootScope,$interval){
 			$scope.monthDays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
 			$scope.pend = true;
-			$scope.items = Object.keys(project.toSync).length;
-			if($scope.items < 1){ $scope.pend = false; }
+			$scope.itemsP = Object.keys(project.toSync).length;
+			if($scope.itemsP < 1){ $scope.pend = false; }
 			var canceler;
 			$scope.snap_back = function(){
 				// vibrate.vib(100);
@@ -1090,8 +1090,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			}();
 			function rune(){
 				$scope.pend = true;
-				$scope.items = Object.keys(project.toSync).length;
-				if($scope.items < 1){ $scope.pend = false; }
+				$scope.itemsP = Object.keys(project.toSync).length;
+				if($scope.itemsP < 1){ $scope.pend = false; }
 			}
 		 	$scope.$on('$destroy', function() {
 	      if (angular.isDefined(project.menuUpdate)) {

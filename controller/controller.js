@@ -291,11 +291,11 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
 			switch(url){
 				case 'capturePhoto()':
 				alert('capturePhoto');
-					capturePhoto();
+					// capturePhoto();
 					break;
 				case 'getPhoto(pictureSource.PHOTOLIBRARY)':
 				alert('getPhoto');
-					getPhoto(pictureSource.PHOTOLIBRARY);
+					// getPhoto(pictureSource.PHOTOLIBRARY);
 					break;
 			}
 			$scope.cancel();
@@ -334,7 +334,7 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
 					if(typeof(results.response[0].projects) == 'object'){ $scope.items = fixList(noAdHocP($scope.projs)); }
 					project.stopLoading();
 				},function(){ project.stopLoading(); });
-			})
+			});
 		}
 		$scope.open = function (pId,tId){
 			if(tId){ $location.path(link+pId+'/'+tId); }
