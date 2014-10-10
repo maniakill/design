@@ -288,6 +288,7 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
 		$scope.items = items;
 		$scope.types = types;
 		$scope.open = function(url){
+			alert(url);
 			switch(url){
 				case 'capturePhoto()':
 				alert('capturePhoto');
