@@ -1,12 +1,12 @@
 <div class="main_menu"  hm-swipe-right="handleGesture($event)">
 	<div class="omain_menu" hm-tap="handleGesture($event)"></div>
 	<div class="right cmain_menu">
-		<div class="header clearfix"><span class="left snap" ng-click="snap_back()"></span><span class="title" lng="Menu"></span></div>
+		<div class="header clearfix"><span class="left snap" hm-tap="snap_back()"></span><span class="title" lng="Menu"></span></div>
 		<ul class="menu_list">
-			<li class="dmenu_list" ng-click="go('timesheet')" lng="Timesheet"><span></span></li>
-			<li class="omenu_list" ng-click="go('expenses_list')" lng="Expenses"><span></span></li>
-			<li class="pmenu_list" ng-click="go('pending')" ><span></span><p lng="Pending"></p> <p ng-if="pend">({{itemsP}}</p> <p  ng-if="pend" lng="items" befor="true">)</p></li>
-			<li class="amenu_list" ng-click="go('account')" lng="Account"><span></span></li>
+			<li class="dmenu_list" hm-tap="go('timesheet')" lng="Timesheet"><span></span></li>
+			<li class="omenu_list" hm-tap="go('expenses_list')" lng="Expenses"><span></span></li>
+			<li class="pmenu_list" hm-tap="go('pending')" ><span></span><p lng="Pending"></p> <p ng-if="pend">({{itemsP}}</p> <p  ng-if="pend" lng="items" befor="true">)</p></li>
+			<li class="amenu_list" hm-tap="go('account')" lng="Account"><span></span></li>
 		</ul>
 	</div>
 </div>

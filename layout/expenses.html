@@ -8,25 +8,25 @@
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div class="loginForm">
 		<form>
-			<input type="submit" class="submit startBtns" value="Save" lng="Save" ng-click="save()">
+			<input type="submit" class="submit startBtns" value="Save" lng="Save" hm-tap="save()">
 		</form>
 	</div>
 	<ul class="add_ul">
-		<li><a herf="#" ng-click="open()" id="add_calendar" class="left"></a>
+		<li><a herf="#" hm-tap="open()" id="add_calendar" class="left"></a>
 			<span>{{getDates()}}</span>
 		<!-- <input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/> -->
 		</li>
 		<li>{{project}}</li>
-		<li ng-click="selectExpense(projectId)">{{customer}}<span class="arrow abs" ></span></li>
-		<li class="notes" ng-click="addNote(projectId,taskId)">{{notes2}}<span class="arrow abs" ></span></li>
-		<li class="notes" ng-click="addAmount(projectId,taskId)">{{amount}}<span class="arrow abs" ></span></li>
-		<li class="last_li" ng-click="selectTask(projectId)"><img id="smallImage" style="{{displayIt}}" src="{{img}}" />{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
+		<li hm-tap="selectExpense(projectId)">{{customer}}<span class="arrow abs" ></span></li>
+		<li class="notes" hm-tap="addNote(projectId,taskId)">{{notes2}}<span class="arrow abs" ></span></li>
+		<li class="notes" hm-tap="addAmount(projectId,taskId)">{{amount}}<span class="arrow abs" ></span></li>
+		<li class="last_li" hm-tap="selectTask(projectId)"><img id="smallImage" style="{{displayIt}}" src="{{img}}" />{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
 	</ul>
 </div>
 <div class="textWrap scroller scrollerUp" ng-show="show_amount">
 	<div class="loginForm">
 		<form>
-			<input type="submit" class="submit startBtns" value="Save" lng="Save" ng-click="saveAmount()">
+			<input type="submit" class="submit startBtns" value="Save" lng="Save" hm-tap="saveAmount()">
 		</form>
 	</div>
 	<form id="form1">
@@ -36,7 +36,7 @@
 <div class="textWrap scroller scrollerUp" ng-show="show_note">
 	<div class="loginForm">
 		<form>
-			<input type="submit" class="submit startBtns" value="Save" ng-click="saveNote()">
+			<input type="submit" class="submit startBtns" value="Save" hm-tap="saveNote()">
 		</form>
 	</div>
 	<textarea class="noteText form-control" ng-model="notes" id="ddd" rows="8" lng="Add note">{{notes}}</textarea>

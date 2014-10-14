@@ -4,10 +4,10 @@
 <div class="modal-body center">
     <ul>
         <li ng-repeat="item in items">
-            <a ng-click="open(item.url)" class="select_type">{{ item.title }}</a>
+            <a hm-tap="open(item.url)" class="select_type">{{ item.title }}</a>
         </li>
     </ul>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="cancel()" lng="Cancel"></button>
+    <button class="btn btn-primary" hm-tap="cancel()" lng="Cancel"></button>
 </div>

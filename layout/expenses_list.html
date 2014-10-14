@@ -5,13 +5,13 @@
 <div class="scroller">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div class="jump" ng-show="notToday">
-		<input type="submit" class="jumpy" value="Jump to Today" lng="Jump to Today" ng-click="jumpToToday()">
+		<input type="submit" class="jumpy" value="Jump to Today" lng="Jump to Today" hm-tap="jumpToToday()">
 	</div>
 	<ul>
 		<li ng-repeat="expens in expense" class="projects">
 			<p class="projectName">{{expens.customer_name +' > '+expens.project_name}}</p>
 			<ul>
-				<li class="taskDetail" ng-click="editTask(expens.project_id,expens.expense_id,expens.project_name,expens.customer_id,expens.id)">
+				<li class="taskDetail" hm-tap="editTask(expens.project_id,expens.expense_id,expens.project_name,expens.customer_id,expens.id)">
 					<div class="right hourContainer ">
 						<span class="hours left">{{expens.amount}}</span>
 					</div>
@@ -24,7 +24,7 @@
 		<div class="loginForm">
 			<p lng="No data to display"></p>
 			<form>
-				<input type="submit" class="submit" value="Add new expense" lng="Add new expense" ng-click="addNewTask()">
+				<input type="submit" class="submit" value="Add new expense" lng="Add new expense" hm-tap="addNewTask()">
 			</form>
 		</div>
 	</div>

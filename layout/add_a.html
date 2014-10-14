@@ -8,7 +8,7 @@
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div class="loginForm">
 		<form>
-			<input type="submit" class="submit saveBtn" value="Save" lng="Save" ng-click="save(true)">
+			<input type="submit" class="submit saveBtn" value="Save" lng="Save" hm-tap="save(true)">
 		</form>
 	</div>
 	<div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:300px">
@@ -16,26 +16,26 @@
 	</div>
 	<div class="loginForm">
 		<form>
-			<input ng-hide="mode" type="submit" class="submit startBtns" value="Start" lng="Start" ng-click="save()">
-			<input ng-show="mode" type="submit" class="submit startBtns" value="Stop" lng="Stop" ng-click="stop()">
+			<input ng-hide="mode" type="submit" class="submit startBtns" value="Start" lng="Start" hm-tap="save()">
+			<input ng-show="mode" type="submit" class="submit startBtns" value="Stop" lng="Stop" hm-tap="stop()">
 		</form>
 	</div>
 	<ul class="add_ul">
-		<li class="datePicker"><a herf="#" ng-click="open()" id="add_calendar" class="left"></a>
+		<li class="datePicker"><a herf="#" hm-tap="open()" id="add_calendar" class="left"></a>
 				<span>{{getDates()}}</span>
 		<!-- <input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/> -->
 	</li>
 		<li>{{customer}}</li>
-		<li class="last_li" ng-click="selectTask(customerId)">{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
+		<li class="last_li" hm-tap="selectTask(customerId)">{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
 	</ul>
 	<ul class="add_ul add_note">
-		<li class="last_li notes" ng-click="addNote(customerId,taskId)">{{notes2}}<span class="arrow abs" ></span></li>
+		<li class="last_li notes" hm-tap="addNote(customerId,taskId)">{{notes2}}<span class="arrow abs" ></span></li>
 	</ul>
 </div>
 <div class="textWrap scroller scrollerUp" ng-show="show_amount">
 	<div class="loginForm">
 		<form>
-			<input type="submit" class="submit startBtns" value="Save" lng="Save" ng-click="saveNote()">
+			<input type="submit" class="submit startBtns" value="Save" lng="Save" hm-tap="saveNote()">
 		</form>
 	</div>
 	<textarea class="noteText form-control" ng-model="notes" rows="8" id="ddd" lng="Add note">{{notes}}</textarea>

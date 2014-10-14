@@ -1,7 +1,7 @@
 <div class="daypic">
-	<span class="right arrow" ng-click="goToDay(true)"></span>
-	<span class="left arrow" ng-click="goToDay(false)"></span>
-	<span class="day" ng-click="selectDate()">{{getDate()}}</span>
+	<span class="right arrow" hm-tap="goToDay(true)"></span>
+	<span class="left arrow" hm-tap="goToDay(false)"></span>
+	<span class="day" hm-tap="selectDate()">{{getDate()}}</span>
 	<div class="allTheWay" ng-show="opened">
 		<datepicker ng-model="dt" min-date="minDate" show-weeks="false" class="well well-sm " ></datepicker>
 	</div>

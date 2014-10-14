@@ -257,6 +257,10 @@ ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
 		}
 		$scope.stop = function(){ project.stop(item,$scope.time2); }
 		$scope.changed = function () {
+			if($scope.mytime == null){
+				$scope.mytime = new Date();
+				$scope.mytime.setHours(0);$scope.mytime.setMinutes(0);
+			}
 			var hours = $scope.mytime.getHours(), minutes = $scope.mytime.getMinutes(), t = hours + minutes/60;
 			project.setHours(t);
 		};
@@ -785,6 +789,10 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 		}
 		$scope.stop = function(){ project.stop(item,$scope.time2); }
 		$scope.changed = function () {
+			if($scope.mytime == null){
+				$scope.mytime = new Date();
+				$scope.mytime.setHours(0);$scope.mytime.setMinutes(0);
+			}
 			var hours = $scope.mytime.getHours(), minutes = $scope.mytime.getMinutes(), t = hours + minutes/60;
 			project.setHours(t);
 		};

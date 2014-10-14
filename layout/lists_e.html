@@ -4,7 +4,7 @@
 <div search=""></div>
 <div class="scroller">
 	<ul class="lists">
-	    <li ng-repeat="task in expense | filter:search" ng-click="open(projectId,task.expense_id)" class="tasks_list">
+	    <li ng-repeat="task in expense | filter:search" hm-tap="open(projectId,task.expense_id)" class="tasks_list">
 	        <p>{{ task.name }}</p>
 	    </li>
 	</ul>

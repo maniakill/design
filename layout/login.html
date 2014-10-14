@@ -7,9 +7,9 @@
 	<form>
 		<input type="text" name="username" value="" maxlenght="50" class="text" lng="Username" ng-model="username" autocomplete="OFF" autocapitalize="off" autocorrect="off" />
 		<input type="password" name="password" value="" maxlenght="50" class="password" lng="Password" ng-model="password" autocomplete="OFF" autocapitalize="off" autocorrect="off" />
-		<input type="submit" class="submit" value="Login" ng-click="fetch()" lng="Log In">
+		<input type="submit" class="submit" value="Login" hm-tap="fetch()" lng="Log In">
 	</form>
 	<div>
-		<a id="forgot" ng-click="openInBrowser()" lng="Can't access your account" befor="true">?</a>
+		<a id="forgot" hm-tap="openInBrowser()" lng="Can't access your account" befor="true">?</a>
 	</div>
 </div>
