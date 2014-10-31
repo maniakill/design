@@ -441,7 +441,7 @@ LANG[3]={
 	'Please select a amount':'Veuillez sélectionner un montant',
 	'No items to synchronize.':'Aucun élément à synchroniser.',
 	'No internet access. Please connect to the internet and then use the sync button.':'Pas d\'accès internet. Connectez-vous à Internet, ensuite faites la synchronisation.',
-	'Time entry synced.':'Inscription du temps synchronisée.',
+	'Time entry synced.':'Enregistrement du temps synchronisée.',
 	'Task already added':'Tâche déjà ajoutée',
 	'Expense synced.':'Dépense synchronisée.',
 	'items':'eléments'
