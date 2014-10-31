@@ -938,7 +938,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		restrict: 'A',
 		scope: {},
 		link: function($scope, iElm, iAttrs, controller) {
-			$scope.title = iAttrs.title;
+			$scope.title = LANG[project.lang][iAttrs.title];
 			$scope.timesheet = true;
 			switch($route.current.controller){
 				case 'timesheet':
