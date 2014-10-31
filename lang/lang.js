@@ -418,7 +418,7 @@ LANG[3]={
 	'Account':'Compte',
 	'Time entry':'Inscription du temps',
 	'Start':'Démarrer',
-	'Stop':'Arrête',
+	'Stop':'Arrêter',
 	'Add note':'Ajouter une note',
 	'List':'Liste',
 	'Add new expense':'Ajouter Note de Frais',
