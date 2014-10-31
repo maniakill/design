@@ -12,7 +12,7 @@
     <preference name="LogLevel" value="ERROR"/>
     <preference name="android-minSdkVersion" value="5" />
     <preference name="orientation" value="portrait" />
-    <preference name="phonegap-version" value="3.5.0" />
+    <preference name="phonegap-version" value="3.6.3" />
     <preference name="fullscreen" value="true" />
     <preference name="EnableViewportScale" value="false"/>
     <preference name="CameraUsesGeolocation" value="false" />
