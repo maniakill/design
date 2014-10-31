@@ -344,6 +344,10 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
 			if(tId){ $location.path(link+pId+'/'+tId); }
 			else{ project.savescope(); $location.path(link+pId); }
 		}
+		$scope.open2 = function (pId){
+			var l =  $route.current.originalPath == '/lists/expense/' ? 'lists_e' : $location.path();			
+			$location.path(l+'/'+pId);
+		}
 		function noAdHocP(p){
 			var ps = {};
 			if(p){ for(x in p){ if(p[x].project_name != 'ad hoc'){ ps[x] = p[x]; } } }
@@ -379,6 +383,10 @@ ctrl.controller('lists_a',['$scope','$http','$location','project','$routeParams'
 			$timeout(function(){project.getCustomerList().then(function(){
 				$scope.items = fixList(project.customers);
 			});});
+		}
+		$scope.open2 = function (pId){
+			var l = $route.current.originalPath == '/lists_a/expense/' ? 'lists_ea' : $location.path();
+			$location.path(l+'/'+pId);
 		}
 		$scope.open = function (pId,tId){
 			if(tId){ $location.path(link+pId+'/'+tId); }

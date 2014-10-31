@@ -29,8 +29,11 @@ a, a:hover{ text-decoration: none; }
 			.loginForm input.saveBtn{ margin: 0 auto; }
 			.loginForm input.startBtns { margin: 0 auto 5%; }
 			.loginForm input.account { border-radius: 10px; width: 258px; margin: 5% 0px 0px; padding: 12px 10px; font-size: 17px; }
-			#forgot { text-decoration: none; color: #5d97b9; font-size: 17px; font-weight: bold; text-align: center; display: block; font-family:HelveticaLTSBold; }
+			#forgot { text-decoration: none; color: #5d97b9; font-size: 17px; text-align: center; display: block; font-family:HelveticaLTSBold; text-shadow: 0 1px #fff; }
 			.loginForm label { color: #666666; font-size: 17px; font-family:HelveticaLTSBold; margin-top: 15%; padding-left: 10px; }
+			.half_btn input.submit { width: 135px; float: left; margin-right: 10px; }
+			.half_btn input.btnright { float: right; margin: 0px; }
+			.half_btn input.startBtns { margin: 0 auto 5%; }
 		.header {  background: #5d97b9; min-height: 31px; padding: 19px 6px 6px; border-bottom: 1px solid #1d4461; border-top: 1px solid #8bb9d3; box-shadow: 0px 2px 4px 0px #8bb9d3; position: relative;
 			background: -webkit-linear-gradient(#5d97b9, #3070a0); /* For Safari 5.1 to 6.0 */
   		background: -o-linear-gradient(#5d97b9, #3070a0); /* For Opera 11.1 to 12.0 */
@@ -157,3 +160,8 @@ a, a:hover{ text-decoration: none; }
 .search { height: 42px; border-bottom: 1px solid #e6e6e6; text-align: center; }
 .search input {margin: 4px 0 0px; width: 280px; border: 1px solid #bbb; padding: 5px 10px 7px; line-height: 20px; border-radius: 7px; font-size: 16px; }
 .scrollerUp { top: 58px; }
+.loginFormNew {  background: none repeat scroll 0 0 #f5f9fa; border: 1px solid #cee0ea; border-radius: 5px; left: 50%; margin: -172px 0 0 -160px; padding: 20px; position: absolute; top: 50%; width: 280px; }
+.loginFormNew input{ color: #4d4d4d; font-family: arial,helvetica; font-size: 18px; margin-top: 20px; padding: 10px; width: 233px; }
+.loginFormNew input.text { border: 1px solid #9dabb3; border-radius: 5px; padding-left: 35px; background: url('../images/icons.png') no-repeat 7px -699px #fff; }
+.loginFormNew input.password { border: 1px solid #9dabb3; border-radius: 5px; padding-left: 35px; background: url('../images/icons.png') no-repeat 7px -733px #fff; }
+.loginFormNew input.submit:active,.loginFormNew input.submit { background: #66b34e; color: #fff; font-weight: bold; border: hidden; border-bottom: 2px solid #539b3d; width: 280px; padding: 10px; font-size: 18px; }

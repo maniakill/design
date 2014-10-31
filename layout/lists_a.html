@@ -4,12 +4,12 @@
 <div search=""></div>
 <div class="scroller">
 	<ul class="lists" ng-hide="projectList" >
-	    <li ng-repeat="item in items | filter:search" hm-tap="open(item.customer_id)" class="tasks_list">
+	    <li ng-repeat="item in items | filter:search track by $index" hm-tap="open2(item.customer_id)" class="tasks_list">
 	        <p>{{ item.customer_name }}</p>
 	    </li>
 	</ul>
 	<ul class="lists" ng-hide="taskList">
-	    <li ng-repeat="task in tasks | filter:search" hm-tap="open(customerId,task.id)" class="tasks_list">
+	    <li ng-repeat="task in tasks | filter:search track by $index" hm-tap="open(customerId,task.id)" class="tasks_list">
 	        <p>{{ task.name }}</p>
 	    </li>
 	</ul>

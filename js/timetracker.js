@@ -38,6 +38,7 @@ app.config(function ($routeProvider) {
 		.when('/expenses_list/:d/:m/:y',{controller: 'expenses_list',templateUrl: 'layout/expenses_list.html'})
 		.when('/lists',{controller: 'lists',templateUrl: 'layout/lists.html'})
 		.when('/lists/expense/',{controller: 'lists',templateUrl: 'layout/lists.html'})
+		.when('/lists/expense/:projectId',{controller: 'lists',templateUrl: 'layout/lists.html'})
 		.when('/lists/:projectId',{controller: 'lists',templateUrl: 'layout/lists.html'})
 		.when('/lists_a',{controller: 'lists_a',templateUrl: 'layout/lists_a.html'})
 		.when('/lists_a/expense/',{controller: 'lists_a',templateUrl: 'layout/lists_a.html'})
@@ -195,7 +196,10 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 							project.taskTimeId[t][id].tasks = {};
 						}
 						if(!project.taskTimeId[t][id].tasks[idt]){ project.taskTimeId[t][id].tasks[idt] = new TaskTimeId(item.task[x], item, item.task[x].hours, item.task[x].notes, idt);
-						}else{ project.taskTimeId[t][id].tasks[idt].notes = item.task[x].notes /*when we get notes from upstairs*/ }
+						}else{ 
+							project.taskTimeId[t][id].tasks[idt].notes = item.task[x].notes /*when we get notes from upstairs*/ 
+							project.taskTimeId[t][id].tasks[idt].hours = item.task[x].hours /*when we get hours from upstairs*/ 
+						}
 						saveTime('taskTimeId', project.taskTimeId);
 					}
 				}

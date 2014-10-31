@@ -3644,11 +3644,11 @@ angular.module("template/timepicker/timepicker.html", []).run(["$templateCache",
     "	<tbody>\n" +
     "		<tr>\n" +
     "			<td style=\"font-size: 110px; color: #898989;\" class=\"form-group\" ng-class=\"{'has-error': invalidHours}\">\n" +
-    "				<input onclick=\"this.select()\"  type=\"text\" ng-model=\"hours\" ng-change=\"updateHours()\" class=\"form-control text-center\" ng-mousewheel=\"incrementHours()\" ng-readonly=\"readonlyInput\" maxlength=\"2\">\n" +
+    "				<input onclick=\"this.select();this.setSelectionRange(0, 9999);\"  type=\"text\" ng-model=\"hours\" ng-change=\"updateHours()\" class=\"form-control text-center\" ng-mousewheel=\"incrementHours()\" ng-readonly=\"readonlyInput\" maxlength=\"2\">\n" +
     "			</td>\n" +
     "			<td style=\"font-size: 110px; color: #898989;\">:</td>\n" +
     "			<td style=\"font-size: 110px; color: #898989;\" class=\"form-group\" ng-class=\"{'has-error': invalidMinutes}\">\n" +
-    "				<input onclick=\"this.select()\" type=\"text\" ng-model=\"minutes\" ng-change=\"updateMinutes()\" class=\"form-control text-center\" ng-readonly=\"readonlyInput\" maxlength=\"2\">\n" +
+    "				<input onclick=\"this.select();this.setSelectionRange(0, 9999);\" type=\"text\" ng-model=\"minutes\" ng-change=\"updateMinutes()\" class=\"form-control text-center\" ng-readonly=\"readonlyInput\" maxlength=\"2\">\n" +
     "			</td>\n" +
     "			<td ng-show=\"showMeridian\"><button type=\"button\" class=\"btn btn-default text-center\" ng-click=\"toggleMeridian()\">{{meridian}}</button></td>\n" +
     "		</tr>\n" +

@@ -1,15 +1,10 @@
-<div class="logo">&nbsp;</div>
-<div class="content">
-	<p>Get integrated &#45; Grow your business</p>
-</div>
-<div class="loginForm">
-	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+<div class="loginForm loginFormNew center">
+	<img src="images/logo.png" alt="SalesAssist" width="275" height="78">
 	<form>
-		<input type="text" name="username" value="" maxlenght="50" class="text" lng="Username" ng-model="username" autocomplete="OFF" autocapitalize="off" autocorrect="off" />
+		<input type="text" name="username" value="" maxlenght="50" class="username text" lng="Username" ng-model="username" autocomplete="OFF" autocapitalize="off" autocorrect="off" />
 		<input type="password" name="password" value="" maxlenght="50" class="password" lng="Password" ng-model="password" autocomplete="OFF" autocapitalize="off" autocorrect="off" />
-		<input type="submit" class="submit" value="Login" hm-tap="fetch()" lng="Log In">
+		<input type="submit" class="submit" value="Log In" ng-click="fetch()" lng="Log In">
 	</form>
-	<div>
-		<a id="forgot" hm-tap="openInBrowser()" lng="Can't access your account" befor="true">?</a>
-	</div>
+	<div class="external_link"><a id="forgot" ng-click="openInBrowser()" lng="Can't access your account" befor="true">?</a></div>
 </div>

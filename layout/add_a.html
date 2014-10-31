@@ -6,9 +6,10 @@
 		</div>
 <div class="add_wrap scroller scrollerUp" ng-hide="show_amount">
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-	<div class="loginForm">
+	<div class="loginForm half_btn clearfix">
 		<form>
-			<input type="submit" class="submit saveBtn" value="Save" lng="Save" hm-tap="save(true)">
+			<input type="submit" class="submit saveBtn" lng="Back" hm-tap="go('/timesheet')">
+			<input type="submit" class="submit saveBtn btnright" value="Save" lng="Save" hm-tap="save(true)">
 		</form>
 	</div>
 	<div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:300px">

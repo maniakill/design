@@ -6,9 +6,10 @@
 </div>
 <div class="add_wrap scroller scrollerUp" ng-hide="hideE" >
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-	<div class="loginForm">
+	<div class="loginForm half_btn clearfix">
 		<form>
-			<input type="submit" class="submit startBtns" value="Save" lng="Save" hm-tap="save()">
+			<input type="submit" class="submit saveBtn" lng="Back" hm-tap="go('/expenses_list')">
+			<input type="submit" class="submit startBtns btnright" value="Save" lng="Save" hm-tap="save()">
 		</form>
 	</div>
 	<ul class="add_ul">
