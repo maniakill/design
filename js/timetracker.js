@@ -29,8 +29,8 @@ angular.module("geolocation",[]).constant("geolocation_msgs",{"errors.location.u
 var app = angular.module('timeT', ['ngRoute','angular-gestures','ctrl','ui.bootstrap','geolocation']);
 app.config(function ($routeProvider) {
 	$routeProvider
-		.when('/',{controller: 'start',templateUrl: 'layout/start.html'})
-		.when('/login',{controller: 'login',templateUrl: 'layout/login.html'})
+		.when('/',{controller: 'login',templateUrl: 'layout/login.html'})
+		// .when('/login',{controller: 'login',templateUrl: 'layout/login.html'})
 		.when('/login/:error',{controller: 'login',templateUrl: 'layout/login.html'})
 		.when('/timesheet',{controller: 'timesheet',templateUrl: 'layout/timesheet.html'})
 		.when('/timesheet/:d/:m/:y',{controller: 'timesheet',templateUrl: 'layout/timesheet.html'})
@@ -80,6 +80,12 @@ app.config(function ($routeProvider) {
 		.when('/header',{controller: 'header',templateUrl: 'layout/header.html'})
 		.when('/pending',{controller: 'pending',templateUrl: 'layout/pending.html'})
 		.otherwise({ redirectTo: '/' });
+}).factory('vibrate', function (){
+  return {
+    vib: function (milliseconds) {
+      if(navigator.vibrate){ navigator.vibrate(milliseconds); }
+    }
+  };
 });
 app.factory('project', ['$http','$templateCache','$location','$rootScope','$interval',
 	function ($http,$templateCache,$location,$rootScope,$interval) {
@@ -196,9 +202,9 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 							project.taskTimeId[t][id].tasks = {};
 						}
 						if(!project.taskTimeId[t][id].tasks[idt]){ project.taskTimeId[t][id].tasks[idt] = new TaskTimeId(item.task[x], item, item.task[x].hours, item.task[x].notes, idt);
-						}else{ 
-							project.taskTimeId[t][id].tasks[idt].notes = item.task[x].notes /*when we get notes from upstairs*/ 
-							project.taskTimeId[t][id].tasks[idt].hours = item.task[x].hours /*when we get hours from upstairs*/ 
+						}else{
+							project.taskTimeId[t][id].tasks[idt].notes = item.task[x].notes /*when we get notes from upstairs*/
+							project.taskTimeId[t][id].tasks[idt].hours = item.task[x].hours /*when we get hours from upstairs*/
 						}
 						saveTime('taskTimeId', project.taskTimeId);
 					}
@@ -933,7 +939,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
       }
     }
   }
-}]).directive('header',['project','$timeout','$routeParams','$location','$route','$modal','$rootScope',function (project,$timeout,$routeParams,$location,$route,$modal,$rootScope){
+}]).directive('header',['project','$timeout','$routeParams','$location','$route','$modal','$rootScope','vibrate',function (project,$timeout,$routeParams,$location,$route,$modal,$rootScope,vibrate){
 	return {
 		restrict: 'A',
 		scope: {},
@@ -954,6 +960,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			}
 			/*modal*/
 			$scope.add = function () {
+				vibrate.vib(100);
 				var modalInstance = $modal.open({
 				  templateUrl: 'layout/task_type.html',
 				  controller: 'task_type',
@@ -972,7 +979,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			/*modalend*/
 			$scope.$on('clickAdd', function() { $scope.add(); });
 			$scope.snap = function(){
-				// vibrate.vib(100);
+				vibrate.vib(100);
 				angular.element('.main_menu').show(0,function(){
 					var _this = angular.element('.cmain_menu'), width = _this.outerWidth();
 					_this.removeClass('slide_right slide_left').css({'left':'-'+width+'px'});
@@ -983,7 +990,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		templateUrl:'layout/header.html',
 
 	}
-}]).directive('menu',['project',function (project){
+}]).directive('menu',['project','vibrate',function (project,vibrate){
 	return {
 		restrict: 'A',
 		controller:function($scope,$timeout,$location,$document,$rootScope,$interval){
@@ -993,17 +1000,17 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			if($scope.itemsP < 1){ $scope.pend = false; }
 			var canceler;
 			$scope.snap_back = function(){
-				// vibrate.vib(100);
+				vibrate.vib(100);
 				$timeout(function(){ angular.element('.cmain_menu').addClass('slide_right'); });
 				$timeout(function(){ angular.element('.main_menu').hide(); },500);
 			}
-			$scope.go = function(h){ /*vibrate.vib(100);*/ $location.path(h); $scope.snap_back(); }
+			$scope.go = function(h){ vibrate.vib(100); $location.path(h); $scope.snap_back(); }
 			$scope.handleGesture = function($event){ $scope.snap_back(); }
 			$scope.name = localStorage.Tlast_name && localStorage.Tfirst_name ? localStorage.Tlast_name + ' ' + localStorage.Tfirst_name : localStorage.Tusername;
 			$scope.email = localStorage.Temail ? localStorage.Temail : '';
 			//$scope.logout = function(){ vibrate.vib(100); var code ={}; code.logout = true; project.logout(code); }
 			$scope.closeDatePicker = function(){
-					// vibrate.vib(100);
+					vibrate.vib(100);
 					// $timeout(function(){ angular.element('.cmain_menu').addClass('slide_right'); });
 				$timeout(function(){ angular.element('.main_menu').hide();
 					var _this = angular.element('.cmain_menu');
@@ -1029,7 +1036,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		},
 		templateUrl:'layout/menu.html',
 	}
-}]).directive('datepic', ['project','$route','$location','$timeout','$routeParams', function (project,$route,$location,$timeout,$routeParams){
+}]).directive('datepic', ['project','$route','$location','$timeout','$routeParams','vibrate', function (project,$route,$location,$timeout,$routeParams,vibrate){
 	return {
 		restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
 		templateUrl: 'layout/daypic.html',
@@ -1053,6 +1060,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			}
 
 			$scope.goToDay = function(p){
+				vibrate.vib(100);
 				var d = $scope.dt.getDate();
 				if(p === false){ $scope.dt.setDate(--d); }
 				else{ $scope.dt.setDate(++d); }
@@ -1065,9 +1073,9 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
         }
 			}
 			$scope.selectDate = function(){
+				vibrate.vib(100);
 				$scope.opened = !$scope.opened;
 				return false;
-				// vibrate.vib(100);
 			}
 
 		}
