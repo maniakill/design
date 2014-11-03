@@ -200,6 +200,7 @@ ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
 		$scope.today();
 		$scope.open = function() {
 			if(!$routeParams.taskTimeId){
+				vibrate.vib(100);
 				$timeout(function() { $scope.opened = true; });
 			}
 		};
@@ -216,7 +217,7 @@ ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
 		}
 		$scope.selectTask = function(id){
 			project.savescope($scope);
-			if(!$routeParams.taskTimeId){ $location.path('/lists/'+id); }
+			if(!$routeParams.taskTimeId){ vibrate.vib(100); $location.path('/lists/'+id); }
 		}
 		$scope.dateOptions = { 'year-format': "'yy'", 'starting-day': 1 };
 		/*timepicker*/
@@ -555,10 +556,11 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 			else{ $scope.dta = new Date(); }
 		};
 		$scope.today();
-		$scope.open = function() { if(!$routeParams.expId){ $timeout(function() { $scope.opened = true; }); } };
+		$scope.open = function() { if(!$routeParams.expId){ vibrate.vib(100); $timeout(function() { $scope.opened = true; }); } };
 		$scope.selectExpense = function(id){
 			project.savescope($scope);
 			if(!$routeParams.expId){
+				vibrate.vib(100);
 				if(prj){ $location.path('/lists_e/'+id); }
 				else{ $location.path('/lists_ea/'+id); }
 			}
@@ -753,8 +755,8 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 			else{ $scope.dta = new Date(); }
 		};
 		$scope.today();
-		$scope.open = function() { if(!$routeParams.taskTimeId){ $timeout(function() { $scope.opened = true; }); } };
-		$scope.selectTask = function(id){ project.savescope($scope); if(!$routeParams.taskTimeId){ $location.path('/lists_a/'+id); } }
+		$scope.open = function() { if(!$routeParams.taskTimeId){ vibrate.vib(100); $timeout(function() { $scope.opened = true; }); } };
+		$scope.selectTask = function(id){ project.savescope($scope); if(!$routeParams.taskTimeId){ vibrate.vib(100); $location.path('/lists_a/'+id); } }
 		$scope.dateOptions = { 'year-format': "'yy'", 'starting-day': 1 };
 		/*timepicker*/
 		$scope.hstep = 1;
