@@ -8,8 +8,8 @@ ctrl.controller('start',['$scope','$timeout','$location',
 	}
 ]);
 // login
-ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout','project',
-	function ($scope,$http,$templateCache,$location,$timeout,project) {
+ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout','project','vibrate',
+	function ($scope,$http,$templateCache,$location,$timeout,project,vibrate) {
 		var token = localStorage.getItem('token');
 		if(token){ $location.path('/timesheet'); }
 		$scope.method = 'POST';
@@ -17,6 +17,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 		$scope.loged = '';
 		$scope.params = [];
 		$scope.fetch = function() {
+			vibrate.vib(100);
 			$scope.params['username']=$scope.username;
 			$scope.params['password']=$scope.password;
 			if($scope.params['username'] && $scope.params['password']){
@@ -44,7 +45,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 				$timeout(function(){ $scope.closeAlert(0); },3000);
 			}
 		};
-		$scope.closeAlert=function(index){$scope.alerts.splice(index,1);}
+		$scope.closeAlert=function(index){vibrate.vib(100); $scope.alerts.splice(index,1);}
 		$scope.openInBrowser=function(){ window.open('https://app.salesassist.eu', '_system', 'location=yes'); }
 	}
 ]);
@@ -86,6 +87,7 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 		if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project=false; }
 		if(!$scope.no_project){project.loading();}
 		$scope.jumpToToday = function(){
+			vibrate.vib(100);
 			project.setDate(TimeT,Today);
 			$location.path('/timesheet/'+TimeT);
 		}
@@ -117,7 +119,7 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 			if(ad_hoc === true){ $location.path('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time); }
 			else{ $location.path('/add/'+pId+'/'+tId+'/'+taskTimeId+'/'+time); }
 		}
-		$scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
+		$scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); vibrate.vib(100); };
 		$scope.addNewTask = function(){ $rootScope.$broadcast('clickAdd'); }
 		var p = Object.keys(project.alerts);
 		if(p && p !='' && p != undefined){
@@ -312,8 +314,8 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
 	}
 ]);
 // lists
-ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route','$timeout',
-	function ($scope,$http,$location,project,$routeParams,$route,$timeout){
+ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParams', '$route','$timeout','vibrate',
+	function ($scope,$http,$location,project,$routeParams,$route,$timeout,vibrate){
 		var link = $route.current.originalPath == '/lists/expense/' ? '/expenses/' : '/add/';
 		var fixList = function(p){
 			var array = [];
@@ -345,10 +347,12 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
 			});
 		}
 		$scope.open = function (pId,tId){
+			vibrate.vib(100);
 			if(tId){ $location.path(link+pId+'/'+tId); }
 			else{ project.savescope(); $location.path(link+pId); }
 		}
 		$scope.open2 = function (pId){
+			vibrate.vib(100);
 			var l =  $route.current.originalPath == '/lists/expense/' ? 'lists_e' : $location.path();
 			$location.path(l+'/'+pId);
 		}
@@ -360,8 +364,8 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
 	}
 ]);
 // lists_a
-ctrl.controller('lists_a',['$scope','$http','$location','project','$routeParams','$route','$timeout',
-	function ($scope,$http,$location,project,$routeParams,$route,$timeout){
+ctrl.controller('lists_a',['$scope','$http','$location','project','$routeParams','$route','$timeout','vibrate',
+	function ($scope,$http,$location,project,$routeParams,$route,$timeout,vibrate){
 		var link = $route.current.originalPath == '/lists_a/expense/' ? '/expenses_a/' : '/add_a/';
 		var fixList = function(p){
 			var array = [];
@@ -389,18 +393,20 @@ ctrl.controller('lists_a',['$scope','$http','$location','project','$routeParams'
 			});});
 		}
 		$scope.open2 = function (pId){
+			vibrate.vib(100);
 			var l = $route.current.originalPath == '/lists_a/expense/' ? 'lists_ea' : $location.path();
 			$location.path(l+'/'+pId);
 		}
 		$scope.open = function (pId,tId){
+			vibrate.vib(100);
 			if(tId){ $location.path(link+pId+'/'+tId); }
 			else{ project.savescope(); $location.path(link+pId); }
 		}
 	}
 ]);
 // lists_e
-ctrl.controller('lists_e',['$scope','$http','$location','project','$routeParams','$route','$timeout',
-	function ($scope,$http,$location,project,$routeParams,$route,$timeout){
+ctrl.controller('lists_e',['$scope','$http','$location','project','$routeParams','$route','$timeout','vibrate',
+	function ($scope,$http,$location,project,$routeParams,$route,$timeout,vibrate){
 		var prj = $route.current.originalPath.search('_ea') > 0 ? false : true;
 		var link = prj ? '/expenses/' : '/expenses_a/' ;
 		var fixList = function(p){
@@ -416,6 +422,7 @@ ctrl.controller('lists_e',['$scope','$http','$location','project','$routeParams'
 			$scope.expense = fixList(project.expenseList);
 		});});
 		$scope.open = function (pId,tId){
+			vibrate.vib(100);
 			if(tId){ $location.path(link+pId+'/'+tId); }
 			else{ $location.path(link+pId); }
 		}
@@ -519,7 +526,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 			var y = $scope.dta.getFullYear();
 			return d + ' ' + m + ', ' + y;
 		}
-		$scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
+		$scope.closeAlert = function(index) { vibrate.vib(100); $scope.alerts.splice(index, 1); };
 		$scope.save = function(){
 			vibrate.vib(100);
 			if(!$routeParams.item){
@@ -663,7 +670,7 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route','v
 				}else{ $scope.alerts = [ { type: 'info', msg: LANG[project.lang]['No items to synchronize.'] } ]; }
 			}else{ $scope.alerts = [ { type: 'error', msg: LANG[project.lang]['No internet access. Please connect to the internet and then use the sync button.'] } ]; }
 		}
-		$scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
+		$scope.closeAlert = function(index) { vibrate.vib(100); $scope.alerts.splice(index, 1); };
 		$scope.$on('syned', function(arg,item) {
 			$scope.dynamic++;
 			switch(item){
@@ -847,6 +854,7 @@ ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$
 		var Today = new Date(), TimeT = Today.getDate()+'/'+(Today.getMonth()+1)+'/'+Today.getFullYear();
 		if(time==TimeT){ $scope.notToday = false; }
 		$scope.jumpToToday = function(){
+			vibrate.vib(100);
 			project.setDate(TimeT,Today);
 			$location.path('/expenses_list/'+TimeT);
 		}
@@ -860,7 +868,7 @@ ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$
 			else{ $location.path('/expenses/'+pId+'/'+tId+'/'+expId+'/'+time); }
 		}
 		$scope.addNewTask = function(){ $rootScope.$broadcast('clickAdd'); }
-		$scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
+		$scope.closeAlert = function(index) { vibrate.vib(100); $scope.alerts.splice(index, 1); };
 		var p = Object.keys(project.alerts);
 		if(p && p !='' && p != undefined){
 			$scope.alerts = [{ type: p, msg: project.alerts[p] }];
