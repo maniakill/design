@@ -22,8 +22,8 @@
 		</form>
 	</div>
 	<ul class="add_ul">
-		<li class="datePicker"><a herf="#" hm-tap="open()" id="add_calendar" class="left"></a>
-			<span>{{getDates()}}</span>
+		<li class="datePicker clearfix"><a herf="#" hm-tap="open()" id="add_calendar" class="left"></a>
+			<span class="dateSpan">{{getDates()}}</span>
 		<!-- <input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/> -->
 
 	</li>
@@ -32,7 +32,7 @@
 		<li class="last_li" hm-tap="selectTask(projectId)">{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
 	</ul>
 	<ul class="add_ul add_note">
-		<li class="last_li notes" hm-tap="addNote(projectId,taskId)">{{notes2}}<span class="arrow abs" ></span></li>
+		<li class="last_li notes" hm-tap="addNote(projectId,taskId)"><span class="arrow abs" ></span><pre>{{notes2}}</pre></li>
 	</ul>
 </div>
 <div class="textWrap scroller scrollerUp" ng-show="show_amount">
