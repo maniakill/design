@@ -960,7 +960,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.position'])
   };
 }])
 
-.directive( 'datepicker', ['dateFilter', '$parse', 'datepickerConfig', '$log','$location','project','$route','$rootScope', function (dateFilter, $parse, datepickerConfig, $log,$location,project,$route,$rootScope) {
+.directive( 'datepicker', ['dateFilter', '$parse', 'datepickerConfig', '$log','$location','project','$route','$rootScope','vibrate', function (dateFilter, $parse, datepickerConfig, $log,$location,project,$route,$rootScope,vibrate) {
   return {
     restrict: 'EA',
     replace: true,
@@ -1054,6 +1054,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.position'])
 
       scope.select = function( date ) {
         if ( mode === 0 ) {
+          vibrate.vib(100);
           var dt = ngModel.$modelValue ? new Date( ngModel.$modelValue ) : new Date(0, 0, 0, 0, 0, 0, 0);
           var timed = date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
           dt.setFullYear( date.getFullYear(), date.getMonth(), date.getDate() );
@@ -1072,12 +1073,14 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.position'])
         }
       };
       scope.move = function(direction) {
+        vibrate.vib(100);
         var step = datepickerCtrl.modes[mode].step;
         selected.setMonth( selected.getMonth() + direction * (step.months || 0) );
         selected.setFullYear( selected.getFullYear() + direction * (step.years || 0) );
         refill();
       };
       scope.toggleMode = function() {
+        vibrate.vib(100);
         setMode( (mode + 1) % datepickerCtrl.modes.length );
       };
       scope.getWeekNumber = function(row) {
