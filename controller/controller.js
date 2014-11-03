@@ -10,6 +10,8 @@ ctrl.controller('start',['$scope','$timeout','$location',
 // login
 ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout','project',
 	function ($scope,$http,$templateCache,$location,$timeout,project) {
+		var token = localStorage.getItem('token');
+		if(token){ $location.path('/timesheet'); }
 		$scope.method = 'POST';
 		$scope.url = 'https://app.salesassist.eu/pim/mobile/';
 		$scope.loged = '';
@@ -47,8 +49,8 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 	}
 ]);
 // timesheet
-ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$location','$rootScope','$filter',
-	function ($scope,$timeout,project,$routeParams,$location,$rootScope,$filter){
+ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$location','$rootScope','$filter','vibrate',
+	function ($scope,$timeout,project,$routeParams,$location,$rootScope,$filter,vibrate){
 		$scope.getP=function(item){
 			var p=project.getProject(item);
 			return p.customer_name+' > '+p.project_name;
@@ -109,6 +111,7 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 			return value;
 		}
 		$scope.editTask = function(pId, tId, notes, adhoc, cId, taskTimeId){
+			vibrate.vib(100);
 			var ad_hoc=adhoc.search('ad hoc') > 0 ? true : false;
 			project.setNote(notes);
 			if(ad_hoc === true){ $location.path('/add_a/'+cId+'/'+tId+'/'+pId+'/'+taskTimeId+'/'+time); }
@@ -134,8 +137,8 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 	}
 ]);
 // add
-ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout','geolocation',
-	function ($scope,$routeParams,project,$location,$timeout,geolocation){
+ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout','geolocation','vibrate',
+	function ($scope,$routeParams,project,$location,$timeout,geolocation,vibrate){
 		/*geolocation.getLocation().then(function(data){
       $scope.coords = {lat:data.coords.latitude, long:data.coords.longitude};
     });*/
@@ -234,6 +237,7 @@ ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
 			if(item.active){ $scope.mode = true; }
 		}
 		$scope.save = function(save){
+			vibrate.vib(100);
 			if(!$routeParams.item){
 				$scope.alerts = [{ type: 'error', msg: LANG[project.lang]["Please select a "+alertText[0]] }];
 				$timeout(function(){ $scope.closeAlert(0); },3000);
@@ -255,7 +259,7 @@ ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
 				else{ project.save('',$routeParams.item,$routeParams.taskId,$scope.notes); }
 			}
 		}
-		$scope.stop = function(){ project.stop(item,$scope.time2); }
+		$scope.stop = function(){ vibrate.vib(100); project.stop(item,$scope.time2); }
 		$scope.changed = function () {
 			if($scope.mytime == null){
 				$scope.mytime = new Date();
@@ -266,11 +270,12 @@ ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
 		};
 		/*timepicker end*/
 		$scope.addNote = function(pId,tId){
+			vibrate.vib(100);
 			$timeout(function(){ document.getElementById('ddd').focus(); });
 			$scope.show_amount = true;
 		}
-		$scope.saveNote = function(){ $scope.notes2 = $scope.notes ? $scope.notes : 'Add note'; $scope.show_amount = false; }
-		$scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
+		$scope.saveNote = function(){ vibrate.vib(100); $scope.notes2 = $scope.notes ? $scope.notes : 'Add note'; $scope.show_amount = false; }
+		$scope.closeAlert = function(index) { vibrate.vib(100); $scope.alerts.splice(index, 1); };
 		$scope.$on('addError', function(arg,args) {
 			$scope.alerts = [ { type: 'error', msg: args } ];
 			$timeout(function(){ $scope.closeAlert(0); },3000);
@@ -279,21 +284,20 @@ ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
 	}
 ]);
 // task_type
-ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'types',
-	function ($scope, $modalInstance, items, $location, types) {
-		console.log('task_type');
+ctrl.controller('task_type',['$scope','$modalInstance','items', '$location', 'types','vibrate',
+	function ($scope, $modalInstance, items, $location, types,vibrate) {
 		$scope.items = items;
 		$scope.types = types;
-		$scope.open = function(url){ $location.path(url); $scope.cancel(); }
-		$scope.cancel = function () { $modalInstance.dismiss('cancel'); };
+		$scope.open = function(url){vibrate.vib(100); $location.path(url); $scope.cancel(); }
+		$scope.cancel = function () {vibrate.vib(100); $modalInstance.dismiss('cancel'); };
 	}
 ]);
-ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 'types',
-	function ($scope, $modalInstance, items, $location, types) {
-		console.log('task_type1');
+ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 'types','vibrate',
+	function ($scope, $modalInstance, items, $location, types,vibrate) {
 		$scope.items = items;
 		$scope.types = types;
 		$scope.open = function(url){
+			vibrate.vib(100);
 			switch(url){
 				case 'capturePhoto()':
 					capturePhoto();
@@ -304,7 +308,7 @@ ctrl.controller('task_type1',['$scope','$modalInstance','items', '$location', 't
 			}
 			$scope.cancel();
 		}
-		$scope.cancel = function () { $modalInstance.dismiss('cancel'); };
+		$scope.cancel = function () {vibrate.vib(100); $modalInstance.dismiss('cancel'); };
 	}
 ]);
 // lists
@@ -345,7 +349,7 @@ ctrl.controller('lists',['$scope', '$http', '$location', 'project', '$routeParam
 			else{ project.savescope(); $location.path(link+pId); }
 		}
 		$scope.open2 = function (pId){
-			var l =  $route.current.originalPath == '/lists/expense/' ? 'lists_e' : $location.path();			
+			var l =  $route.current.originalPath == '/lists/expense/' ? 'lists_e' : $location.path();
 			$location.path(l+'/'+pId);
 		}
 		function noAdHocP(p){
@@ -426,8 +430,8 @@ ctrl.controller('addAmount',['$scope', 'project',
 	function ($scope, project, $route){ $scope.amount =  project.getAmount() ? project.getAmount() : ''; }
 ]);
 // expenses
-ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$timeout', '$route', '$modal',
-	function ($scope, $routeParams, project, $location, $timeout, $route, $modal){
+ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$timeout', '$route', '$modal','vibrate',
+	function ($scope, $routeParams, project, $location, $timeout, $route, $modal,vibrate){
 		var prj = $route.current.originalPath.search('_a') > 0 ? false : true,
 			type = $route.current.originalPath.search('_a') > 0 ? 'expenses_a' : 'expenses',
 			alertText = ['project','expense','amount'];
@@ -517,6 +521,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 		}
 		$scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
 		$scope.save = function(){
+			vibrate.vib(100);
 			if(!$routeParams.item){
 				$scope.alerts = [{ type: 'error', msg: LANG[project.lang]["Please select a "+alertText[0]] }];
 				$timeout(function(){ $scope.closeAlert(0); },3000);
@@ -566,15 +571,17 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 		$scope.update();
 		/*timepicker end*/
 		$scope.addNote = function(pId,tId){
+			vibrate.vib(100);
 			$scope.hideE = true;
 			$scope.show_note = true;
 			$timeout(function(){ document.getElementById('ddd').focus(); });
 		}
-		$scope.saveNote = function(){ $scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note']; $scope.hideE = false; $scope.show_note = false; }
+		$scope.saveNote = function(){ vibrate.vib(100); $scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note']; $scope.hideE = false; $scope.show_note = false; }
 		var setf = function(){
 			document.getElementById("addamount").focus();
 		}
 		$scope.addAmount = function(pId,tId){
+			vibrate.vib(100);
 			$scope.hideE = true;
 			$scope.show_amount=true;
 			$timeout(function(){ document.getElementById('addamount').focus(); });
@@ -604,24 +611,25 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 	}
 ]);
 // account
-ctrl.controller('account',['$scope', '$location', 'project', '$interval',
-	function ($scope, $location, project,$interval){
+ctrl.controller('account',['$scope', '$location', 'project', '$interval','vibrate',
+	function ($scope, $location, project,$interval,vibrate){
 		$scope.username = localStorage.username;
 		//deleting the database
 		var removeStuff = function (){ localStorage.clear(); }
 		// removeStuff();
 		$scope.logout = function (){
+			vibrate.vib(100);
 			// $interval.cancel(project.interval);
 			localStorage.setItem('username','');
 			localStorage.setItem('token','');
 			// removeStuff(); // this is for testiung only and shall be removed when going live
-			$location.path('/start');
+			$location.path('/login');
 		}
 	}
 ]);
 // pending
-ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
-	function ($scope,$location,project,$timeout,$route){
+ctrl.controller('pending',['$scope','$location','project','$timeout','$route','vibrate',
+	function ($scope,$location,project,$timeout,$route,vibrate){
 		var clicked = false;
 		$scope.times = 0;
 		$scope.progress = true;
@@ -642,6 +650,7 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
 		}
 		// connect = 'none';
 		$scope.sync = function(){
+			vibrate.vib(100);
 			var connect = checkConnection();
 			if(connect != 'none' && connect !='unknown'){
 				$scope.max = Object.keys(project.toSync).length;
@@ -677,8 +686,8 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route',
 	}
 ]);
 // add adhoc
-ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$timeout',
-	function ($scope, $routeParams, project, $location, $timeout){
+ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$timeout','vibrate',
+	function ($scope, $routeParams, project, $location, $timeout,vibrate){
 		var time = '', alertText = ['project','task'];
 		var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 		$scope.date = 'today';
@@ -764,6 +773,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 		}
 		$scope.$on('closeDatepicker', function(arg) { $scope.opened = false; });
 		$scope.save = function(save){
+			vibrate.vib(100);
 			if(!$routeParams.item){
 				$scope.alerts = [{ type: 'error', msg: LANG[project.lang]["Please select a "+alertText[0]] }];
 				$timeout(function(){ $scope.closeAlert(0); },3000);
@@ -795,7 +805,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 			var y = $scope.dta.getFullYear();
 			return d + ' ' + m + ', ' + y;
 		}
-		$scope.stop = function(){ project.stop(item,$scope.time2); }
+		$scope.stop = function(){ vibrate.vib(100); project.stop(item,$scope.time2); }
 		$scope.changed = function () {
 			if($scope.mytime == null){
 				$scope.mytime = new Date();
@@ -806,11 +816,12 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 		};
 		/*timepicker end*/
 		$scope.addNote = function(pId,tId){
+			vibrate.vib(100);
 			$timeout(function(){ document.getElementById('ddd').focus(); });
 			$scope.show_amount = true;
 		}
-		$scope.saveNote =function(){ $scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note']; $scope.show_amount= false; }
-		$scope.closeAlert = function(index) { $scope.alerts.splice(index, 1); };
+		$scope.saveNote =function(){vibrate.vib(100); $scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note']; $scope.show_amount= false; }
+		$scope.closeAlert = function(index) {vibrate.vib(100); $scope.alerts.splice(index, 1); };
 		$scope.$on('addError', function(arg,args) {
 			$scope.alerts = [ { type: 'error', msg: args } ];
 			$timeout(function(){ $scope.closeAlert(0); },3000)
@@ -818,8 +829,8 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 	}
 ]);
 // expenses_list
-ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$location','$rootScope','$filter',
-	function ($scope,$timeout,project,$routeParams,$location,$rootScope,$filter){
+ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$location','$rootScope','$filter','vibrate',
+	function ($scope,$timeout,project,$routeParams,$location,$rootScope,$filter,vibrate){
 		var fixList = function(d){
 			var data = [];
 			angular.forEach(d,function(value,key){
@@ -844,6 +855,7 @@ ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$
 		if(JSON.stringify(project.expense[time]) == '{}'){ $scope.no_project = false; }
 		if(!$scope.no_project){ project.loading(); }
 		$scope.editTask = function(pId,tId,adhoc,cId,expId){
+			vibrate.vib(100);
 			if(adhoc == "ad hoc"){ $location.path('/expenses_a/'+cId+'/'+tId+'/'+expId+'/'+time); }
 			else{ $location.path('/expenses/'+pId+'/'+tId+'/'+expId+'/'+time); }
 		}
