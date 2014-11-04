@@ -26,10 +26,10 @@ a, a:hover{ text-decoration: none; }
 			.loginForm input { border: 1px solid #cccccc; padding: 12px 10px 12px 60px; width: 208px; margin: 0px; color: #000000; font-size: 17px; }
 			.loginForm input.text{ border-bottom: 0px; border-radius: 10px 10px 0 0; height: 20px; background: url("../images/loginIcons.png") no-repeat left -1px #ffffff; }
 			.loginForm input.password{ border-radius: 0 0 10px 10px; background: url("../images/loginIcons.png") no-repeat left -46px #ffffff; height: 20px; }
-			.loginForm input.submit{ border-radius: 10px; border: 1px solid #3a6884; margin: 5% 0px; width: 100%; padding: 12px 10px; font-size: 16px; color: #ffffff; background: #518caf; }
+			.loginForm input.submit{ border-radius: 3px; border: 1px solid #3a6884; margin: 5% 0px; width: 100%; padding: 12px 10px; font-size: 16px; color: #ffffff; background: #518caf; }
 			.loginForm input.saveBtn{ margin: 0 auto; }
 			.loginForm input.startBtns { margin: 0 auto 5%; }
-			.loginForm input.account { border-radius: 10px; width: 258px; margin: 5% 0px 0px; padding: 12px 10px; font-size: 17px; }
+			.loginForm input.account { border-radius: 3px; width: 258px; margin: 5% 0px 0px; padding: 12px 10px; font-size: 17px; }
 			#forgot { text-decoration: none; color: #5d97b9; font-size: 17px; text-align: center; display: block; font-family:Helvetica; text-shadow: 0 1px #fff; }
 			.loginForm label { color: #666666; font-size: 17px; font-family:Helvetica; margin-top: 15%; padding-left: 10px; }
 			.half_btn input.submit { width: 135px; float: left; margin-right: 10px; }
@@ -42,21 +42,22 @@ a, a:hover{ text-decoration: none; }
   		background: linear-gradient(#5d97b9, #3070a0); /* Standard syntax */
 		 }
 			.header .headerB { background: url('../images/icons.png') 5px -39px ; border: none; padding: 6px 15px 5px; margin: 0px; line-height: normal; }
-			.header .add, .header .calendar { width: 31px; height: 31px; padding: 0px;  margin-right: 6px; }
+			.header .add, .header .calendar { width: 40px; height: 40px; padding: 0px;  margin-right: 6px; margin-top: -3px; }
 			.header .calendar { margin-right: 0px; }
 			#classSpan, #classSpan1 { font-size: 20px; color: #ffffff; font-family:Helvetica; background: none; border: 0px; box-shadow: 0 0px 0px; cursor: default; padding: 0px 0px 0px; margin: 0px; width: 180px; border-radius: 0px; vertical-align: middle; height: 20px; }
 			#classSpan1 { color: #000000; margin-top: 4px; width: 200px; }
 		.projects { border-bottom: 1px solid #e6e6e6;  background: url("../images/line-bg.png") repeat-x scroll left bottom rgba(0, 0, 0, 0); }
-		.projectName{ font-family:Helvetica; font-size: 12px; padding: 9px 10px 1px; /*border-bottom: 1px solid #e6e6e6; */color: #000000; cursor: default; line-height: normal; font-weight: bold; }
+		.projectName{ font-family:Helvetica; font-size: 12px; padding: 9px 10px 1px 20px; /*border-bottom: 1px solid #e6e6e6; */color: #000000; cursor: default; line-height: normal; font-weight: bold; }
+		.clientName{ font-family:Helvetica; font-size: 12px; padding: 9px 10px 1px; color: #666; cursor: default; line-height: normal; }
 		.taskDetail{ padding: 9px 10px 8px; /*border-bottom: 1px solid #e6e6e6;*/ cursor: pointer; /*background: url('../images/line-bg.png') repeat-x left bottom;*/ }
 		/*.taskDetail:active{  background: -webkit-linear-gradient(#E6E6E6, #ffffff);  background: -o-linear-gradient(#E6E6E6, #ffffff);  background: -moz-linear-gradient(#E6E6E6, #ffffff);  background: linear-gradient(#E6E6E6, #ffffff); }*/
-			.taskDetail .taskName{ font-family:Helvetica; font-size: 12px; color: #666666; }
+			.taskDetail .taskName{ font-family:Helvetica; font-size: 12px; color: #666666; padding-left: 10px; }
 		.arrow { background: url("../images/icons.png") no-repeat 0px -138px; width: 10px; height: 15px; margin-top: 4px; }
 			.taskDetail .hourContainer{ margin-right: 15px; padding: 0px 5px 0px; height: 22px; }
 			.taskDetail .active { background: #ff9878; border-radius: 5px; }
 				.taskDetail .hourContainer .clock { background: url("../images/icons.png") no-repeat -4px -548px; width: 13px; height: 14px; margin-top: 5px; margin-right: 5px; margin-bottom: -4px; }
 				.taskDetail .active .clock { background: url("../images/icons.png") no-repeat -4px -582px; }
-				.taskDetail .hourContainer .hours { font-size: 17px; color: #999999; font-family:Helvetica; position: relative; top: 2px; }
+				.taskDetail .hourContainer .hours { font-size: 17px; color: #999999; font-family:Helvetica; position: relative; top: 3px; line-height: normal; }
 				.taskDetail .active .hours { color: #ffffff; }
 		.footer{ height: 49px; background: url('../images/footer-bg.png') repeat-x left top; position: fixed; bottom: 0px; width: 100%; }
 			.footers{ width: 25%; /*padding-right: 2px;*/ background: url('../images/footers-bg.png') repeat-y right top; height: inherit; position: relative; }
@@ -80,7 +81,7 @@ a, a:hover{ text-decoration: none; }
 				.add_ul li.notes { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 					#add_calendar{ margin-top: -1px; margin-left: -4px; margin-right: 10px; background: url('../images/icons.png') -1px -621px; width: 28px; height: 28px; }
 						.datePicker li { color: #333333; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 10px; line-height: 20px; }
-					.square { display: inline-block; background: #c9dde9; border-radius: 5px; margin: 0px 8px -3px -3px; color: #326488; padding: 6px 10px 0px; }
+					.square { display: inline-block; background: #c9dde9; border-radius: 5px; margin: 0px 8px -3px -3px; color: #326488; padding: 3px 10px; }
 					.square_active { background: #ff9878; color: #ffffff; }
 			/*.add_note { margin-top: 10px; }*/
 			.timepicker { margin: 0 auto 10px; }
@@ -124,6 +125,10 @@ a, a:hover{ text-decoration: none; }
 .snap { background: url('../images/icons.png') 10px 0px; display: inline-block; display: block; padding: 16px 90px 15px 0px; }
 .main_menu .snap { background-position: 10px -81px; }
 .header .title { color: #fff; font-size: 16px; font-weight: bold; display: inline-block; margin-top: 5px; }
+.headerAdd { text-align: center; }
+.headerAdd .title { font-size: 14px; margin: 0 auto; }
+.headerAdd .titleCancel { padding: 6px 10px; font-weight: normal; margin-top: -6px; }
+.headerAdd .titleSave { padding: 6px 10px; margin-top: -6px; }
 .main_menu{position: absolute; width: 100%; height: 100%; z-index: 4; top: 0; right: 0; left: 0; bottom: 0px; display: none;}
 .omain_menu {background: black;opacity: 0.5;height: 100%;width: 100%;position: absolute;z-index: 4;}
 .cmain_menu {height: 100%;background: #fff;width: 50%; position: absolute;z-index: 5;left: -50%; overflow: hidden; box-shadow: 0px 5px 15px #111; }
@@ -159,7 +164,7 @@ a, a:hover{ text-decoration: none; }
 .jump { padding: 7px 0px; text-align: center; margin: 0 auto; width: 280px; }
 .jump .jumpy { background-color: #e1e1e1; border-bottom: 1px solid #ccc; border: 1px solid #ccc; border-radius: 10px; color: #5a93b5; font-size: 16px; padding: 10px; text-shadow: 0 1px #fff; width: 100%; font-weight: bold; }
 .search { height: 42px; border-bottom: 1px solid #e6e6e6; text-align: center; }
-.search input {margin: 4px 0 0px; width: 280px; border: 1px solid #bbb; padding: 5px 10px 7px; line-height: 20px; border-radius: 7px; font-size: 16px; }
+.search input {margin: 4px 0 0px; width: 280px; border: 1px solid #bbb; padding: 5px 10px 7px; line-height: 20px; border-radius: 3px; font-size: 16px; }
 .scrollerUp { top: 58px; }
 .loginFormNew {  background: none repeat scroll 0 0 #f5f9fa; border: 1px solid #cee0ea; border-radius: 5px; left: 50%; margin: -172px 0 0 -160px; padding: 20px; position: absolute; top: 50%; width: 280px; }
 .loginFormNew input{ color: #4d4d4d; font-family: arial,helvetica; font-size: 18px; margin-top: 20px; padding: 10px; width: 233px; }
@@ -167,3 +172,4 @@ a, a:hover{ text-decoration: none; }
 .loginFormNew input.password { border: 1px solid #9dabb3; border-radius: 5px; padding-left: 35px; background: url('../images/icons.png') no-repeat 7px -733px #fff; }
 .loginFormNew input.submit:active,.loginFormNew input.submit { background: #66b34e; color: #fff; font-weight: bold; border: hidden; border-bottom: 2px solid #539b3d; width: 280px; padding: 10px; font-size: 18px; }
 .dateSpan { display: block; margin-top: 5px; }
+.pre { min-height: 32px; }
