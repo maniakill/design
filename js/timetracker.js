@@ -1061,7 +1061,6 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 
 			$scope.goToDay = function(p){
 				vibrate.vib(100);
-				console.profile('go to day');
 				var d = $scope.dt.getDate(),r = $route.current.controller;
 				if(p === false){ $scope.dt.setDate(--d); }
 				else{ $scope.dt.setDate(++d); }
@@ -1072,7 +1071,6 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
         }else if(r == 'expenses_list'){
           $location.path('/expenses_list/'+timed);
         }
-        console.profileEnd();
 			}
 			$scope.selectDate = function(){
 				vibrate.vib(100);
