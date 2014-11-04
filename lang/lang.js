@@ -146,7 +146,8 @@ LANG[1]={
 	'Time entry synced.':'Tijdsregistratie gesynchroniseerd.',
 	'Task already added':'Taak reeds toegevoegd',
 	'Expense synced.':'Uitgave gesynchroniseerd.',
-	'items':'items'
+	'items':'items',
+	'Expense' : 'Uitgave'
 }
 //english
 LANG[2]={
@@ -295,7 +296,8 @@ LANG[2]={
 	'Time entry synced.':'Time entry synced.',
 	'Task already added':'Task already added',
 	'Expense synced.':'Expense synced.',
-	'items':'items'
+	'items':'items',
+	'Expense' : 'Expense'
 }
 //french
 LANG[3]={
@@ -444,7 +446,8 @@ LANG[3]={
 	'Time entry synced.':'Enregistrement du temps synchronisée.',
 	'Task already added':'Tâche déjà ajoutée',
 	'Expense synced.':'Dépense synchronisée.',
-	'items':'eléments'
+	'items':'eléments',
+	'Expense' : 'Dépense'
 }
 //german
 LANG[4]={
@@ -593,5 +596,6 @@ LANG[4]={
 	'Time entry synced.':'Zeiteingabe synchronisiert.',
 	'Task already added':'Aufgabe bereits hinzugefügt',
 	'Expense synced.':'Ausgabe synchronisiert.',
-	'items':'Artikel'
+	'items':'Artikel',
+	'Expense' : 'Ausgabe'
 }
