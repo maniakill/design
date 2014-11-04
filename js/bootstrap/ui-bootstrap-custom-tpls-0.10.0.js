@@ -2865,7 +2865,7 @@ angular.module('ui.bootstrap.timepicker', [])
   mousewheel: true
 })
 
-.directive('timepicker', ['$parse', '$log', 'timepickerConfig', '$locale', function ($parse, $log, timepickerConfig, $locale) {
+.directive('timepicker', ['$parse', '$log', 'timepickerConfig', '$locale','$rootScope', function ($parse, $log, timepickerConfig, $locale,$rootScope) {
   return {
     restrict: 'EA',
     require:'?^ngModel',
@@ -3054,7 +3054,6 @@ angular.module('ui.bootstrap.timepicker', [])
 
       function updateTemplate( keyboardChange ) {
         var hours = selected.getHours(), minutes = selected.getMinutes();
-
         if ( scope.showMeridian ) {
           hours = ( hours === 0 || hours === 12 ) ? 12 : hours % 12; // Convert 24 to 12 hour system
         }
@@ -3084,6 +3083,9 @@ angular.module('ui.bootstrap.timepicker', [])
       scope.toggleMeridian = function() {
         addMinutes( 12 * 60 * (( selected.getHours() < 12 ) ? 1 : -1) );
       };
+      $rootScope.$on('changeTheTime',function(){
+        ngModel.$render();
+      });
     }
   };
 }]);
