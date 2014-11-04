@@ -1,6 +1,6 @@
 <div id="loading"></div>
 <div menu=""></div>
-<div header="" title="Expense"></div>
+<div header-add="" title="Expense"></div>
 <div class="allTheWay" ng-show="opened">
 	<datepicker ng-model="dta" min-date="minDate" show-weeks="false" class="well well-sm " ></datepicker>
 </div>
@@ -8,8 +8,8 @@
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div class="loginForm half_btn clearfix">
 		<form>
-			<input type="submit" class="submit saveBtn" lng="Back" hm-tap="go('/expenses_list')">
-			<input type="submit" class="submit startBtns btnright" value="Save" lng="Save" hm-tap="save()">
+			<!-- <input type="submit" class="submit saveBtn" lng="Back" hm-tap="go('/expenses_list')"> -->
+			<!-- <input type="submit" class="submit startBtns btnright" value="Save" lng="Save" hm-tap="save()"> -->
 		</form>
 	</div>
 	<ul class="add_ul">
@@ -27,17 +27,17 @@
 <div class="textWrap scroller scrollerUp" ng-show="show_amount">
 	<div class="loginForm">
 		<form>
-			<input type="submit" class="submit startBtns" value="Save" lng="Save" hm-tap="saveAmount()">
+			<input type="submit" class="submit startBtns" value="Save" lng="Back" hm-tap="saveAmount()">
 		</form>
 	</div>
 	<form id="form1">
-	<input type="number" value="{{amount}}" ng-model="amount" class="form-control" id="addamount" />
+	<input type="number" value="33" ng-model="amount" class="form-control" id="addamount" />
 </form>
 </div>
 <div class="textWrap scroller scrollerUp" ng-show="show_note">
 	<div class="loginForm">
 		<form>
-			<input type="submit" class="submit startBtns" value="Save" hm-tap="saveNote()">
+			<input type="submit" class="submit startBtns" lng="Back" value="Save" hm-tap="saveNote()">
 		</form>
 	</div>
 	<textarea class="noteText form-control" ng-model="notes" id="ddd" rows="8" lng="Add note">{{notes}}</textarea>
