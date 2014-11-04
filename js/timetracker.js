@@ -24,6 +24,113 @@ function onPhotoURISuccess(imageURI) {
   largeImage.style.display = 'block';
   smallImage.src = "data:image/jpeg;base64," + imageURI;
 }
+function number2hour(number){
+	var value = '0:00';
+	if(isNaN(number) === true){ return value; }
+	else{
+		var minutes = number;
+		if(isNaN(minutes)){ minutes=0; }
+		minutes = Math.round(minutes*60);
+		if(minutes >= 60){
+			var n=Math.floor(minutes/60);
+			minutes=minutes-(60*n);
+			if(minutes.toString().length == 1){ minutes='0'+minutes; }
+			value=n+":"+minutes;
+		}else{
+			if(minutes.toString().length == 1){ minutes='0'+minutes; }
+			value="0:"+minutes;
+		}
+	}
+	return value;
+}
+function explode(delimiter, string, limit) {
+  if ( arguments.length < 2 || typeof delimiter == 'undefined' || typeof string == 'undefined' ) return null;
+	if ( delimiter === '' || delimiter === false || delimiter === null) return false;
+	if ( typeof delimiter == 'function' || typeof delimiter == 'object' || typeof string == 'function' || typeof string == 'object'){
+		return { 0: '' };
+	}
+	if ( delimiter === true ) delimiter = '1';
+	delimiter += '';
+	string += '';
+	var s = string.split( delimiter );
+	if ( typeof limit === 'undefined' ) return s;
+	if ( limit === 0 ) limit = 1;
+	if ( limit > 0 ){
+		if ( limit >= s.length ) return s;
+		return s.slice( 0, limit - 1 ).concat( [ s.slice( limit - 1 ).join( delimiter ) ] );
+	}
+	if ( -limit >= s.length ) return [];
+	s.splice( s.length + limit );
+	return s;
+}
+function corect_val(number){
+		var what_char = number.toString().search(/\D/),
+				the_char = number.toString().charAt(what_char);
+		if(the_char == ':'){
+			var zhe_number = explode(the_char,number);
+			if(isNaN(zhe_number[1])){
+				zhe_number[1] ='00';
+			}
+			if(zhe_number[1] >= 60){
+				value = '0:00';
+				return value;
+			}
+			if(zhe_number[1].length == 1){
+				zhe_number[1] = '0'+zhe_number[1];
+			}
+			value = zhe_number[0] + ':' + zhe_number[1];
+		}
+		else if(the_char == ','){
+			var minutes = number.replace(the_char,'.');
+			if(isNaN(minutes)){
+				minutes = 0;
+			}
+			minutes = Math.round(minutes * 60);
+			if(minutes >=60){
+				n = Math.floor(minutes/60);
+				minutes = minutes - (60*n);
+				if(minutes.toString().length == 1){
+					minutes = '0'+minutes;
+				}
+				value = n +":"+minutes;
+			}
+			else{
+				if(minutes.toString().length == 1){
+					minutes = '0'+minutes;
+				}
+				value = "0:"+minutes;
+			}
+		}
+		else if(the_char == '.'){
+			var minutes = number;
+			if(isNaN(minutes)){
+				minutes = 0;
+			}
+			minutes = Math.round(minutes * 60);
+			if(minutes >=60){
+				n = Math.floor(minutes/60);
+				minutes = minutes - (60*n);
+				if(minutes.toString().length == 1){
+					minutes = '0'+minutes;
+				}
+				value = n +":"+minutes;
+			}
+			else{
+				if(minutes.toString().length == 1){
+					minutes = '0'+minutes;
+				}
+				value = "0:"+minutes;
+			}
+		}else if(!isNaN(number)){
+			value = number+':00';
+			if(!number){
+				value ='0:00';
+			}
+		}else{
+			value = '0:00';
+		}
+		return value;
+	}
 /*! angularjs-geolocation 11-09-2013 */
 angular.module("geolocation",[]).constant("geolocation_msgs",{"errors.location.unsupportedBrowser":"Browser does not support location services","errors.location.notFound":"Unable to determine your location"}),angular.module("geolocation").factory("geolocation",["$q","$rootScope","$window","geolocation_msgs",function(a,b,c,d){return{getLocation:function(){var e=a.defer();return c.navigator&&c.navigator.geolocation?c.navigator.geolocation.getCurrentPosition(function(a){b.$apply(function(){e.resolve(a)})},function(){b.$broadcast("error",d["errors.location.notFound"]),b.$apply(function(){e.reject(d["errors.location.notFound"])})}):(b.$broadcast("error",d["errors.location.unsupportedBrowser"]),b.$apply(function(){e.reject(d["errors.location.unsupportedBrowser"])})),e.promise}}}]);
 var app = angular.module('timeT', ['ngRoute','angular-gestures','ctrl','ui.bootstrap','geolocation']);
@@ -83,7 +190,7 @@ app.config(function ($routeProvider) {
 }).factory('vibrate', function (){
   return {
     vib: function (milliseconds) {
-      if(navigator.vibrate){ navigator.vibrate(milliseconds); }
+      // if(navigator.vibrate){ navigator.vibrate(milliseconds); }
     }
   };
 });
@@ -1058,7 +1165,6 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 				var y = $scope.dt.getFullYear();
 				return d + ' ' + m + ', ' + y;
 			}
-
 			$scope.goToDay = function(p){
 				vibrate.vib(100);
 				var d = $scope.dt.getDate(),r = $route.current.controller;
@@ -1085,4 +1191,27 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
 		templateUrl: 'layout/search.html'
 	};
-});
+}).directive('headerAdd',['project','$timeout','$routeParams','$location','$route','$modal','$rootScope','vibrate',function (project,$timeout,$routeParams,$location,$route,$modal,$rootScope,vibrate){
+	return {
+		restrict: 'A',
+		scope: {},
+		link: function($scope, iElm, iAttrs, controller) {
+			switch($route.current.controller){
+				case 'expenses':
+					$scope.h = '/expenses_list';
+					$scope.saveParam = false;
+					break;
+				default:
+					$scope.h = '/timesheet';
+					$scope.saveParam = true;
+					break;
+			}
+			$scope.title = LANG[project.lang][iAttrs.title];
+			$scope.go = function(){ vibrate.vib(100); $location.path($scope.h); }
+			$scope.save = function(){ $rootScope.$broadcast('saveFromHeader',$scope.saveParam); }
+
+		},
+		templateUrl:'layout/headeradd.html',
+
+	}
+}]);
