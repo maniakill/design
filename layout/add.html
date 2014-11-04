@@ -1,45 +1,54 @@
 <div id="loading"></div>
 <div menu=""></div>
-<div header="" title="Time entry"></div>
+<div header-add="" title="Time entry"></div>
 <div class="allTheWay" ng-show="opened">
 	<datepicker ng-model="dta" min-date="minDate" show-weeks="false" class="well well-sm " ></datepicker>
 </div>
-<div class="add_wrap scroller scrollerUp" ng-hide="show_amount">
+<div class="add_wrap scroller scrollerUp" ng-hide="hide_entry" >
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 	<div class="loginForm half_btn clearfix">
 		<form>
-			<input type="submit" class="submit saveBtn" lng="Back" hm-tap="go('/timesheet')">
-			<input type="submit" class="submit saveBtn btnright" lng="Save" hm-tap="save(true)">
+			<!-- <input type="submit" class="submit saveBtn" lng="Back" hm-tap="go('/timesheet')"> -->
+			<!-- <input type="submit" class="submit saveBtn btnright" lng="Save" hm-tap="save(true)"> -->
 		</form>
 	</div>
 	<div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:300px">
 		<timepicker hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
 	</div>
-	<div class="loginForm">
+	<div class="loginForm half_btn clearfix">
 		<form>
 			<input ng-hide="mode" type="submit" class="submit startBtns" value="Start" lng="Start" hm-tap="save()">
 			<input ng-show="mode" type="submit" class="submit startBtns" value="Stop" lng="Stop" hm-tap="stop()">
+			<input type="submit" class="submit startBtns btnright" value="Stop" lng="Edit" hm-tap="edit()">
 		</form>
 	</div>
 	<ul class="add_ul">
 		<li class="datePicker clearfix"><a herf="#" hm-tap="open()" id="add_calendar" class="left"></a>
 			<span class="dateSpan">{{getDates()}}</span>
 		<!-- <input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/> -->
-
 	</li>
+		<!-- <li hm-tap="showtPick()">{{dHours}}</li> -->
 		<li>{{customer}}</li>
 		<li>{{project}}</li>
 		<li class="last_li" hm-tap="selectTask(projectId)">{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
 	</ul>
 	<ul class="add_ul add_note">
-		<li class="last_li notes" hm-tap="addNote(projectId,taskId)"><span class="arrow abs" ></span><pre>{{notes2}}</pre></li>
+		<li class="last_li notes" hm-tap="addNote(projectId,taskId)"><span class="arrow abs" ></span><pre class="pre">{{notes2}}</pre></li>
 	</ul>
 </div>
 <div class="textWrap scroller scrollerUp" ng-show="show_amount">
 	<div class="loginForm">
 		<form>
-			<input type="submit" class="submit startBtns" value="Save" lng="Save" hm-tap="saveNote()">
+			<input type="submit" class="submit startBtns" value="Save" lng="Back" hm-tap="saveNote()">
 		</form>
 	</div>
 	<textarea class="noteText form-control" ng-model="notes" rows="8" id="ddd" lng="Add note">{{notes}}</textarea>
+</div>
+<div class="textWrap scroller scrollerUp" ng-show="show_time">
+	<div class="loginForm">
+		<form>
+			<input type="submit" class="submit startBtns" value="Save" lng="Back" hm-tap="edit(true)">
+		</form>
+	</div>
+	<input type="text" class="noteText form-control" ng-model="dHours"  />
 </div>
