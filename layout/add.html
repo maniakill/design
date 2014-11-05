@@ -1,20 +1,14 @@
 <div id="loading"></div>
-<div menu=""></div>
 <div header-add="" title="Time entry"></div>
 <div class="allTheWay" ng-show="opened">
 	<datepicker ng-model="dta" min-date="minDate" show-weeks="false" class="well well-sm " ></datepicker>
 </div>
 <div class="add_wrap scroller scrollerUp" ng-hide="hide_entry" >
 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-	<div class="loginForm half_btn clearfix">
-		<form>
-			<!-- <input type="submit" class="submit saveBtn" lng="Back" hm-tap="go('/timesheet')"> -->
-			<!-- <input type="submit" class="submit saveBtn btnright" lng="Save" hm-tap="save(true)"> -->
-		</form>
-	</div>
-	<div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:300px">
+	<!-- <div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:300px">
 		<timepicker hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
-	</div>
+	</div> -->
+	<span class="dtime">{{dHours}}</span>
 	<div class="loginForm half_btn clearfix">
 		<form>
 			<input ng-hide="mode" type="submit" class="submit startBtns" value="Start" lng="Start" hm-tap="save()">
@@ -25,9 +19,7 @@
 	<ul class="add_ul">
 		<li class="datePicker clearfix"><a herf="#" hm-tap="open()" id="add_calendar" class="left"></a>
 			<span class="dateSpan">{{getDates()}}</span>
-		<!-- <input type="text" datepicker-popup="dd MMMM, yyyy" ng-model="dta" is-open="opened" datepicker-options="dateOptions" ng-required="true" show-weeks="false" id="classSpan1" disabled="disabled"/> -->
 	</li>
-		<!-- <li hm-tap="showtPick()">{{dHours}}</li> -->
 		<li>{{customer}}</li>
 		<li>{{project}}</li>
 		<li class="last_li" hm-tap="selectTask(projectId)">{{task}}<span class="arrow abs" ng-hide="no_task"></span></li>
@@ -50,5 +42,7 @@
 			<input type="submit" class="submit startBtns" value="Save" lng="Back" hm-tap="edit(true)">
 		</form>
 	</div>
-	<input type="text" class="noteText form-control" ng-model="dHours"  />
+	<div ng-model="mytime" ng-change="changed()" class="timepicker" style="width:300px">
+		<timepicker hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+	</div>
 </div>
