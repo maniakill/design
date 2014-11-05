@@ -1033,7 +1033,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
           element.val(attrs.lng);
           if(LANG[project.lang][attrs.lng]){ element.val( LANG[project.lang][attrs.lng] ); }
         }
-        if(element[0].type == 'text' || element[0].type == 'password'){
+        if(element[0].type == 'text' || element[0].type == 'password' || element[0].type == 'number'){
           element[0].placeholder = attrs.lng;
           if(LANG[project.lang][attrs.lng]){ element[0].placeholder = LANG[project.lang][attrs.lng]; }
         }
@@ -1194,21 +1194,18 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 }).directive('headerAdd',['project','$timeout','$routeParams','$location','$route','$modal','$rootScope','vibrate',function (project,$timeout,$routeParams,$location,$route,$modal,$rootScope,vibrate){
 	return {
 		restrict: 'A',
-		scope: {},
+		// scope: {},
 		link: function($scope, iElm, iAttrs, controller) {
 			switch($route.current.controller){
 				case 'expenses':
 					$scope.h = '/expenses_list';
-					$scope.saveParam = false;
 					break;
 				default:
 					$scope.h = '/timesheet';
-					$scope.saveParam = true;
 					break;
 			}
 			$scope.title = LANG[project.lang][iAttrs.title];
 			$scope.go = function(){ vibrate.vib(100); $location.path($scope.h); }
-			$scope.save = function(){ $rootScope.$broadcast('saveFromHeader',$scope.saveParam); }
 
 		},
 		templateUrl:'layout/headeradd.html',
