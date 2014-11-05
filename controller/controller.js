@@ -279,7 +279,12 @@ ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
 			$scope.show_amount = true;
 			$scope.hide_entry=true;
 		}
-		$scope.saveNote = function(){ vibrate.vib(100); $scope.notes2 = $scope.notes ? $scope.notes : 'Add note'; $scope.show_amount = false; $scope.hide_entry=false; }
+		$scope.saveNote = function(){
+			vibrate.vib(100);
+			$scope.notes2 = $scope.notes ? $scope.notes : 'Add note';
+			$scope.show_amount = false;
+			$scope.hide_entry=false;
+		}
 		$scope.closeAlert = function(index) { vibrate.vib(100); $scope.alerts.splice(index, 1); };
 		$scope.$on('addError', function(arg,args) {
 			$scope.alerts = [ { type: 'error', msg: args } ];
@@ -452,7 +457,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 		$scope.project = LANG[project.lang]['Project Name'];
 		$scope.task = LANG[project.lang]['Receipt Photo'];
 		$scope.displayIt = 'display: none';
-		$scope.amount = LANG[project.lang]['Select Amount'];
+		$scope.amount = '';
 		$scope.notes = '';
 		$scope.notes2 = LANG[project.lang]['Add note'];
 		$scope.no_task = false;
@@ -460,9 +465,9 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 		$scope.img = '';
 		$scope.show_amount = false;
 		$scope.show_note = false;
-		$scope.hideE = false;
+		$scope.hide_entry = false;
 		if(project.Scopes){
-			$scope.amount = parseInt(project.Scopes.amount);
+			$scope.amount = isNaN(project.Scopes.amount) ? $scope.amount : parseInt(project.Scopes.amount);
 			$scope.notes = project.Scopes.notes;
 			$scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note'];
 		}
@@ -480,7 +485,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 							$scope.taskId = t.expense_id;
 							if($routeParams.expId){
 								var idx = $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
-								$scope.amount = project.expense[idx][$routeParams.expId]['amount'] ? parseInt(project.expense[idx][$routeParams.expId]['amount']) : LANG[project.lang]['Select Amount'];
+								$scope.amount = project.expense[idx][$routeParams.expId]['amount'] ? parseInt(project.expense[idx][$routeParams.expId]['amount']) : '';
 								$scope.notes = project.expense[idx][$routeParams.expId]['note'];
 								$scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note'];
 								$scope.img = project.expense[idx][$routeParams.expId]['picture'];
@@ -505,7 +510,7 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 							$scope.taskId = t.expense_id;
 							if($routeParams.expId){
 								var idx = $routeParams.d +'/'+ $routeParams.m +'/'+ $routeParams.y;
-								$scope.amount = project.expense[idx][$routeParams.expId]['amount'] ? parseInt(project.expense[idx][$routeParams.expId]['amount']) : LANG[project.lang]['Select Amount'];
+								$scope.amount = project.expense[idx][$routeParams.expId]['amount'] ? parseInt(project.expense[idx][$routeParams.expId]['amount']) : '';
 								$scope.notes = project.expense[idx][$routeParams.expId]['note'];
 								$scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note'];
 								$scope.img = project.expense[idx][$routeParams.expId]['picture'];
@@ -585,23 +590,23 @@ ctrl.controller('expenses',['$scope','$routeParams', 'project', '$location', '$t
 		/*timepicker end*/
 		$scope.addNote = function(pId,tId){
 			vibrate.vib(100);
-			$scope.hideE = true;
+			$scope.hide_entry = true;
 			$scope.show_note = true;
 			$timeout(function(){ document.getElementById('ddd').focus(); });
 		}
-		$scope.saveNote = function(){ vibrate.vib(100); $scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note']; $scope.hideE = false; $scope.show_note = false; }
+		$scope.saveNote = function(){ vibrate.vib(100); $scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note']; $scope.hide_entry = false; $scope.show_note = false; }
 		var setf = function(){
 			document.getElementById("addamount").focus();
 		}
 		$scope.addAmount = function(pId,tId){
 			vibrate.vib(100);
-			$scope.hideE = true;
+			$scope.hide_entry = true;
 			$scope.show_amount=true;
 			$timeout(function(){ document.getElementById('addamount').focus(); });
 		}
 		$scope.saveAmount = function(){
-			if(!$scope.amount){ $scope.amount = LANG[project.lang]['Select Amount']; }
-			$scope.hideE = false;
+			if(!$scope.amount){ $scope.amount = ''; }
+			$scope.hide_entry = false;
 			$scope.show_amount = false;
 		}
 		$scope.selectTask = function(){ $scope.add(); }
@@ -850,8 +855,14 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 			vibrate.vib(100);
 			$timeout(function(){ document.getElementById('ddd').focus(); });
 			$scope.show_amount = true;
+			$scope.hide_entry=true;
 		}
-		$scope.saveNote =function(){vibrate.vib(100); $scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note']; $scope.show_amount= false; }
+		$scope.saveNote =function(){
+			vibrate.vib(100);
+			$scope.notes2 = $scope.notes ? $scope.notes : LANG[project.lang]['Add note'];
+			$scope.show_amount= false;
+			$scope.hide_entry=false;
+		}
 		$scope.closeAlert = function(index) {vibrate.vib(100); $scope.alerts.splice(index, 1); };
 		$scope.$on('addError', function(arg,args) {
 			$scope.alerts = [ { type: 'error', msg: args } ];
