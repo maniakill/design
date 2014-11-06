@@ -52,15 +52,13 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 // timesheet
 ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$location','$rootScope','$filter','vibrate',
 	function ($scope,$timeout,project,$routeParams,$location,$rootScope,$filter,vibrate){
-		/*$scope.getP=function(item){
-			var p=project.getProject(item);
-			return p.customer_name+' > '+p.project_name;
-		}*/
+		$scope.total_hours = 0;
 		$scope.getTaskName = function(pr,item){
 			var t=project.getTask(pr,item);
 			return t.task_name;
 		}
 		var fixList = function(d){
+			$scope.total_hours = 0;
 			var array = [];
 			angular.forEach(d,function(value,key){
 				var tempP = project.getProject(value.id);
@@ -68,6 +66,7 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 				angular.forEach(value.tasks,function(v,k){
 					var t = v;
 					t.task_name = $scope.getTaskName(value.id,t.task_id);
+					$scope.total_hours += t.hours;
 					p.tasks.push(t);
 				});
 				p.tasks = $filter('orderBy')(p.tasks,'task_name',false);
@@ -182,6 +181,7 @@ ctrl.controller('add',['$scope','$routeParams','project','$location','$timeout',
 			}
 		}
 		$scope.edit = function(e){
+			if($scope.mode === true){ return false; }
 			if(e){
 				var r = corect_val($scope.dHours);
 				if($scope.mytime == null){
@@ -761,6 +761,7 @@ ctrl.controller('add_a',['$scope','$routeParams', 'project', '$location', '$time
 			}else{ $location.path('/timesheet'); }
 		}
 		$scope.edit = function(e){
+			if($scope.mode === true){ return false; }
 			if(e){
 				var r = corect_val($scope.dHours);
 				if($scope.mytime == null){
