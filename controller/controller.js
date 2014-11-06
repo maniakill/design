@@ -923,3 +923,25 @@ ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$
 		});
 	}
 ]);
+
+ctrl.controller('lists_c', ['$scope','project','$location','$timeout', function ($scope,project,$location,$timeout){
+	var fixList = function(p){
+		var array = [];
+		angular.forEach(p,function(value,key){
+			this.push(value);
+		},array);
+		return array;
+	}
+	$scope.items = fixList(project.contractList);
+	$timeout(function(){project.getContractList().then(function(){
+		$scope.items = fixList(project.contractList);
+	});});
+	$scope.getCName = function(item){
+		return project.getCustomer(item).customer_name;
+	}
+	$scope.open = function (pId,tId){
+		// vibrate.vib(100);
+		$location.path('/add/'+pId+'/'+tId);
+	}
+
+}]);

@@ -1,0 +1,12 @@
+<div id="loading"></div>
+<div menu=""></div>
+<div header="" title="List"></div>
+<div search=""></div>
+<div class="scroller">
+	<ul class="lists" >
+	    <li ng-repeat="item in items | filter:search  track by $index" hm-tap="open(item.project_id,item.task_id)">
+	    	<p>{{ item.name }}</p>
+	    	<span>{{ getCName(item.c_id) }}</span>
+	    </li>
+	</ul>
+</div>

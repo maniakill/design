@@ -147,7 +147,8 @@ LANG[1]={
 	'Task already added':'Taak reeds toegevoegd',
 	'Expense synced.':'Uitgave gesynchroniseerd.',
 	'items':'items',
-	'Expense' : 'Uitgave'
+	'Expense' : 'Uitgave',
+	'Add Contract':'Contract toevoegen'
 }
 //english
 LANG[2]={
@@ -297,7 +298,8 @@ LANG[2]={
 	'Task already added':'Task already added',
 	'Expense synced.':'Expense synced.',
 	'items':'items',
-	'Expense' : 'Expense'
+	'Expense' : 'Expense',
+	'Add Contract':'Add Contract'
 }
 //french
 LANG[3]={
@@ -447,7 +449,8 @@ LANG[3]={
 	'Task already added':'Tâche déjà ajoutée',
 	'Expense synced.':'Dépense synchronisée.',
 	'items':'eléments',
-	'Expense' : 'Dépense'
+	'Expense' : 'Dépense',
+	'Add Contract':'Ajouter un Contrat'
 }
 //german
 LANG[4]={
@@ -597,5 +600,6 @@ LANG[4]={
 	'Task already added':'Aufgabe bereits hinzugefügt',
 	'Expense synced.':'Ausgabe synchronisiert.',
 	'items':'Artikel',
-	'Expense' : 'Ausgabe'
+	'Expense' : 'Ausgabe',
+	'Add Contract':'Vertrag hinzufügen'
 }

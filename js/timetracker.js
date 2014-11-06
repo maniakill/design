@@ -152,6 +152,7 @@ app.config(function ($routeProvider) {
 		.when('/lists_a/:customerId',{controller: 'lists_a',templateUrl: 'layout/lists_a.html'})
 		.when('/lists_e/:projectId',{controller: 'lists_e',templateUrl: 'layout/lists_e.html'})
 		.when('/lists_ea/:projectId',{controller: 'lists_e',templateUrl: 'layout/lists_e.html'})
+		.when('/lists_c',{controller: 'lists_c',templateUrl: 'layout/lists_c.html'})
 		.when('/add/:item',{controller: 'add',templateUrl: 'layout/add.html'})
 		.when('/add/:item/:taskId',{controller: 'add',templateUrl: 'layout/add.html'})
 		.when('/add/:item/:taskId/:taskTimeId/:d/:m/:y',{controller: 'add',templateUrl: 'layout/add.html'})
@@ -208,6 +209,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		project.taskTimeId = localStorage.getItem('taskTimeId'+localStorage.username) ? JSON.parse(localStorage.getItem('taskTimeId'+localStorage.username)) : {};
 		project.taskTime = localStorage.getItem('taskTime'+localStorage.username) ? JSON.parse(localStorage.getItem('taskTime'+localStorage.username)) : {};
 		project.toSync = localStorage.getItem('toSync'+localStorage.username) ? JSON.parse(localStorage.getItem('toSync'+localStorage.username)) : {};
+		project.contractList = localStorage.getItem('contractList'+localStorage.username) ? JSON.parse(localStorage.getItem('contractList'+localStorage.username)) : {};
 		project.alerts={};
 		project.synceded = true;
 		project.menuUpdate = undefined;
@@ -252,6 +254,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			this.customer_name = item.customer_name;
 			this.customer_id = item.customer_id;
 			this.date = show;
+			this.is_contract=item.is_contract;
 			this.task = {};
 			for(x in item.task){
 				var id = item.task[x].task_id;
@@ -280,6 +283,14 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			this.unit = item.unit;
 			this.unit_price = item.unit_price;
 			this.name = item.expense_name ? item.expense_name : item.name;
+		}
+		function Contract(item){
+			this.contract_id = item.id;
+			this.project_id = item.project_id;
+			this.name=item.name;
+			this.c_id=item.customer_id;
+			this.task_id=item.task_id
+			this.task_name=item.task_name;
 		}
 		var save = function(item, show, saveT, time){
 			var id = item.project_id;
@@ -364,6 +375,17 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			if(!project.expenseList[id]){ project.expenseList[id] = new Expenses(item); }
 			saveTime('expensesList', project.expenseList);
 		}
+		var saveContract = function(item){
+			var id = item.id;
+			var customerItem = {};
+			customerItem.id = item.customer_id;
+			customerItem.name = item.customer_name;
+			saveCustomer(customerItem);
+			if(!project.time[item.project_id]){ project.time[item.project_id] = new Proj(item);	}
+			project.time[item.project_id].is_contract=1;
+			if(!project.contractList[id]){ project.contractList[id] = new Contract(item); }
+			saveTime('contractList', project.contractList);
+		}
 		/* end store data */
 		/* requests */
 		project.getTime = function(time) {
@@ -405,6 +427,20 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 				project.stopLoading();
 				return response.data.response;
 			},function(){ project.stopLoading(); });
+			return this.data;
+		}
+		project.getContractList = function(){
+			//project.loading();
+			this.data = $http.get(url+'index.php?do=mobile-contract_list&'+key).then(function(response){
+				if(response.data.code=='ok'){
+					if(typeof(response.data.response[0].contract) == 'object'){
+						var pr = response.data.response[0].contract;
+						for(x in pr){ saveContract(pr[x]); }
+					}
+				}
+				if(response.data.code=='error'){ project.logout(response.data); }
+				return response.data;
+			});
 			return this.data;
 		}
 		project.getCustomerList = function(){
@@ -1057,7 +1093,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			switch($route.current.controller){
 				case 'timesheet':
 					$scope.timesheet = false;
-					$scope.task_type = [ { title: LANG[project.lang]['Add Task for Project'], url: '/lists' }, { title: LANG[project.lang]['Add Ad Hoc Task'], url: '/lists_a'} ];
+					$scope.task_type = [ { title: LANG[project.lang]['Add Task for Project'], url: '/lists' }, { title: LANG[project.lang]['Add Ad Hoc Task'], url: '/lists_a'},{title:LANG[project.lang]['Add Contract'],url:'lists_c'} ];
 					$scope.types = 'Task';
 					break;
 				case 'expenses_list':
