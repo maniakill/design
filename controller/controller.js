@@ -109,6 +109,7 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 			$timeout(function(){ $scope.closeAlert(0); },3000);
 		}
 		$scope.$on('closeDatepicker', function(arg) { $scope.opened = false; });
+		$scope.$on('updateTotal', function(arg) { $scope.projects = fixList(project.taskTimeId[time]); });
 		project.closeAlert();
 		$timeout( function(){
 			project.getTime(time).then(function(){
