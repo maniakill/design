@@ -96,6 +96,8 @@ a, a:hover{ text-decoration: none; }
 			.noteText { width: 274px; }
 		.no_data { }
 			.no_data p { color: #000; font-size: 18px; font-family:Helvetica; text-align: center; padding-top: 40%; }
+.timepicker .glyphicon-chevron-up{  background: url("../images/icons.png") no-repeat -2px -780px; height: 24px; width: 24px; }
+.timepicker .glyphicon-chevron-down{  background: url("../images/icons.png") no-repeat -2px -810px; height: 24px; width: 24px; }
 .glyphicon { background: url("../img/glyphicons-halflings.png") no-repeat left top;height: 14px; vertical-align: text-top; }
 .glyphicon-chevron-left { background-position: -432px -72px; }
 .glyphicon-chevron-right { background-position: -458px -72px; }
