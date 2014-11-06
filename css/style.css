@@ -85,7 +85,7 @@ a, a:hover{ text-decoration: none; }
 					.square_active { background: #ff9878; color: #ffffff; }
 			/*.add_note { margin-top: 10px; }*/
 			.timepicker { margin: 15px auto; }
-				.timepicker input.form-control { /*height: 116px;*/ width: 36px; /*font-size: 108px; border: 2px solid #b7b7b7;*/ padding: 6px; line-height: normal; }
+				.timepicker input.form-control { height: 36px; width: 50px; font-size: 28px;/* border: 2px solid #b7b7b7;*/ padding: 6px; line-height: normal; }
 				.timepicker table { margin: 0 auto;}
 		.lists {}
 			.lists li { padding: 5px 10px 2px; border-bottom: 1px solid #E6E6E6; font-weight: bold; cursor: pointer; }

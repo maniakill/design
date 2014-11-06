@@ -66,7 +66,7 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 				angular.forEach(value.tasks,function(v,k){
 					var t = v;
 					t.task_name = $scope.getTaskName(value.id,t.task_id);
-					$scope.total_hours += t.hours;
+					$scope.total_hours = parseFloat($scope.total_hours) + parseFloat(t.hours);
 					p.tasks.push(t);
 				});
 				p.tasks = $filter('orderBy')(p.tasks,'task_name',false);
