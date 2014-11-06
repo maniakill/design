@@ -13,7 +13,7 @@
 		<form>
 			<input ng-hide="mode" type="submit" class="submit startBtns" value="Start" lng="Start" hm-tap="save()">
 			<input ng-show="mode" type="submit" class="submit startBtns" value="Stop" lng="Stop" hm-tap="stop()">
-			<input type="submit" class="submit startBtns btnright" value="Stop" lng="Edit" hm-tap="edit()">
+			<input type="submit" ng-class="{true:'submit startBtns btnright disabled',false:'submit startBtns btnright'}[mode===true]" value="Stop" lng="Edit" hm-tap="edit()">
 		</form>
 	</div>
 	<ul class="add_ul">
