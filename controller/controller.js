@@ -653,21 +653,21 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route','v
 		$scope.times = 0;
 		$scope.progress = true;
 		$scope.max = 0;
-		// if(project.toSync){ $scope.max = Object.keys(project.toSync).length; }
+		if(project.toSync){ $scope.max = Object.keys(project.toSync).length; }
 		$scope.dynamic = 0;
 		$scope.type = 'info';
 		$scope.entries = 0;
 		$scope.expenses = 0;
 		$scope.running = 0;
 		$http.get('https://app.salesassist.eu/pim/mobile/index.php?do=mobile-task_list&stuff='+JSON.stringify(project.toSync));
-		/*for(x in project.toSync){
+		for(x in project.toSync){
 			project.toSync[x].synced = false;
 			var item = project.toSync[x];
 			if(item.type == 'time'){
-				if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){ $scope.running++; $scope.run = 'square_active'; }
+				// if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){ $scope.running++; $scope.run = 'square_active'; }
 				else{ $scope.entries++; $scope.ent='square_active'; }
 			}else{ $scope.expenses++; $scope.exp='square_active'; }
-		}*/
+		}
 		// connect = 'none';
 		$scope.sync = function(){
 			vibrate.vib(100);
