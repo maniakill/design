@@ -659,14 +659,14 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route','v
 		$scope.entries = 0;
 		$scope.expenses = 0;
 		$scope.running = 0;
-		for(x in project.toSync){
+		/*for(x in project.toSync){
 			project.toSync[x].synced = false;
 			var item = project.toSync[x];
 			if(item.type == 'time'){
 				if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){ $scope.running++; $scope.run = 'square_active'; }
 				else{ $scope.entries++; $scope.ent='square_active'; }
 			}else{ $scope.expenses++; $scope.exp='square_active'; }
-		}
+		}*/
 		// connect = 'none';
 		$scope.sync = function(){
 			vibrate.vib(100);
