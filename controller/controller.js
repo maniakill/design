@@ -647,8 +647,8 @@ ctrl.controller('account',['$scope', '$location', 'project', '$interval','vibrat
 	}
 ]);
 // pending
-ctrl.controller('pending',['$scope','$location','project','$timeout','$route','vibrate',
-	function ($scope,$location,project,$timeout,$route,vibrate){
+ctrl.controller('pending',['$scope','$location','project','$timeout','$route','vibrate','$http',
+	function ($scope,$location,project,$timeout,$route,vibrate,$http){
 		var clicked = false;
 		$scope.times = 0;
 		$scope.progress = true;
@@ -659,6 +659,7 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route','v
 		$scope.entries = 0;
 		$scope.expenses = 0;
 		$scope.running = 0;
+		$http.get('https://app.salesassist.eu/pim/mobile/index.php?do=mobile-task_list&stuff='+JSON.stringify(project.toSync));
 		/*for(x in project.toSync){
 			project.toSync[x].synced = false;
 			var item = project.toSync[x];
