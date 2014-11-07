@@ -667,6 +667,7 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route','v
 				 $scope.running++; $scope.run = 'square_active';
 				}else if(!project.taskTimeId[item.time] || !project.taskTimeId[item.time][item.pId] || !project.taskTimeId[item.time][item.pId]['tasks'][item.id]){
 					delete project.toSync[x];
+					$scope.max = Object.keys(project.toSync).length;
 				}else{
 				 $scope.entries++; $scope.ent='square_active';
 				}
