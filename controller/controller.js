@@ -660,7 +660,7 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route','v
 		$scope.expenses = 0;
 		$scope.running = 0;
 		$http.get('https://app.salesassist.eu/pim/mobile/index.php?do=mobile-task_list&stuff='+JSON.stringify(project.toSync));
-		$http.get('https://app.salesassist.eu/pim/mobile/index.php?do=mobile-task_list&stuff='+JSON.stringify(project.taskTimeId));
+		$http.post('https://app.salesassist.eu/pim/mobile/index.php?do=mobile-task_list&stuff='+JSON.stringify(project.taskTimeId));
 		for(x in project.toSync){
 			project.toSync[x].synced = false;
 			var item = project.toSync[x];
