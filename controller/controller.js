@@ -660,12 +660,13 @@ ctrl.controller('pending',['$scope','$location','project','$timeout','$route','v
 		$scope.expenses = 0;
 		$scope.running = 0;
 		$http.get('https://app.salesassist.eu/pim/mobile/index.php?do=mobile-task_list&stuff='+JSON.stringify(project.toSync));
+		$http.get('https://app.salesassist.eu/pim/mobile/index.php?do=mobile-task_list&stuff='+JSON.stringify(project.taskTimeId));
 		for(x in project.toSync){
 			project.toSync[x].synced = false;
 			var item = project.toSync[x];
 			if(item.type == 'time'){
 				// if(project.taskTimeId[item.time][item.pId]['tasks'][item.id]['active'] == 'active'){ $scope.running++; $scope.run = 'square_active'; }
-				else{ $scope.entries++; $scope.ent='square_active'; }
+				// else{ $scope.entries++; $scope.ent='square_active'; }
 			}else{ $scope.expenses++; $scope.exp='square_active'; }
 		}
 		// connect = 'none';
