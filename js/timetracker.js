@@ -822,20 +822,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 				if(!redirect){ $location.path('/timesheet/'+time); }
 			}
 		}
-		project.start = function(item, time){
-			// project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
-			item.hours =  project.getHours();
+		var activateItem = function(item,time){
 			item.active = 'active';
-			var connect = checkConnection();
-			if(connect != 'none' && connect !='unknown'){
-				var sendItem = {};
-				sendItem.task_time_id = item.task_time_id;
-				sendItem.hours = item.hours;
-				sendItem.notes = item.notes;
-				$http({ method: 'POST', url: url+'index.php?do=mobile--mobile-save_time&'+key+'&overwrite=1', data: 'task_time=' + JSON.stringify(Array(sendItem)), headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
-				.then(function(res){ if(res.data.code=='error'){ project.logout(res.data); } },
-							function(){ project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id); });
-			}
 			project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
 			saveTime('taskTimeId', project.taskTimeId);
 			var d = Date.now();
@@ -847,25 +835,74 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			saveTime('taskTime', project.taskTime);
 			$location.path('/timesheet/'+time);
 		}
+		project.start = function(item, time){
+			item.hours =  project.getHours();
+			var connect = checkConnection();
+			if(connect != 'none' && connect !='unknown'){
+				project.loading();
+				var sendItem = {};
+				sendItem.task_time_id = item.task_time_id;
+				sendItem.hours = item.hours;
+				sendItem.notes = item.notes;
+				$http({ method: 'POST', url: url+'index.php?do=mobile--mobile-save_time&'+key+'&overwrite=1', data: 'task_time=' + JSON.stringify(Array(sendItem)), headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
+				.then(function(res){
+					if(res.data.code=='error'){ project.logout(res.data); }
+					else{
+						if(res.data.response.failed[0] == item.task_time_id){
+							$rootScope.$broadcast('addError',LANG[project.lang]['Time entry locked']);
+							project.stopLoading();
+						}else{
+							activateItem(item,time);
+						}
+					}
+				},
+				function(){
+					activateItem(item,time);
+			  });
+			}else{
+				activateItem(item,time);
+			}
+
+		}
 		project.update = function(item,time,scope){
 			var connect = checkConnection();
 			item.notes =  scope.notes;
 			item.hours =  project.getHours();
 			if(project.taskTime[item.task_time_id]){ project.taskTime[item.task_time_id].start = Date.now()-item.hours*3600*1000; }
 			if(connect != 'none' && connect !='unknown'){
+				project.loading();
 				var sendItem = {};
 				sendItem.task_time_id = item.task_time_id;
 				sendItem.hours = item.hours;
 				sendItem.notes = item.notes;
 				$http({ method: 'POST', url: url+'index.php?do=mobile--mobile-save_time&'+key+'&overwrite=1', data: 'task_time=' + JSON.stringify(Array(sendItem)), headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
-				.then(function(res){ if(res.data.code=='error'){ project.logout(res.data); } },
-							function(){ project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id); });
+				.then(function(res){
+					if(res.data.code=='error'){ project.logout(res.data); }
+					else{
+						console.log(item);
+						if(res.data.response.failed[0] == item.task_time_id){
+							$rootScope.$broadcast('addError',LANG[project.lang]['Time entry locked']);
+							project.stopLoading();
+						}else{
+							saveTime('taskTimeId', project.taskTimeId);
+							saveTime('taskTime', project.taskTime);
+							$location.path('/timesheet/'+time);
+						}
+					}
+				},
+				function(){
+					project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
+					saveTime('taskTimeId', project.taskTimeId);
+					saveTime('taskTime', project.taskTime);
+					$location.path('/timesheet/'+time);
+				});
 			}else{
 				project.addToSync('time',time,item.project_id,item.customer_id,item.task_id,item.task_time_id);
+				saveTime('taskTimeId', project.taskTimeId);
+				saveTime('taskTime', project.taskTime);
+				$location.path('/timesheet/'+time);
 			}
-			saveTime('taskTimeId', project.taskTimeId);
-			saveTime('taskTime', project.taskTime);
-			$location.path('/timesheet/'+time);
+
 		}
 		// var t = window.setInterval( rune, 1000 ); I don't know why this doesn't work and the line below works
 		project.interval = $interval(rune,5000);

@@ -148,7 +148,8 @@ LANG[1]={
 	'Expense synced.':'Uitgave gesynchroniseerd.',
 	'items':'items',
 	'Expense' : 'Uitgave',
-	'Add Contract':'Contract toevoegen'
+	'Add Contract':'Contract toevoegen',
+	'Time entry locked':'Invoer is beveiligd'
 }
 //english
 LANG[2]={
@@ -299,7 +300,8 @@ LANG[2]={
 	'Expense synced.':'Expense synced.',
 	'items':'items',
 	'Expense' : 'Expense',
-	'Add Contract':'Add Contract'
+	'Add Contract':'Add Contract',
+	'Time entry locked':'Time entry locked'
 }
 //french
 LANG[3]={
@@ -450,7 +452,8 @@ LANG[3]={
 	'Expense synced.':'Dépense synchronisée.',
 	'items':'eléments',
 	'Expense' : 'Dépense',
-	'Add Contract':'Ajouter un Contrat'
+	'Add Contract':'Ajouter un Contrat',
+	'Time entry locked':'Cette donnée est protégée'
 }
 //german
 LANG[4]={
@@ -601,5 +604,6 @@ LANG[4]={
 	'Expense synced.':'Ausgabe synchronisiert.',
 	'items':'Artikel',
 	'Expense' : 'Ausgabe',
-	'Add Contract':'Vertrag hinzufügen'
+	'Add Contract':'Vertrag hinzufügen',
+	'Time entry locked':'Eintrag wurde gesperrt'
 }
