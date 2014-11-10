@@ -1182,7 +1182,8 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			var canceler;
 			$scope.snap_back = function(){
 				vibrate.vib(100);
-				$timeout(function(){ angular.element('.cmain_menu').addClass('slide_right'); });
+				angular.element('.cmain_menu').addClass('slide_right');
+				// $timeout(function(){  });
 				$timeout(function(){ angular.element('.main_menu').hide(); },500);
 			}
 			$scope.go = function(h){ vibrate.vib(100); $location.path(h); $scope.snap_back(); }
