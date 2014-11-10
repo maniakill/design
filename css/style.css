@@ -135,11 +135,11 @@ a, a:hover{ text-decoration: none; }
 .headerAdd .titleSave { padding: 10px; margin-top: -3px; }
 .main_menu{position: absolute; width: 100%; height: 100%; z-index: 4; top: 0; right: 0; left: 0; bottom: 0px; display: none;}
 .omain_menu {background: black;opacity: 0.5;height: 100%;width: 100%;position: absolute;z-index: 4;}
-.cmain_menu {height: 100%;background: #fff;width: 85%; position: absolute;z-index: 5;left: -85%; overflow: hidden; /*box-shadow: 0px 5px 15px #111;*/ }
+.cmain_menu {height: 100%;background: #fff;width: 85%; position: absolute;z-index: 5;left: -85%; overflow: hidden; box-shadow: 0px 5px 15px #111; }
 .menu_list .nmenu_list {font-size: 18px;}
 .menu_list li {color: #252525;font-size: 14px;font-weight: normal;border-bottom: 1px solid #d9d9d9;padding: 5px;}
-.slide_left {-webkit-transform: translate(100%,0);-ms-transform: translate(100%,0);transform: translate(100%,0);-webkit-transition: -webkit-transform .3s ease-out;-moz-transition: -moz-transform .3s ease-out;-o-transition: -o-transform .3s ease-out;transition: transform .3s ease-out;}
-.slide_right {-webkit-transform: translate(0,0);-ms-transform: translate(0,0);transform: translate(0,0);-webkit-transition: -webkit-transform .3s ease-in;-moz-transition: -moz-transform .3s ease-in;-o-transition: -o-transform .3s ease-in;transition: transform .3s ease-in;}
+.slide_left {-webkit-transform: translate3d(100%,0,0);-ms-transform: translate3d(100%,0,0);transform: translate3d(100%,0,0);-webkit-transition: -webkit-transform .3s ease-out;-moz-transition: -moz-transform .3s ease-out;-o-transition: -o-transform .3s ease-out;transition: transform .3s ease-out;}
+.slide_right {-webkit-transform: translate3d(0,0,0);-ms-transform: translate3d(0,0,0);transform: translate3d(0,0,0);-webkit-transition: -webkit-transform .3s ease-in;-moz-transition: -moz-transform .3s ease-in;-o-transition: -o-transform .3s ease-in;transition: transform .3s ease-in;}
 .daypic { background-color: #e1e1e1; border-bottom: 1px solid #ccc; box-shadow: 0px 2px 4px 0px #DDD; }
 .day { font-size: 14px; font-weight: bold; color: #5a93b5; width: 230px; margin: 0 auto; display: block; text-align: center; padding: 11px 0; line-height: 20px; text-shadow: 0 1px #fff; }
 .daypic .arrow { width: 44px; height: 42px; margin: 0px; background: url('../images/icons.png') 17px -181px; border-left: 1px solid #ccc; border-right: 1px solid #ccc; }
