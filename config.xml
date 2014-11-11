@@ -43,7 +43,7 @@
 
     <gap:platform name="ios" />
     <gap:config-file platform="ios" parent="CFBundleVersion">
-        <string>60</string>
+        <string>61</string>
     </gap:config-file>
     <gap:platform name="android" />
     <description>
