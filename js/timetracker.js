@@ -504,6 +504,16 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			return this.data;
 		}
 		/* end requests */
+		/* start fixers */
+		project.checkExpenses = function(r,time){
+			if(r.response && typeof(r.response.expense) == 'object'){
+				var data = r.response.expense, keys = [];
+				angular.forEach(project.expense[time],function(value,key){
+					keys.push(key);
+				});
+			}
+		}
+		/* end fixers */
 		/* geters and seters */
 		project.getProject = function(id){ if (project.time[id] && id) { return project.time[id]; } return ''; }
 		project.getTask = function(id, item){ if (id && item) { if(project.time[id]){ if(project.time[id].task[item]){ return project.time[id].task[item]; } } } return ''; }

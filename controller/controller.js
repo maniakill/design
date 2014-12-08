@@ -904,6 +904,7 @@ ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$
 		}
 		$scope.no_project = true;
 		$scope.expense = fixList(project.expense[time]);
+		console.log(project.expense[time]);
 		if(JSON.stringify(project.expense[time]) == '{}'){ $scope.no_project = false; }
 		if(!$scope.no_project){ project.loading(); }
 		$scope.editTask = function(pId,tId,adhoc,cId,expId){
@@ -921,7 +922,8 @@ ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$
 		project.closeAlert();
 		$scope.$on('closeDatepicker', function(arg) { $scope.opened = false; });
 		$timeout(function(){
-			project.getExpenses(time).then(function(){
+			project.getExpenses(time).then(function(res){
+				project.checkExpenses(res,time);
 				$scope.no_project = true;
 				if(JSON.stringify(project.expense[time]) == '{}'){ $scope.no_project = false; }
 				$scope.expense = fixList(project.expense[time]);
