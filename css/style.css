@@ -35,12 +35,7 @@ a, a:hover{ text-decoration: none; }
 			.half_btn input.submit { width: 135px; float: left; margin-right: 10px; }
 			.half_btn input.btnright { float: right; margin: 0px; }
 			.half_btn input.startBtns { margin: 0 auto 5%; }
-		.header {  background: #5d97b9; min-height: 31px; padding: 19px 6px 6px; border-bottom: 1px solid #1d4461; border-top: 1px solid #8bb9d3; box-shadow: 0px 2px 4px 0px #8bb9d3; position: relative;
-			background: -webkit-linear-gradient(#5d97b9, #3070a0); /* For Safari 5.1 to 6.0 */
-  		background: -o-linear-gradient(#5d97b9, #3070a0); /* For Opera 11.1 to 12.0 */
-  		background: -moz-linear-gradient(#5d97b9, #3070a0); /* For Firefox 3.6 to 15 */
-  		background: linear-gradient(#5d97b9, #3070a0); /* Standard syntax */
-		 }
+		.header {  background: #518caf; min-height: 31px; padding: 19px 6px 6px; border-bottom: 1px solid #1d4461; border-top: 1px solid #8bb9d3; box-shadow: 0px 2px 4px 0px #8bb9d3; position: relative; }
 			.header .headerB { background: url('../images/icons.png') 5px -39px ; border: none; padding: 6px 15px 5px; margin: 0px; line-height: normal; }
 			.header .add, .header .calendar { width: 40px; height: 40px; padding: 0px;  margin-right: 6px; margin-top: -3px; }
 			.header .calendar { margin-right: 0px; }
