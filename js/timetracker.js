@@ -1163,7 +1163,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 				vibrate.vib(100);
 				angular.element('.main_menu').show(0,function(){
 					var _this = angular.element('.cmain_menu'), width = _this.outerWidth();
-					_this.removeClass('slide_right slide_left').css({'left':'-85%'});
+					_this.removeClass('slide_right slide_left');//.css({'left':'-85%'});
 					$timeout(function(){ _this.addClass('slide_left'); });
 				});
 			}
