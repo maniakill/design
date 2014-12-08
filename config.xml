@@ -61,6 +61,7 @@
     <gap:plugin name="org.apache.cordova.geolocation" version="0.3.10" />
     <gap:plugin name="org.apache.cordova.vibration" version="0.3.11" />
     <gap:plugin name="org.apache.cordova.console" version="0.2.11" />
+    <gap:plugin name="org.apache.cordova.device" version="0.2.12" />
     <content src="index.html" />
     <access origin="*" />
 </widget>

@@ -191,7 +191,11 @@ app.config(function ($routeProvider) {
 }).factory('vibrate', function (){
   return {
     vib: function (milliseconds) {
-      // if(navigator.vibrate){ navigator.vibrate(milliseconds); }
+      if(navigator.vibrate){
+      	if(device && device.platform == 'Android'){
+      		navigator.vibrate(milliseconds);
+      	}
+      }
     }
   };
 });

@@ -930,7 +930,7 @@ ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$
 	}
 ]);
 
-ctrl.controller('lists_c', ['$scope','project','$location','$timeout', function ($scope,project,$location,$timeout){
+ctrl.controller('lists_c', ['$scope','project','$location','$timeout','vibrate', function ($scope,project,$location,$timeout,vibrate){
 	var fixList = function(p){
 		var array = [];
 		angular.forEach(p,function(value,key){
@@ -946,7 +946,7 @@ ctrl.controller('lists_c', ['$scope','project','$location','$timeout', function 
 		return project.getCustomer(item).customer_name;
 	}
 	$scope.open = function (pId,tId){
-		// vibrate.vib(100);
+		vibrate.vib(100);
 		$location.path('/add/'+pId+'/'+tId);
 	}
 
