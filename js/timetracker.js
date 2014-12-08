@@ -193,7 +193,7 @@ app.config(function ($routeProvider) {
     vib: function (milliseconds) {
       if(navigator.vibrate){
       	if(device && device.platform == 'Android'){
-      		navigator.vibrate(milliseconds);
+      		navigator.vibrate(50);
       	}
       }
     }
