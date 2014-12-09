@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget
-    id="eu.thinkweb.salesassist"
+    id="eu.salesassist.timetracker"
     version="2.0"
     versionCode = "2000"
     xmlns="http://www.w3.org/ns/widgets"
