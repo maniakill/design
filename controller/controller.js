@@ -112,7 +112,8 @@ ctrl.controller('timesheet',['$scope','$timeout','project','$routeParams','$loca
 		$scope.$on('updateTotal', function(arg) { $scope.projects = fixList(project.taskTimeId[time]); });
 		project.closeAlert();
 		$timeout( function(){
-			project.getTime(time).then(function(){
+			project.getTime(time).then(function(res){
+				project.checkTimeSheet(res,time);
 				$scope.no_project=true;
 				if(JSON.stringify(project.taskTimeId[time]) == '{}'){ $scope.no_project=false; }
 				$scope.projects = fixList(project.taskTimeId[time]);
@@ -904,7 +905,6 @@ ctrl.controller('expenses_list',['$scope','$timeout','project','$routeParams','$
 		}
 		$scope.no_project = true;
 		$scope.expense = fixList(project.expense[time]);
-		console.log(project.expense[time]);
 		if(JSON.stringify(project.expense[time]) == '{}'){ $scope.no_project = false; }
 		if(!$scope.no_project){ project.loading(); }
 		$scope.editTask = function(pId,tId,adhoc,cId,expId){

@@ -8,7 +8,7 @@
 		<input type="submit" class="jumpy" value="Jump to Today" lng="Jump to Today" hm-tap="jumpToToday()">
 	</div>
 	<ul>
-		<li ng-repeat="expens in expense" class="projects">
+		<li ng-repeat="expens in expense track by $index" class="projects">
 			<p class="projectName">{{expens.customer_name +' > '+expens.project_name}}</p>
 			<ul>
 				<li class="taskDetail" hm-tap="editTask(expens.project_id,expens.expense_id,expens.project_name,expens.customer_id,expens.id)">

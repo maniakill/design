@@ -131,6 +131,7 @@ function corect_val(number){
 		}
 		return value;
 	}
+
 /*! angularjs-geolocation 11-09-2013 */
 angular.module("geolocation",[]).constant("geolocation_msgs",{"errors.location.unsupportedBrowser":"Browser does not support location services","errors.location.notFound":"Unable to determine your location"}),angular.module("geolocation").factory("geolocation",["$q","$rootScope","$window","geolocation_msgs",function(a,b,c,d){return{getLocation:function(){var e=a.defer();return c.navigator&&c.navigator.geolocation?c.navigator.geolocation.getCurrentPosition(function(a){b.$apply(function(){e.resolve(a)})},function(){b.$broadcast("error",d["errors.location.notFound"]),b.$apply(function(){e.reject(d["errors.location.notFound"])})}):(b.$broadcast("error",d["errors.location.unsupportedBrowser"]),b.$apply(function(){e.reject(d["errors.location.unsupportedBrowser"])})),e.promise}}}]);
 var app = angular.module('timeT', ['ngRoute','angular-gestures','ctrl','ui.bootstrap','geolocation']);
@@ -507,9 +508,56 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 		/* start fixers */
 		project.checkExpenses = function(r,time){
 			if(r.response && typeof(r.response.expense) == 'object'){
-				var data = r.response.expense, keys = [];
+				var data = r.response.expense, keys = [],respKeys = [], toSyncKeys = [];
 				angular.forEach(project.expense[time],function(value,key){
 					keys.push(key);
+				});
+				angular.forEach(data,function(value,key){
+					respKeys.push(value.id);
+				});
+				angular.forEach(project.toSync,function(value,key){
+					toSyncKeys.push(value.id.toString());
+				});
+				angular.forEach(keys,function(value,key){
+					if(respKeys.indexOf(value) == -1 && toSyncKeys.indexOf(value) == -1){
+						delete project.expense[time][value];
+						saveTime('expenses', project.expense);
+					}
+				});
+			}
+		}
+		project.checkTimeSheet = function(r,time){
+			if(r.response && typeof(r.response.project) == 'object'){
+				var data = r.response.project, keys = [],respKeys = [], toSyncKeys = [], secondKeys =[];
+				angular.forEach(data,function(value,key){
+					angular.forEach(value.task,function(v,k){
+						if(respKeys.indexOf(v.task_time_id) == -1){
+							respKeys.push(v.task_time_id);
+						}
+					});
+				});
+				angular.forEach(project.taskTimeId[time],function(value,key){
+					angular.forEach(value.tasks,function(v,k){
+						keys.push(v.task_time_id);
+						secondKeys[v.task_time_id]=value.id;
+					});
+				});
+				angular.forEach(project.toSync,function(value,key){
+					toSyncKeys.push(value.id.toString());
+				});
+				angular.forEach(keys,function(value,key){
+					if(respKeys.indexOf(value) == -1 && toSyncKeys.indexOf(value) == -1){
+						delete project.taskTimeId[time][secondKeys[value]].tasks[value];
+						saveTime('taskTimeId', project.taskTimeId);
+						var inc = 0;
+						angular.forEach(project.taskTimeId[time][secondKeys[value]].tasks,function(v,k){
+							inc++;
+						});
+						if(inc == 0){
+							delete project.taskTimeId[time][secondKeys[value]];
+							saveTime('taskTimeId', project.taskTimeId);
+						}
+					}
 				});
 			}
 		}
@@ -893,7 +941,6 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 				.then(function(res){
 					if(res.data.code=='error'){ project.logout(res.data); }
 					else{
-						console.log(item);
 						if(res.data.response.failed[0] == item.task_time_id){
 							$rootScope.$broadcast('addError',LANG[project.lang]['Time entry locked']);
 							project.stopLoading();
@@ -944,6 +991,7 @@ app.factory('project', ['$http','$templateCache','$location','$rootScope','$inte
 			if($route.current.controller == 'timesheet'){ $rootScope.$broadcast('updateTotal'); }
 			if(save == true){ saveTime('taskTime', project.taskTime);}
 			var connect = checkConnection();
+			// connect = 'none';
 			if(connect != 'none' && connect !='unknown' && project.synceded){ project.synceded = false; project.sync(true); }
 		}
 		$rootScope.$on('finished', function(arg) {
