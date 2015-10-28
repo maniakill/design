@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget
     id="eu.thinkweb.salesassist"
-    version="2.1"
-    versionCode = "2100"
+    version="2.2"
+    versionCode = "2200"
     xmlns="http://www.w3.org/ns/widgets"
     xmlns:gap = "http://phonegap.com/ns/1.0"
     xmlns:android   = "http://schemas.android.com/apk/res/android"
@@ -13,7 +13,7 @@
     <preference name="android-minSdkVersion" value="5" />
     <preference name="android-targetSdkVersion" value="11" />
     <preference name="orientation" value="portrait" />
-    <preference name='phonegap-version' value='cli-5.1.1' />
+    <preference name='phonegap-version' value='cli-5.2.0' />
     <preference name="fullscreen" value="true" />
     <preference name="EnableViewportScale" value="false"/>
     <preference name="CameraUsesGeolocation" value="false" />
@@ -44,7 +44,7 @@
 
     <gap:platform name="ios" />
     <gap:config-file platform="ios" parent="CFBundleVersion">
-        <string>63</string>
+        <string>64</string>
     </gap:config-file>
     <gap:platform name="android" />
     <description>
