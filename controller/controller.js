@@ -4,7 +4,7 @@ ctrl.controller('start',['$scope','$timeout','$location',
 	function ($scope,$timeout,$location){
 		var token = localStorage.getItem('token');
 		var target = token ? '/timesheet' : '/login';
-		$timeout(function() { $location.path(target); }, 1000);
+		// $timeout(function() { $location.path(target); }, 1000);
 	}
 ]);
 // login
@@ -13,7 +13,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 		var token = localStorage.getItem('token');
 		if(token){ $location.path('/timesheet'); }
 		$scope.method = 'POST';
-		$scope.url = 'https://app.salesassist.eu/pim/mobile/';
+		$scope.url = 'https://app.akti.com/pim/mobile/';
 		$scope.loged = '';
 		$scope.params = [];
 		$scope.fetch = function() {
@@ -46,7 +46,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 			}
 		};
 		$scope.closeAlert=function(index){vibrate.vib(100); $scope.alerts.splice(index,1);}
-		$scope.openInBrowser=function(){ window.open('https://app.salesassist.eu', '_system', 'location=yes'); }
+		$scope.openInBrowser=function(){ window.open('https://app.akti.com', '_system', 'location=yes'); }
 	}
 ]);
 // timesheet

@@ -18,7 +18,7 @@ a, a:hover{ text-decoration: none; }
 .abs { position: absolute; right: 20px; }
 	.wrapper{ margin: 0 auto; width: 320px; }
 		.tree{ background: url("../images/tree.png") no-repeat top left; width: 281px; height: 186px; margin: 25% auto 0; }
-		.logo{ background: url("../images/logo.png") no-repeat top left; width: 275px; height: 78px; margin: 9% auto 3%; }
+		.logo{ background: url("../images/akti-login-logo.png") no-repeat center; width: 275px; height: 78px; margin: 9% auto 3%; }
 		.logo_acount { margin: 3% auto 1%; }
 		.content, .loginForm{ margin: 0 auto; width: 280px; }
 			.content p{ color: #1a1a1a; font-size: 16px; font-weight: bold; text-align: center; font-family:Helvetica; margin-top: 3%;}
