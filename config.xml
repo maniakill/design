@@ -53,17 +53,15 @@
     <author email="marius@medeeaweb.com" href="http://salesassist.eu">
         ArkWeb Team
     </author>
-    <gap:plugin name="org.apache.cordova.camera" />
-    <gap:plugin name="org.apache.cordova.media-capture" />
-    <gap:plugin name="org.apache.cordova.media" />
-    <gap:plugin name="org.apache.cordova.network-information" />
-    <gap:plugin name="org.apache.cordova.splashscreen" />
-    <gap:plugin name="org.apache.cordova.geolocation" />
-    <gap:plugin name="org.apache.cordova.vibration" />
-    <gap:plugin name="org.apache.cordova.console" />
-    <gap:plugin name="org.apache.cordova.device" />
-    <gap:plugin name="org.apache.cordova.whitelist" />
-    <gap:plugin name="org.apache.cordova.inappbrowser" />
+    <gap:plugin name="cordova-plugin-camera" source="npm" />
+    <gap:plugin name="cordova-plugin-media-capture" source="npm" />
+    <gap:plugin name="cordova-plugin-media" source="npm" />
+    <gap:plugin name="cordova-plugin-network-information" source="npm"  />
+    <gap:plugin name="cordova-plugin-splashscreen" source="npm" />
+    <gap:plugin name="cordova-plugin-geolocation" source="npm" />
+    <gap:plugin name="cordova-plugin-vibration" source="npm" />
+    <gap:plugin name="cordova-plugin-device" source="npm" />
+    <gap:plugin name="cordova-plugin-whitelist" source="npm" />
     <content src="index.html" />
     <access origin="*" />
 </widget>
