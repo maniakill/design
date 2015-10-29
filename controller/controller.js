@@ -37,8 +37,9 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 						$timeout(function(){ $scope.closeAlert(0); },3000);
 					}
 				}).error(function(data,status){
-					alert(data);
+					alert(data.toSource());
 					alert(status);
+					alert($scope.url);
 					$scope.alerts=[{type:'error',msg:LANG[project.lang]['Server error. Please try later']}];
 					$timeout(function(){ $scope.closeAlert(0); },3000);
 				});
