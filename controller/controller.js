@@ -21,7 +21,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 			$scope.params['username']=$scope.username;
 			$scope.params['password']=$scope.password;
 			if($scope.params['username'] && $scope.params['password']){
-				$http({method:$scope.method,url:$scope.url,cache:$templateCache,params:$scope.params}).
+				$http({method:$scope.method,url:$scope.url,params:$scope.params}).
 				success(function(data,status) {
 					if(data.code == 'ok'){
 						localStorage.setItem('token',data.response);
