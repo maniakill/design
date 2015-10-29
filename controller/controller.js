@@ -13,7 +13,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 		var token = localStorage.getItem('token');
 		if(token){ $location.path('/timesheet'); }
 		$scope.method = 'POST';
-		$scope.url = 'https://app.akti.com/pim/mobile/';
+		$scope.url = 'https://app.salesassist.eu/pim/mobile/';
 		$scope.loged = '';
 		$scope.params = [];
 		$scope.fetch = function() {
