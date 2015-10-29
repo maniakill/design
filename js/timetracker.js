@@ -202,7 +202,7 @@ app.config(function ($routeProvider) {
 });
 app.factory('project', ['$http','$templateCache','$location','$rootScope','$interval','$route',
 	function ($http,$templateCache,$location,$rootScope,$interval,$route) {
-		var project = {}, url = 'https://app.salesassist.eu/pim/mobile/', key = 'api_key='+localStorage.token+'&username='+localStorage.username, obj = {};
+		var project = {}, url = 'https://app.akti.com/pim/mobile/', key = 'api_key='+localStorage.token+'&username='+localStorage.username, obj = {};
 		/* store data */
 		var init = function(){
 		project.lang = localStorage.getItem("TLang") ? JSON.parse(localStorage.getItem("TLang")) : 2;

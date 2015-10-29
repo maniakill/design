@@ -13,7 +13,7 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 		var token = localStorage.getItem('token');
 		if(token){ $location.path('/timesheet'); }
 		$scope.method = 'POST';
-		$scope.url = 'https://app.salesassist.eu/pim/mobile/';
+		$scope.url = 'https://app.akti.com/pim/mobile/';
 		$scope.loged = '';
 		$scope.params = [];
 		$scope.fetch = function() {
@@ -37,8 +37,6 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 						$timeout(function(){ $scope.closeAlert(0); },3000);
 					}
 				}).error(function(data,status){
-					alert(status);
-					alert($scope.url);
 					$scope.alerts=[{type:'error',msg:LANG[project.lang]['Server error. Please try later']}];
 					$timeout(function(){ $scope.closeAlert(0); },3000);
 				});
