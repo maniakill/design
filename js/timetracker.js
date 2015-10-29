@@ -135,7 +135,7 @@ function corect_val(number){
 /*! angularjs-geolocation 11-09-2013 */
 angular.module("geolocation",[]).constant("geolocation_msgs",{"errors.location.unsupportedBrowser":"Browser does not support location services","errors.location.notFound":"Unable to determine your location"}),angular.module("geolocation").factory("geolocation",["$q","$rootScope","$window","geolocation_msgs",function(a,b,c,d){return{getLocation:function(){var e=a.defer();return c.navigator&&c.navigator.geolocation?c.navigator.geolocation.getCurrentPosition(function(a){b.$apply(function(){e.resolve(a)})},function(){b.$broadcast("error",d["errors.location.notFound"]),b.$apply(function(){e.reject(d["errors.location.notFound"])})}):(b.$broadcast("error",d["errors.location.unsupportedBrowser"]),b.$apply(function(){e.reject(d["errors.location.unsupportedBrowser"])})),e.promise}}}]);
 var app = angular.module('timeT', ['ngRoute','angular-gestures','ctrl','ui.bootstrap','geolocation']);
-app.config(function ($routeProvider) {
+app.config(function ($routeProvider,$httpProvider) {
 	$routeProvider
 		.when('/',{controller: 'login',templateUrl: 'layout/login.html'})
 		// .when('/login',{controller: 'login',templateUrl: 'layout/login.html'})
@@ -189,6 +189,8 @@ app.config(function ($routeProvider) {
 		.when('/header',{controller: 'header',templateUrl: 'layout/header.html'})
 		.when('/pending',{controller: 'pending',templateUrl: 'layout/pending.html'})
 		.otherwise({ redirectTo: '/' });
+		$httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
 }).factory('vibrate', function (){
   return {
     vib: function (milliseconds) {
