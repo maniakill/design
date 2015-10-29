@@ -64,4 +64,6 @@
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
     <content src="index.html" />
     <access origin="*" />
+    <allow-navigation href="https://app.akti.com/pim/mobile/*" />
+    <allow-intent href="https://app.akti.com/pim/mobile/*" />
 </widget>
