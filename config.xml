@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget
-    id="eu.thinkweb.salesassist"
+    id="com.akti.timetracker"
     version="2.2"
     versionCode = "2200"
     xmlns="http://www.w3.org/ns/widgets"
@@ -50,7 +50,7 @@
     <description>
         SalesAssist Time Tracker application
     </description>
-    <author email="marius@medeeaweb.com" href="http://salesassist.eu">
+    <author email="marius@medeeaweb.com" href="http://akti.com">
         ArkWeb Team
     </author>
     <gap:plugin name="cordova-plugin-camera" source="npm" />
