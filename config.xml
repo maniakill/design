@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget
     id="com.akti.timetracker"
-    version="2.2"
-    versionCode = "2200"
+    version="2.3"
+    versionCode = "2300"
     xmlns="http://www.w3.org/ns/widgets"
     xmlns:gap = "http://phonegap.com/ns/1.0"
     xmlns:android   = "http://schemas.android.com/apk/res/android"
@@ -44,7 +44,7 @@
 
     <gap:platform name="ios" />
     <gap:config-file platform="ios" parent="CFBundleVersion">
-        <string>64</string>
+        <string>65</string>
     </gap:config-file>
     <gap:platform name="android" />
     <description>
