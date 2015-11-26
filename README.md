@@ -1,4 +1,4 @@
-SalesAssist TimeTracker applications
+Akti TimeTracker applications
 ====================================
 
-SalesAssist timetracking application
+Akti timetracking application
