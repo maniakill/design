@@ -46,7 +46,6 @@ ctrl.controller('login',['$scope','$http','$templateCache','$location','$timeout
 			}
 		};
 		$scope.closeAlert=function(index){vibrate.vib(100); $scope.alerts.splice(index,1);}
-		$scope.openInBrowser=function(){ window.open('https://app.akti.com', '_system', 'location=yes'); }
 	}
 ]);
 // timesheet
